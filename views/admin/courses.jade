@@ -1,0 +1,17 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+  h1 Courses
+  ul
+    -courses.forEach(function (course) {
+      li
+        h3
+          a(href="/courses/" + course._id + "/edit") !{course.name}
+        p !{courses.duration}
+    -})
+
+
+
+  a(href="/courses/new").btn.btn-large.btn-info New  

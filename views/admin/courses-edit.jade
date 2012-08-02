@@ -1,0 +1,19 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+
+  h1 Add new course
+  form(method="post", action="/courses/" + course._id + "/update")
+    .control-group
+      label Name
+      input(type="text", name="name", value=course.name)
+    .control-group
+      label Duration
+      input(type="text", name="duration", value=course.duration)
+    .form-actions
+      button.btn(type="submit") Submit
+      a(href="/courses").btn Cancel
+  form(method="post", action="/courses/" + course._id + "/delete")
+      button.btn.btn-warning.btn-large.pull-right(type="submit") Delete

@@ -38,7 +38,7 @@ exports.view = function (req, res) {
         html: function(){
           res.render('admin/edition', {
             title: 'Edition info',
-            course: item
+            edition: item
           });
         },
         json: function(){
@@ -57,6 +57,8 @@ exports.view = function (req, res) {
     if (!req.accepts('application/json')){
       res.send(406);  //  Not Acceptable
     }
+    console.log(req.body);
+
     var edition = new models.Editions({
       date: req.body.date,
       venue: req.body.venue,
@@ -64,7 +66,7 @@ exports.view = function (req, res) {
       course: req.body.courseId
     });
 
-    course.save(function (err) {
+    edition.save(function (err) {
       if(err) {
         res.send(500, err.message);
       } else {

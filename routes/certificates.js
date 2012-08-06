@@ -54,7 +54,7 @@ exports.list =  function (req, res) {
       } else {
         res.format({
           html: function () {
-            res.render('admin/certificates-edit', {
+            res.render('admin/certificate', {
               title: 'Edit ' + item.name,
               certificate: item
             });

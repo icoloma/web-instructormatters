@@ -54,7 +54,7 @@ exports.list =  function (req, res) {
       } else {
         res.format({
           html: function () {
-            res.render('admin/users-edit', {
+            res.render('admin/user', {
               title: 'Edit ' + item.name,
               user: item
             });

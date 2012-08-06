@@ -16,7 +16,7 @@ module.exports = function (server) {
   // Courses
 
   server.get( '/courses',      courses.list);
-  server.post('/courses/:id',  courses.add);
+  server.post('/courses/',  courses.add);
   server.get( '/courses/:id',  courses.view);
   server.put( '/courses/:id',  courses.update);
   server.del( '/courses/:id',  courses.del);
@@ -32,7 +32,6 @@ module.exports = function (server) {
   server.get( '/certificates/:id',  certificates.view);
   server.put( '/certificates/:id',  certificates.update);
   server.del( '/certificates/:id',  certificates.del);
-
 
   // server.get('/users', function(req, res) {
   //   res.render('admin/users', { title: 'Users' });

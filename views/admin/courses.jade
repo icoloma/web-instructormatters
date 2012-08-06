@@ -8,7 +8,7 @@ append content
     -courses.forEach(function (course) {
       li
         h3
-          a(href="/courses/" + course._id + "/edit") !{course.name}
+          a(href="/courses/" + course._id ) !{course.name}
         p !{courses.duration}
     -})
 

@@ -1,0 +1,17 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+  h1 Certificates
+  ul
+    -certificates.forEach(function (certificate) {
+      li
+        h3
+          a(href="/certificates/" + certificate._id + "/edit") !{certificate.name}
+        p !{certificate.email}
+    -})
+
+
+
+  a(href="/certificates/new").btn.btn-large.btn-info New  

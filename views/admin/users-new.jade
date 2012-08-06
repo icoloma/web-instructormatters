@@ -1,0 +1,25 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+
+  h1 Add new user
+  form(method="post", action="/users")
+    .control-group
+      label Name
+      input(type="text", name="name")
+    .control-group
+      label Email
+      input(type="email", name="email")
+    .control-group
+      label Admin
+      select(name="admin")
+        option true
+        option false
+    .control-group
+      label Expires
+      input(type="date", name="expires")
+    .form-actions
+      button.btn(type="submit") Submit
+      a(href="/users").btn Cancel

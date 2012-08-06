@@ -355,6 +355,16 @@
 	},
 	"buffers":
 	[
+		{
+			"contents": "Searching 8 files for \"cookie\" (regex, case sensitive)\n\n0 matches across 0 files\n\n\nSearching 8 files for \"Parser\" (regex, case sensitive)\n\n/home/ehdez/workspaces/javascript/instructormatters/app.js:\n   19    app.use(express.favicon());\n   20    app.use(express.logger('dev'));\n   21:   app.use(express.bodyParser());\n   22    app.use(express.methodOverride());\n   23    app.use(app.router);\n\n1 match in 1 file\n",
+			"settings":
+			{
+				"buffer_size": 410,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -380,6 +390,7 @@
 	},
 	"file_history":
 	[
+		"/home/ehdez/workspaces/javascript/instructormatters/routes/index.js",
 		"/home/roberto/workspace/web-extrema/public/javascripts/modernizr-touch.min.js",
 		"/home/roberto/workspace/web-extrema/public/javascripts/jquery-1.7.2.min.js",
 		"/home/roberto/workspace/web-extrema/public/stylesheets/style.min.css",
@@ -506,8 +517,7 @@
 		"/home/roberto/Desktop/mockup/training.html",
 		"/home/roberto/Desktop/demo/post.js",
 		"/home/roberto/Desktop/mockup/contact.html",
-		"/home/roberto/Desktop/mockup/follow-us.html",
-		"/home/roberto/Desktop/mockup/home.html"
+		"/home/roberto/Desktop/mockup/follow-us.html"
 	],
 	"find":
 	{
@@ -515,9 +525,10 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
+			"*.js",
 			"*.jade",
 			"*.less",
 			"",
@@ -579,6 +590,8 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"Parser",
+			"cookie",
 			"less",
 			"img\\(.+_.+\\)",
 			"url\\(.+_.+\\)",
@@ -704,9 +717,7 @@
 			"extrema-sistemas",
 			"border",
 			"modernizr",
-			"jquery",
-			"contact",
-			"\\.clients"
+			"jquery"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -854,6 +865,49 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"settings":
+					{
+						"buffer_size": 410,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										306,
+										312
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								83,
+								83
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 2,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 68.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -1057,6 +1111,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 323.0,
+	"side_bar_width": 199.0,
 	"status_bar_visible": true
 }

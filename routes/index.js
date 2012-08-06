@@ -13,11 +13,11 @@ module.exports = function (server) {
   
   // Courses
 
-  server.get( '/courses',      courses.list);
-  server.post('/courses/:id',  courses.add);
-  server.get( '/courses/:id',  courses.view);
-  server.put( '/courses/:id',  courses.update);
-  server.del( '/courses/:id',  courses.del);
+  server.get( '/courses',     courses.list);
+  server.post('/courses',     courses.add);
+  server.get( '/courses/:id', courses.view);
+  server.put( '/courses/:id', courses.update);
+  server.del( '/courses/:id', courses.del);
   
 
   // server.get('/users', function(req, res) {

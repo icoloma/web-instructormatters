@@ -18,4 +18,15 @@ var EditionSchema = new mongoose.Schema({
 
 var Editions = mongoose.model('Editions', EditionSchema);
 
+
+Editions.prototype.toJSON = function(){
+  return {
+    id: this._id,
+    date: this.date,
+    venue: this.venue,
+    instructorId: this.instructor._id,
+    courseId: this.course._id
+  }
+};
+
 module.exports = Editions;

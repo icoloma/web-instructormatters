@@ -1,0 +1,14 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+  h1 Editions
+  ul
+    -editions.forEach(function (edition) {
+      li
+        h3
+          a(href="/editions/" + edition._id ) !{edition.date}
+        p !{edition.venue}
+        p !{edition.instructor}
+    -})

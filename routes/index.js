@@ -1,7 +1,8 @@
 
 
 var models  = require('../db/models')
-  , courses = require('./courses');
+  , courses = require('./courses')
+  , editions = require('./editions');
 
  
 module.exports = function (server) {
@@ -9,6 +10,13 @@ module.exports = function (server) {
   server.get('/', function(req, res) {
     res.render('admin', { title: 'Admin' });
   });
+
+  // Editions
+  server.get( '/editions',     editions.list);
+  server.post('/editions',     editions.add);
+  server.get( '/editions/:id', editions.view);
+  server.put( '/editions/:id', editions.update);
+  server.del( '/editions/:id', editions.del);
 
   
   // Courses

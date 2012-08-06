@@ -14,7 +14,7 @@ var EditionSchema = new mongoose.Schema({
   instructor: {type: ObjectId, ref: 'Users', required: true},
   course: {type: ObjectId, ref: 'Courses', required: true},
   deleted: {type: Boolean, default: false},
-});
+}, {strict: true});
 
 var Editions = mongoose.model('Editions', EditionSchema);
 

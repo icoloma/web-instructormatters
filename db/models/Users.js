@@ -18,8 +18,18 @@ var UserSchema = new mongoose.Schema({
   oauth: String,
   admin: {type: Boolean, default: false},
   deleted: {type: Boolean, default: false},
-});
+}, {strict: true});
+
 
 var Users = mongoose.model('Users', UserSchema);
+
+Users.prototype.toJSON = function(){
+  return {
+    id: this._id,
+    name: this.name,
+    expires: this.expires,
+    admin: this.admin
+  }
+};
 
 module.exports = Users;

@@ -9,7 +9,7 @@ var CourseSchema = new mongoose.Schema({
   duration: String, 
   deleted: {type: Boolean, default: false},   // private field
   // details: String,
-});
+}, {strict: true});
 
 
 var Courses = mongoose.model('Courses', CourseSchema);

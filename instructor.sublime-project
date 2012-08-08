@@ -2,7 +2,7 @@
 	"folders":
 	[
 		{
-			"path": "/home/roberto/workspace/instructor",
+			"path": ".",
       "folder_exclude_patterns": ["node_modules"]
 		}
 	]

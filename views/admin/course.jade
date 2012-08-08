@@ -3,18 +3,23 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
+  
+  .main  
+  a(href="/courses") Back
 
-  h1 Course info
-  form(method="post", action="#" )
-    .control-group
-      label Name
-      input(type="text", name="name", value=course.name, readonly="true")
-    .control-group
-      label Duration
-      input(type="text", name="duration", value=course.duration,  readonly="true")
 
-    .form-actions
-      a(href="/courses").btn Cancel
+append scripts
+  script 
+    define('editview', 
+      [ 'courses/editview', 'courses/model' ], 
+      function(CourseView, CourseModel) {
 
-  //form(method="post", action="/courses/" + course._id + "/delete")
-  //    button.btn.btn-warning.btn-large.pull-right(type="submit") Delete
+        // Create view
+        var view = new CourseView({
+          model: new CourseModel(!{JSON.stringify(course)}),
+          el: $('.main')
+        });
+
+        // render it
+        view.render();
+      });

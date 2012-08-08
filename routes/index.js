@@ -22,7 +22,8 @@ module.exports = function (server) {
 
   // Courses
   server.get( '/courses',      courses.list);
-  server.post('/courses',  courses.add);
+  server.get( '/courses/new',  courses.add);
+  server.post('/courses',      courses.create);
   server.get( '/courses/:id',  courses.view);
   server.put( '/courses/:id',  courses.update);
   server.del( '/courses/:id',  courses.del);
@@ -32,7 +33,7 @@ module.exports = function (server) {
   server.post('/users',  users.add);
   server.get( '/users/:id',  users.view);
   server.put( '/users/:id',  users.update);
-  server.del( '/users/:id',  users.del);
+  server.delete( '/users/:id',  users.del);
 
   // Certificates
   server.get( '/certificates',      certificates.list);

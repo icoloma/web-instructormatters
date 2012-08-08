@@ -2,7 +2,7 @@
 var models = require('../db/models');
 
 /*
-* Listado de todos los cursos
+  Listado de todos los cursos
 */
 exports.list =  function (req, res) {
   models.Courses.find({deleted: false}, function (err, items) {
@@ -25,7 +25,7 @@ exports.list =  function (req, res) {
 };
 
 /*
-* Mostrar un curso
+  Mostrar un curso
 */
 exports.view = function (req, res) {
   models.Courses.findById(req.params.id, function (err, item) {
@@ -38,7 +38,7 @@ exports.view = function (req, res) {
         html: function(){
           res.render('admin/course', {
             title: 'Course ' + item.name,
-            course: item
+            course: item.toJSON()
           });
         },
         json: function(){
@@ -49,17 +49,26 @@ exports.view = function (req, res) {
   });
 };
 
+/*
+  Añadir curso - ventana 
+*/
+exports.add = function(req,res){
+  res.render('admin/course', {
+      title: 'New Course ',
+      course: {}
+    });
+}
+
 
 /**
-* Añadir curso
+  Crear curso
 */
-  exports.add =  function (req, res) {
+  exports.create =  function (req, res) {
     if (!req.accepts('application/json')){
       res.send(406);  //  Not Acceptable
     }
     var course = new models.Courses(req.body);
     course.save(function (err) {
-      console.log(req.headers);
       if(err) {
         res.send(500, err.message);
       } else {
@@ -72,13 +81,13 @@ exports.view = function (req, res) {
 
 
 /**
-* Actualizar un curso
+  Actualizar un curso
 */
   exports.update = function (req, res) {
     if (!req.accepts('application/json')){
        res.send(406);  //  Not Acceptable
     }
-    models.Courses.update({_id: req.params.item}, req.body, function (err, num) {
+    models.Courses.update({_id: req.params.id}, req.body, function (err, num) {
       if(err) {
         res.send(500, err.message);
       } else if(!num) {
@@ -90,10 +99,10 @@ exports.view = function (req, res) {
   };
 
   /**
-  * Eliminar un curso
+    Eliminar un curso
   */
   exports.del = function (req, res) {
-    models.Courses.update({_id: req.params.item}, {deleted: true}, function (err, num) {{
+    models.Courses.update({_id: req.params.id}, {deleted: true}, function (err, num) {{
       if(err) {
         res.send(500, err.message);
       } else if(!num) {

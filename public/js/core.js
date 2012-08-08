@@ -1,4 +1,4 @@
-define([ 'jquery', 'underscore', 'backbone'], function() {
+define([ 'jquery', 'underscore', 'backbone', 'bootstrap_alert'], function() {
   
   window.B = Backbone;
   

@@ -8,11 +8,12 @@ mongoose = require('mongoose');
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  ;
 
 var app = express();
 
-app.configure(function(){
+  app.configure(function(){
   app.set('port', process.env.PORT || 5000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');

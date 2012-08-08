@@ -1,0 +1,21 @@
+<h2>Course</h2>
+
+<form class="well">
+
+  <label>Course name: </label>
+  <input name="name" type="text" value="{{name}}">
+ 
+  <label>Duration: </label>
+  <input name="duration" type="text" value="{{duration}}">
+
+  <label>Description: </label>
+  <input name="description" type="text" value="{{description}}">
+
+  <p>
+    <input type="submit" class="btn btn-primary" value="Save" />
+
+  {{#if id}}
+    <input type="button" class="btn btn-danger" value="Delete" id="delete"/>
+  {{/if}}
+  
+</form>

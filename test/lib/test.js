@@ -13,7 +13,8 @@ var require = {
     moment: 'lib/moment',
     hbs: 'lib/hbs',
     Handlebars: 'lib/Handlebars',
-    bootstrap_alert: 'lib/bootstrap-alert'
+    bootstrap_alert: 'lib/bootstrap-alert',
+    messages: 'lib/messages'
   },
   deps: [
     // para que todos los tests puedan invocarlos desde el cuerpo del fichero html

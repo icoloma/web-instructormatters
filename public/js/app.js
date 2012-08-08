@@ -6,7 +6,8 @@ var require = {
     moment: 'lib/moment',
     hbs: 'lib/hbs',
     Handlebars: 'lib/Handlebars',
-    bootstrap_alert: 'lib/bootstrap-alert'
+    bootstrap_alert: 'lib/bootstrap-alert',
+    messages: 'lib/messages'
   },
   deps: [
   ],

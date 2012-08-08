@@ -1,20 +1,22 @@
-<h2>Course</h2>
+{{#if message }}
+  {{{message}}}
+{{/if}}
 
 <form class="well">
 
   <label>Course name: </label>
-  <input name="name" type="text" value="{{name}}">
+  <input name="name" type="text" value="{{course.name}}">
  
   <label>Duration: </label>
-  <input name="duration" type="text" value="{{duration}}">
+  <input name="duration" type="text" value="{{course.duration}}">
 
   <label>Description: </label>
-  <input name="description" type="text" value="{{description}}">
+  <input name="description" type="text" value="{{course.description}}">
 
   <p>
     <input type="submit" class="btn btn-primary" value="Save" />
 
-  {{#if id}}
+  {{#if course.id}}
     <input type="button" class="btn btn-danger" value="Delete" id="delete"/>
   {{/if}}
   

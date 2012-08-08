@@ -1,5 +1,5 @@
-define([ 'core', 'hbs!./editview', 'hbs!../template/message' ], 
-  function(K, template, messageTmpl) {
+define([ 'core', 'hbs!./editview', 'messages' ], 
+  function(Core, template, messageTmpl) {
   
     return B.View.extend({
 
@@ -12,32 +12,32 @@ define([ 'core', 'hbs!./editview', 'hbs!../template/message' ],
         }
       },
 
+
       render: function() {
         var edition = this.model.edition;
-        this.$el.html(template(this.model.toJSON()));
+        this.$el.html( template( {
+            course: this.model.toJSON(),
+            message: messageTmpl.getMessage()  
+          })); 
       },
 
+      
       save: function(e) {
         var self = this;
         this.model.save({}, {
          
           success: function() {
-            var msg = messageTmpl({
-              type: 'success',
-              message: 'Save OK'
-            })
-            self.$el.prepend(msg);
+            window.location = self.model.url()  + "?code=u";
           },
 
           error: function(resp, status, xhr){
-            if (status.status === 201){   // Http status Ok, Created
-              var location = status.getResponseHeader("location");
+            if (status.status === 201){   
+              // Http status Ok, Created
+              var location = status.getResponseHeader("location") + "?code=s";
               window.location=location;              
             } else {
-              var error = messageTmpl({
-                type: 'error',
-                message: 'Error while saving'
-              })
+              // error
+              var error = messageTmpl.getMessage('e');
               self.$el.prepend(error);
             }
           }
@@ -45,17 +45,15 @@ define([ 'core', 'hbs!./editview', 'hbs!../template/message' ],
         e.preventDefault();
       },
 
+     
       delete: function(e){
         var self=this;
         this.model.destroy({
           success: function(resp, status, xhr) {
-            window.location=self.model.urlRoot;
+            window.location=self.model.urlRoot+ "?code=d";;
           },
           error: function(){
-            var error = messageTmpl({
-              type: 'error',
-              message: 'Error while deleting'
-            })
+            var error = messageTmpl.getMessage('e');
             self.$el.prepend(error);
           }
         });

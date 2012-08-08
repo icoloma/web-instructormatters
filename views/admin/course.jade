@@ -3,7 +3,8 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
-  
+ 
+  h2 Course
   .main  
   a(href="/courses") Back
 
@@ -13,7 +14,7 @@ append scripts
     define('editview', 
       [ 'courses/editview', 'courses/model' ], 
       function(CourseView, CourseModel) {
-
+       
         // Create view
         var view = new CourseView({
           model: new CourseModel(!{JSON.stringify(course)}),
@@ -23,3 +24,5 @@ append scripts
         // render it
         view.render();
       });
+
+   

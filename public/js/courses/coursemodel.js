@@ -1,6 +1,6 @@
-define([ 'core' ], function() {
+define([ 'core', 'backbone' ], function() {
   
-  return B.Model.extend({
+  return Backbone.Model.extend({
     
     urlRoot : '/courses',
    

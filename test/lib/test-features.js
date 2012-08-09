@@ -7,6 +7,8 @@ define([ 'jquery', 'core', 'lib/qunit-git.js'], function(jq, co, qu) {
 
 	// add qunit results container
 	$('body').append('<div id="qunit-testrunner-toolbar"></div> <h2 id="qunit-userAgent"></h2> <ol id="qunit-tests"></ol>');
+	$('body').append('<div id="qunit-testresult"></div>');
+
 
 	// define Test object
 	/*

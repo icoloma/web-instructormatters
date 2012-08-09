@@ -3,8 +3,7 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
-  h1 Courses
-  
+   
   ul
     -courses.forEach(function (course) {
       li
@@ -15,4 +14,4 @@ append content
 
 
 
-  a(href="/courses/new").btn.btn-large.btn-info New  
+  a(href="/courses/new").btn.btn-large.btn-info New Course

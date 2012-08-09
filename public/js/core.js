@@ -1,9 +1,9 @@
-define([ 'jquery', 'underscore', 'backbone', 'bootstrap_alert'], function() {
+define([ 'jquery', 'underscore', 'backbone', 'bootstrap_alert', 'lib/messages', 'hbs!./lib/message'], 
+  function($, _, Backbone, BootstrapAlert, Messages, messageTmpl) {
   
   window.B = Backbone;
 
-  // getParamValue from current URL
-  return {
+  var core = {
     getParamValue: function (paramName) {
       /// <summary>
       ///     Get the value of input parameter from the querystring
@@ -19,10 +19,24 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap_alert'], function() {
         return '';
       else 
         return decodeURIComponent(matches[1].replace(/\+/g, ' '));
+    },
+    /**
+      Render any pending messages
+      @param msg.level {String}
+      @param msg.message {String}
+      */
+    renderMessage : function(msg){
+      $('.messages-container').append(messageTmpl(msg));
     }
 
     
-  }
+  };
+
+  // render any existing messages
+  var messageKey = core.getParamValue('code');
+  messageKey && core.renderMessage(Messages[messageKey]);
+
+  return core;
 
   
   

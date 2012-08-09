@@ -1,7 +1,7 @@
 <html>
 <body>
 
-
+  <div class="messages-container"></div>
   <div class="main"></div>
 
   <script src="lib/test.js"></script>
@@ -23,10 +23,12 @@
       // Create view
       , view = new CourseView({
           model: new CourseModel(course),
+
           el: $('.main')
       });
 
       // render it
+      view.model.urlRoot='/test/courses-test.html';
       view.render();
   });
   </script>

@@ -1,7 +1,7 @@
-define([ 'core', 'hbs!./courseview', 'messages' ], 
-  function(Core, template, messageTmpl) {
-  
-    return B.View.extend({
+define([ 'core', 'backbone', 'hbs!./courseview' ], 
+  function(Core, B, template) {
+
+    return Backbone.View.extend({
 
       events: {
         'click #delete' : 'delete',
@@ -20,8 +20,7 @@ define([ 'core', 'hbs!./courseview', 'messages' ],
       render: function() {
         var edition = this.model.edition;
         this.$el.html( template( {
-            course: this.model.toJSON(),
-            message: messageTmpl.getMessage('Course'),
+            course: this.model.toJSON()
           })); 
       },
 
@@ -30,19 +29,17 @@ define([ 'core', 'hbs!./courseview', 'messages' ],
         var self = this;
         this.model.save({}, {
          
-          success: function() {
-            window.location = self.model.url()  + "?code=u";
+          success: function(resp, status, xhr) {
+            window.location = self.model.url()  + "?code=updated";
           },
 
           error: function(resp, status, xhr){
             if (status.status === 201){   
               // Http status Ok, Created
-              var location = status.getResponseHeader("location") + "?code=s";
+              var location = status.getResponseHeader("location") + "?code=saved";
               window.location=location;              
             } else {
-              // error
-              var error = messageTmpl.getMessage('Course','e');
-              self.$el.prepend(error);
+              Core.renderMessage({ level:'error', message: status.statusText});             
             }
           }
         });
@@ -54,11 +51,10 @@ define([ 'core', 'hbs!./courseview', 'messages' ],
         var self=this;
         this.model.destroy({
           success: function(resp, status, xhr) {
-            window.location=self.model.urlRoot+ "?code=d";;
+            window.location=self.model.urlRoot+ "?code=deleted";;
           },
-          error: function(){
-            var error = messageTmpl.getMessage('Course','e');
-            self.$el.prepend(error);
+          error: function(resp, status, xhr){
+            Core.renderMessage({ level:'error', message:status.statusText});
           }
         });
         e.preventDefault();

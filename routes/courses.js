@@ -11,6 +11,7 @@ exports.list =  function (req, res) {
     .exec( 
       function (err, items) {
         if(err) {
+          console.log(err);
           res.send(500, err.message);
         } else {
           res.format({
@@ -35,6 +36,7 @@ exports.list =  function (req, res) {
 exports.view = function (req, res) {
   models.Courses.findById(req.params.id, function (err, item) {
     if(err) {
+      console.log(err);
       res.send(500, err.message)
     } else if(!item || (item && item.deleted)) {
       res.send(404);
@@ -75,6 +77,7 @@ exports.add = function(req,res){
     var course = new models.Courses(req.body);
     course.save(function (err) {
       if(err) {
+        console.log(err);
         res.send(500, err.message);
       } else {
         res.header('location',  req.url + '/' + this.emitted.complete[0]._id);
@@ -94,6 +97,7 @@ exports.add = function(req,res){
     }
     models.Courses.update({_id: req.params.id}, req.body, function (err, num) {
       if(err) {
+        console.log(err);
         res.send(500, err.message);
       } else if(!num) {
         res.send(404);   // not found
@@ -109,6 +113,7 @@ exports.add = function(req,res){
   exports.del = function (req, res) {
     models.Courses.update({_id: req.params.id}, {deleted: true}, function (err, num) {{
       if(err) {
+        console.log(err);
         res.send(500, err.message);
       } else if(!num) {
         res.send(404);  // not found

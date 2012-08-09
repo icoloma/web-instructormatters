@@ -5,6 +5,9 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap-responsive.css')
+    //if lt IE 10
+      script
+        window.location.href=/(http(s?):\/\/[^\/]+).*/.exec(window.location.href)[1] + '/browser-not-supported.html'
   body
     block content
     

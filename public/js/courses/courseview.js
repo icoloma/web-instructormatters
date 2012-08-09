@@ -5,6 +5,7 @@ define([ 'core', 'hbs!./courseview', 'messages' ],
 
       events: {
         'click #delete' : 'delete',
+        'click #back' : 'showCourses',
         'submit form': 'save',
         'change input': function(e) {
           var $ct = $(e.currentTarget);
@@ -12,13 +13,15 @@ define([ 'core', 'hbs!./courseview', 'messages' ],
         }
       },
 
+      showCourses : function() {
+        window.location = this.model.urlRoot ;
+      },
 
       render: function() {
         var edition = this.model.edition;
         this.$el.html( template( {
             course: this.model.toJSON(),
             message: messageTmpl.getMessage('Course'),
-            back: this.model.urlRoot 
           })); 
       },
 

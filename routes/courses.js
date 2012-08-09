@@ -5,23 +5,28 @@ var models = require('../db/models');
   Listado de todos los cursos
 */
 exports.list =  function (req, res) {
-  models.Courses.find({deleted: false}, function (err, items) {
-    if(err) {
-      res.send(500, err.message);
-    } else {
-      res.format({
-        html: function(){
-          res.render('admin/courses', {
-            title: 'Courses',
-            courses: items
+  models.Courses
+    .find({deleted: false})
+    .sort('name','descending')
+    .exec( 
+      function (err, items) {
+        if(err) {
+          res.send(500, err.message);
+        } else {
+          res.format({
+            html: function(){
+              res.render('admin/courses', {
+                title: 'Courses',
+                courses: items
+              });
+            },
+            json: function(){
+              res.json(items);
+            }
           });
-        },
-        json: function(){
-          res.json(items);
-        }
-      });
-    };
-  });
+        };
+      }
+    )
 };
 
 /*

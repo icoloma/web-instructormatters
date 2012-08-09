@@ -1,4 +1,4 @@
-define([ 'core', 'hbs!./editview', 'messages' ], 
+define([ 'core', 'hbs!./courseview', 'messages' ], 
   function(Core, template, messageTmpl) {
   
     return B.View.extend({
@@ -17,7 +17,8 @@ define([ 'core', 'hbs!./editview', 'messages' ],
         var edition = this.model.edition;
         this.$el.html( template( {
             course: this.model.toJSON(),
-            message: messageTmpl.getMessage()  
+            message: messageTmpl.getMessage('Course'),
+            back: this.model.urlRoot 
           })); 
       },
 
@@ -37,7 +38,7 @@ define([ 'core', 'hbs!./editview', 'messages' ],
               window.location=location;              
             } else {
               // error
-              var error = messageTmpl.getMessage('e');
+              var error = messageTmpl.getMessage('Course','e');
               self.$el.prepend(error);
             }
           }
@@ -53,7 +54,7 @@ define([ 'core', 'hbs!./editview', 'messages' ],
             window.location=self.model.urlRoot+ "?code=d";;
           },
           error: function(){
-            var error = messageTmpl.getMessage('e');
+            var error = messageTmpl.getMessage('Course','e');
             self.$el.prepend(error);
           }
         });

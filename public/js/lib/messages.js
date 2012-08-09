@@ -3,27 +3,37 @@ define([ 'core',  'hbs!./lib/message' ],
 function(Core, messageTmpl) {
 
   var codes = {
-      u : { level :'info',  message :'Item updated' },
-      s : { level :'info',  message :'Item saved' },
-      d : { level :'info',  message :'Item deleted' },
-      e : { level :'error', message :'Error while processing the request' }
+      u : { level :'info',  message :' updated' },
+      s : { level :'info',  message :' saved' },
+      d : { level :'info',  message :' deleted' },
+      e : { level :'error', message :': Error while processing the request' }
   }
 
   return {
-    getMessage : function(code){
-      var message
+    getMessage : function(itemName, code, customMessage){
+      var messageHTML   
+        , messageText
     
       if (!code){
         code =  Core.getParamValue('code');
       }
 
+
       if (code){
-        message =  messageTmpl({        
+
+        if (customMessage){
+          messageText = customMessage;
+        } else {
+          messageText = itemName  + codes[code].message;
+        }
+
+
+        messageHTML =  messageTmpl({        
           type: codes[code].level,
-          message : codes[code].message
+          message : messageText
         });
       }
-      return message;
+      return messageHTML;
     }
   }
 

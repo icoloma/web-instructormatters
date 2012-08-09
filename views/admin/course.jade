@@ -6,13 +6,13 @@ append content
  
   h2 Course
   .main  
-  a(href="/courses") Back
+  
 
 
 append scripts
   script 
     define('editview', 
-      [ 'courses/editview', 'courses/model' ], 
+      [ 'courses/courseview', 'courses/coursemodel' ], 
       function(CourseView, CourseModel) {
        
         // Create view

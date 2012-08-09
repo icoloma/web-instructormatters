@@ -5,7 +5,7 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
 
       events: {
         'click #delete' : 'delete',
-        'click #back' : 'showCourses',
+        'click #list' : 'list',
         'submit form': 'save',
         'change input': function(e) {
           var $ct = $(e.currentTarget);
@@ -13,7 +13,7 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
         }
       },
 
-      showCourses : function() {
+      list : function() {
         window.location = this.model.urlRoot ;
       },
 

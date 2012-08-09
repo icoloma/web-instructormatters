@@ -7,7 +7,7 @@ var models = require('../db/models');
 exports.list =  function (req, res) {
   models.Courses
     .find({deleted: false})
-    .sort('name','descending')
+    .sort('name','ascending')
     .exec( 
       function (err, items) {
         if(err) {

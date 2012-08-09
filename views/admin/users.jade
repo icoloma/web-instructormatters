@@ -3,15 +3,14 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
-  h1 Users
+  ss
   ul
     -users.forEach(function (user) {
       li
         h3
-          a(href="/users/" + user._id + "/edit") !{user.name}
-        p !{user.email}
+          a(href="/users/" + user._id ) !{user.email}
+        p !{users.email}
     -})
 
-
-
-  a(href="/users/new").btn.btn-large.btn-info New  
+  a(href="/users/new").btn.btn-info New User
+  

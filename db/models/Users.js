@@ -27,6 +27,7 @@ Users.prototype.toJSON = function(){
   return {
     id: this._id,
     name: this.name,
+    email: this.email,
     expires: this.expires,
     admin: this.admin
   }

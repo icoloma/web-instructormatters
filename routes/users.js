@@ -5,42 +5,65 @@ var models = require('../db/models');
 * Listado de todos los usuarios
 */
 exports.list =  function (req, res) {
-    models.Users.find({deleted: false}, function (err, items) {
-      if(err) {
-        res.send(500, err.message);
-      } else {
-        res.format({
-          html: function () {
-            res.render('admin/users', {
-              title: 'Users',
-              users: items
-            })
-          },
-          json: function () {
-            //Fix: parsear JSON (es esto JSON válido? JSON.stringify...)
-            res.send(items);
-          }
-        });
+    models.Users
+    .find({deleted: false})
+    .sort('name','ascending')
+    .exec( 
+      function (err, items) {
+        if(err) {
+          console.log(err);
+          res.send(500, err.message);
+        } else {
+          res.format({
+            html: function(){
+              res.render('admin/users', {
+                title: 'Users',
+                users: items
+              });
+            },
+            json: function(){
+              res.json(items);
+            }
+          });
+        };
       }
-    });
+    )
   };
+
+
 
 /**
 * Añadir usuario
 */
-  exports.add =  function (req, res) {
+exports.add = function(req,res){
+  res.render('admin/user', {
+      title: 'New User',
+      user: {}
+    });
+}
+
+
+
+/**
+  Crear usuario
+*/
+  exports.create =  function (req, res) {
+    if (!req.accepts('application/json')){
+      res.send(406);  //  Not Acceptable
+    }
     var user = new models.Users(req.body);
     user.save(function (err) {
       if(err) {
+        console.log(err);
         res.send(500, err.message);
       } else {
-        //Fix Url completa
-        //res.header('location', req.headers.host + req.url + '/' + this.emitted.complete[0]._id);
         res.header('location',  req.url + '/' + this.emitted.complete[0]._id);
         res.send(201);
+
       }
     });
   };
+
 
 /*
 * Mostrar un usuario
@@ -68,32 +91,36 @@ exports.list =  function (req, res) {
   };
 
 /**
-* Actualizar un usuario
+  Actualizar un usuario
 */
   exports.update = function (req, res) {
-    req.accepts('application/json');
-    models.Users.update({_id: req.params.item}, req.body, function (err, num) {
+    if (!req.accepts('application/json')){
+       res.send(406);  //  Not Acceptable
+    }
+    models.Users.update({_id: req.params.id}, req.body, function (err, num) {
       if(err) {
+        console.log(err);
         res.send(500, err.message);
       } else if(!num) {
-        res.send(404);
+        res.send(404);   // not found
       } else {
-        res.send(204);
+        res.send(204);   // OK, no content
       }
     });
   };
-
+ 
   /**
-  * Eliminar un usuario
+    Eliminar un ususario
   */
   exports.del = function (req, res) {
-    models.Users.update({_id: req.params.item}, {deleted: true}, function (err, num) {{
+    models.Users.update({_id: req.params.id}, {deleted: true}, function (err, num) {{
       if(err) {
+        console.log(err);
         res.send(500, err.message);
       } else if(!num) {
-        res.send(404);
+        res.send(404);  // not found
       } else {
-        res.send(204);
+        res.send(204);  // OK, no content
       }
     }});
   };

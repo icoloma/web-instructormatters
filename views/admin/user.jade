@@ -3,30 +3,21 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
+ 
+  .main  
 
-  h1 Add new user
-  form(method="post", action="/users/" + user._id)
-    .control-group
-      label Name
-      input(type="text", name="name", value=user.name)
-    .control-group
-      label Email
-      input(type="email", name="email", value=user.email)
-    .control-group
-      label Admin
-      select(name="admin")
-        -for(o in [true, false]) {
-        -  if(user.admin === o) {
-            option(selected) !{o.toString()}
-          -} else {
-            option !{o.toString()}
-          -}
-        -}
-    .control-group
-      label Expires
-      input(type="date", name="expires", value=user.expires)
-    .form-actions
-      button.btn(type="submit") Submit
-      a(href="/users").btn Cancel
-  form(method="post", action="/users/" + user._id + "/delete")
-      button.btn.btn-warning.btn-large.pull-right(type="submit") Delete
+append scripts
+  script 
+    define('editview', 
+      [ 'users/userview', 'users/usermodel' ], 
+      function(UserView, UserModel) {
+       
+        // Create view
+        var view = new UserView({
+          model: new UserModel(!{JSON.stringify(user)}),
+          el: $('.main')
+        });
+
+        // render it
+        view.render();
+      });

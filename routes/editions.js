@@ -16,10 +16,33 @@ exports.list =  function (req, res) {
         } else {
           res.format({
             html: function(){
-              res.render('admin/editions', {
-                title: 'Editions',
-                editions: items
-              });
+
+              // hay que añadirle el nombre de los instructores
+              async.parallel(
+                [function (cb) {
+                  // Recuperamos los instructores que aparecen en las ediciones
+                  var instructorIds = _.uniq(_.map(items, function(item) {return item.instructor.toJSON();}));
+                  models.Users
+                    .find({ _id : { $in : instructorIds } })
+                    .select('name')
+                    .exec(cb);  
+                },
+                function (cb) {
+                  // Recuperamos los cursos que aparecen en las ediciones
+                  var coursesIds = _.uniq(_.map(items, function(item) {return item.course.toJSON();}));
+                  models.Courses
+                    .find({ _id : { $in : coursesIds } })
+                    .select('name')
+                    .exec(cb);  
+                }],
+                function (err, results) {
+                  res.render('admin/editions', {
+                    title: 'Editions',
+                    editions: items,
+                    instructors: results[0],
+                    courses: results[1]
+                  });
+                });
             },
             json: function(){
               res.json(items);

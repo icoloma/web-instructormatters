@@ -28,6 +28,8 @@ module.exports = function (server) {
   server.get( '/courses/:id',  courses.view);
   server.put( '/courses/:id',  courses.update);
   server.del( '/courses/:id',  courses.del);
+  // server.get( '/courses/:id/editions', courses.listEditions());
+
 
   // Users
   server.get( '/users',      users.list);

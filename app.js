@@ -5,11 +5,13 @@
 
 mongoose = require('mongoose'),
   async = require('async');
+  _ = require('./public/js/lib/underscore');
 
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
   , path = require('path')
+ 
   ;
 
 var app = express();

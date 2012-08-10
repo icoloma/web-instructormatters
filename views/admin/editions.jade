@@ -7,10 +7,29 @@ append content
   ul
     -editions.forEach(function (edition) {
       li
-        h3
-          a(href="/editions/" + edition._id ) !{edition.date}
-        p !{edition.venue}
-        p !{edition.instructor}
+        -courses.forEach(function (course) {
+          -if(course._id.toString() === edition.course.toString()) {
+            h3 
+              a(href="/editions/" + edition._id ) !{course.name}
+          -}
+        -})
+
+        .form-actions
+          p 
+            span Date: 
+            | !{edition.date}
+          
+          p
+            span Venue: 
+            | !{edition.venue}
+
+          -instructors.forEach(function (instructor) {
+            -if(instructor._id.toString() === edition.instructor.toString()) {
+              p
+                span Instructor: 
+                | !{instructor.name}
+            -}
+          -})
     -})
  
   a(href="/editions/new").btn.btn-info New Edition

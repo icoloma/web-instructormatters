@@ -1,20 +1,29 @@
+
 extends ../layout
 
 include ../includes/admin-mixins
 
 append content
+ 
+  .main  
 
- h1 Edition  info
+append scripts
+  script 
+    define('editview', 
+      [ 'editions/editionview', 'editions/editionmodel', 'jquery' ], 
+      function(EditionView, EditionModel) {
 
-  form(method="post", action="#" )
-    .control-group
-      label venue
-      input(type="text", name="venue", value=edition.venue, readonly="true")
+        // Create view
+        var view = new EditionView({
+          model: new EditionModel(!{JSON.stringify(edition)}),
+          instructors : !{JSON.stringify(instructors)},
+          courses : !{JSON.stringify(courses)},
+          el: $('.main')
+        });
 
+        // render it
+        view.render();
 
-    .form-actions
-      a(href="/editions").btn Cancel
+      });
 
-
-  script
-    alert("scripting here");
+   

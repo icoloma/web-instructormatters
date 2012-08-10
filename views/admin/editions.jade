@@ -3,7 +3,7 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
-  h1 Editions
+
   ul
     -editions.forEach(function (edition) {
       li
@@ -12,3 +12,5 @@ append content
         p !{edition.venue}
         p !{edition.instructor}
     -})
+ 
+  a(href="/editions/new").btn.btn-info New Edition

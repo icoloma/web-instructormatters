@@ -1,0 +1,40 @@
+<form class="well">
+
+  <label>Course: </label>
+  <select name="course" required="true">
+    <option value="">--</option>
+    {{#courses}}
+      <option value="{{this.id}}">{{this.name}}</option>
+    {{/courses}}
+  </select>
+
+
+  <label>Venue: </label>
+  <input name="venue" type="text" value="{{edition.venue}}" required="required">
+
+  <label>Date: </label>
+  <input name="date" type="date" value="{{edition.date}}" required="required" autocomplete="off" placeholder="yyyy-mm-dd">
+ 
+  <label>Instructor: </label>
+  <select name="instructor" required="true">
+    <option value="">--</option>
+    {{#instructors}}
+      <option value="{{this.id}}" >{{this.name}}</option>
+    {{/instructors}}
+  </select> 
+
+  <p>
+    <input type="submit" class="btn btn-primary" value="Save" />
+
+
+  {{#if edition.id }}
+    <a id="delete" href="#" class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
+  {{/if}}
+
+  <a id="list" href="#" class="btn"><i class="icon-list"></i> List</a>
+  
+</form>
+<script>
+  $("select[name=course] option[value={{edition.course}}]").attr("selected", true);
+  $("select[name=instructor] option[value={{edition.instructor}}]").attr("selected", true);
+</script>

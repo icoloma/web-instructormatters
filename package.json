@@ -11,7 +11,8 @@
     "jade": "*",
     "mongoose": "*",
     "passport": "*",
-    "node-minify": "*"
+    "node-minify": "*",
+    "async": "*"
   },
 
    "devDependencies": {

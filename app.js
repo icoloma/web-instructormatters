@@ -3,7 +3,8 @@
  * Module dependencies.
  */
 
-mongoose = require('mongoose');
+mongoose = require('mongoose'),
+  async = require('async');
 
 var express = require('express')
   , routes = require('./routes')

@@ -78,7 +78,7 @@ exports.add = function(req,res){
         res.format({
           html: function () {
             res.render('admin/user', {
-              title: 'Edit ' + item.name,
+              title: 'Edit user',
               user: item
             });
           },

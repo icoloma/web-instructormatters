@@ -46,11 +46,13 @@ exports.view = function (req, res) {
             function (cb) {
               models.Courses
                 .find({deleted: false})
+                .select('name')
                 .sort('name','ascending')
                 .exec(cb)
             }, function (cb) {
               models.Users
                 .find({deleted: false})
+                .select('name')
                 .sort('name','ascending')
                 .exec(cb)
             }], function (err, results) {
@@ -86,11 +88,13 @@ exports.add = function(req,res){
     function (cb) {
       models.Courses
         .find({deleted: false})
+        .select('name')
         .sort('name','ascending')
         .exec(cb)
     }, function (cb) {
       models.Users
         .find({deleted: false})
+        .select('name') 
         .sort('name','ascending')
         .exec(cb)
     }], function (err, results) {

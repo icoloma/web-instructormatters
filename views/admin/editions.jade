@@ -10,7 +10,7 @@ append content
         -courses.forEach(function (course) {
           -if(course._id.toString() === edition.course.toString()) {
             h3 
-              a(href="/editions/" + edition._id ) !{course.name}
+              a(href="/admin/editions/" + edition._id ) !{course.name}
           -}
         -})
 
@@ -32,4 +32,6 @@ append content
           -})
     -})
  
-  a(href="/editions/new").btn.btn-info New Edition
+  a(href="/admin/editions/new").btn.btn-info New Edition
+
+  

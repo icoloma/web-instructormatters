@@ -1,0 +1,58 @@
+<html>
+<body>
+
+  <div class="main"></div>
+
+  <script src="lib/test.js"></script>
+  <script src="lib/require.js"></script>
+  
+  <script>
+  define('editview-test', 
+    [ 'certificates/editview', 'certificates/model', 'edition/model' ], 
+    function(EditView, CertificateModel, EditionModel ) {
+
+      // Create Stubs
+      var certificate = {
+        uuid: 'cert-1',
+        name: 'studentName',
+        email:'studentName@company.com',
+        company: 'Students of the world inc.',
+        edition : 'uuid-1'
+      }
+
+      , edition = {
+        uuid: 'uudi-1',
+        venue: 'some location',
+        date: '2012/10/01'
+      }
+
+      , user = {
+        name: 'some user',
+        email: 'someone@company.org'
+      }
+
+      , course = {
+        name: 'HTML 5',
+        duration : '3 days'
+      }
+
+      // Create view
+      , view = new EditView({
+        model: new CertificateModel({
+          urlRoot: '/certificates',
+          model: certificate,
+          edition: new EditionModel({
+            model: edition,
+            user: new B.Model(user),
+            course: new B.Model(course)
+          })
+        }),
+        el: $('.main')
+      });
+
+      // render it
+      view.render();
+  });
+  </script>
+</body>
+</html>

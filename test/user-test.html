@@ -1,0 +1,36 @@
+<html>
+<body>
+
+  <div class="messages-container"></div>
+  <div class="main"></div>
+
+  <script src="lib/test.js"></script>
+  <script src="lib/require.js"></script> 
+ 
+  <script>
+  define('editview-test', 
+    [ 'users/courseview', 'courses/coursemodel' ], 
+    function(CourseView, CourseModel) {
+
+      // Create Stub
+      var course = {
+        id: '123',
+        name: 'HTML 5',
+        duration : '3 days',
+        description : "Learnig HTML5 and CCS3"
+      }
+
+      // Create view
+      , view = new CourseView({
+          model: new CourseModel(course),
+
+          el: $('.main')
+      });
+
+      // render it
+      view.model.urlRoot='/test/courses-test.html';
+      view.render();
+  });
+  </script>
+</body>
+</html>

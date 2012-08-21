@@ -2,7 +2,7 @@ define([ 'core' ], function() {
   
   return Backbone.Model.extend({
     
-    urlRoot : '/courses',
+    urlRoot : '/admin/courses',
    
   })
 

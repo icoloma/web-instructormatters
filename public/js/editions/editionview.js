@@ -4,7 +4,7 @@ define([ 'core', 'backbone', 'hbs!./editionview' ],
     return Backbone.View.extend({
 
       events: {
-        'click #delete' : 'delete',
+        'click .delete' : 'delete',
         'click #list' : 'list',
         'submit form': 'save',
         'change input': function(e) {
@@ -22,21 +22,24 @@ define([ 'core', 'backbone', 'hbs!./editionview' ],
       },
 
       render: function() {
-        var edition = this.model.edition;
+        var json = this.model.toJSON();
         this.$el.html( template( {
-            edition: this.model.toJSON(),
-            instructors : this.options.instructors,
-            courses : this.options.courses,
-          })); 
+          edition: this.model.toJSON(),
+          instructors : this.options.instructors,
+          courses : this.options.courses,
+          certificates : this.options.certificates
+        })); 
+        this.$("select[name=course]").val(json.course);
+        this.$("select[name=instructor]").val(json.instructor);
       },
 
-      
-      save: function(e) {
-        var self = this;
+      save: function() {
         this.model.save({}, {
+
+          context: this,
          
           success: function(resp, status, xhr) {
-            window.location = self.model.url()  + "?code=updated";
+            window.location = this.model.url()  + "?code=updated";
           },
 
           error: function(resp, status, xhr){
@@ -49,21 +52,18 @@ define([ 'core', 'backbone', 'hbs!./editionview' ],
             }
           }
         });
-        e.preventDefault();
       },
 
-     
-      delete: function(e){
-        var self=this;
+      delete: function(){
         this.model.destroy({
-          success: function(resp, status, xhr) {
-            window.location=self.model.urlRoot+ "?code=deleted";;
-          },
+          context: this,
+          success: function() {
+            location.href = this.model.urlRoot+ "?code=deleted";;
+          }/*,
           error: function(resp, status, xhr){
             Core.renderMessage({ level:'error', message:status.statusText});
-          }
+          }*/
         });
-        e.preventDefault();
       }
 
     })

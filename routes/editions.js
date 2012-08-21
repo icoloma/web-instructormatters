@@ -78,17 +78,22 @@ exports.view = function (req, res) {
                 .select('name')
                 .sort('name','ascending')
                 .exec(cb)
+            }, function (cb) {
+              models.Certificates
+                .find({deleted: false })
+                .exec(cb)
             }], function (err, results) {
                 // TODO: error handling
                 if (err){
-                  console.log(error);
+                  console.log(err);
                   res.send(500,err.message);
                 } else {
                   res.render('admin/edition', {
                     title: 'Edition',
                     edition: item,
+                    courses: results[0],
                     instructors: results[1],
-                    courses: results[0]
+                    certificates: results[2]
                   });
                 }
             });

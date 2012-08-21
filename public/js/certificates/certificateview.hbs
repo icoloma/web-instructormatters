@@ -1,0 +1,30 @@
+<form class="well">
+
+  <p><span>Course: </span>{{course.name}}
+  <p><span>Venue: </span>{{edition.venue}}
+  <p><span>Date: </span>{{edition.date}}
+  <p><span>Instructor: </span>{{instructor.name}}
+
+  <p>
+
+  <label>Name: </label>
+  <input name="name" type="text" value="{{certificate.name}}" required>
+
+  <label>e-mail: </label>
+  <input name="email" type="text" value="{{certificate.email}}" required>
+  
+  <label>Company: </label>
+  <input name="company" type="text" value="{{certificate.company}}">
+
+  <p>
+    <input type="submit" class="btn btn-primary" value="Save" />
+
+
+  {{#if certificate.id }}
+    <a id="delete"user class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
+  {{/if}}
+
+  <a id="list"user class="btn"><i class="icon-list"></i> List</a>
+  
+</form>
+

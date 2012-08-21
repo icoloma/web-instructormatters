@@ -7,6 +7,7 @@ append content
  
   .main  
 
+ 
 append scripts
   script 
     define('editview', 
@@ -18,6 +19,7 @@ append scripts
           model: new EditionModel(!{JSON.stringify(edition)}),
           instructors : !{JSON.stringify(instructors)},
           courses : !{JSON.stringify(courses)},
+          certificates : !{JSON.stringify(certificates)}, 
           el: $('.main')
         });
 

@@ -10,7 +10,7 @@ var CertificateSchema = new mongoose.Schema({
   email: {type: String, required: true},
   uuid: {type: String, required: true},
   company: String,
-  edition: {type: ObjectId, ref: 'Editions'},
+  edition: {type: ObjectId, ref: 'Editions', required: true},
   deleted: {type: Boolean, default: false},
 }, {strict: true});
 
@@ -19,10 +19,12 @@ var Certificates = mongoose.model('Certificates', CertificateSchema);
 
 Certificates.prototype.toJSON = function(){
   return {
+    id: this._id,
     name: this.name,
     email: this.email,
     uuid: this.uuid,
     company: this.company,
+    edition: this.edition
     // edition: {type: ObjectId, ref: 'Editions'},
   }
 };

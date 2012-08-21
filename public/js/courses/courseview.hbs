@@ -1,7 +1,7 @@
 <form class="well">
 
   <label>Course name: </label>
-  <input name="name" type="text" value="{{course.name}}" required="required">
+  <input name="name" type="text" value="{{course.name}}" required>
  
   <label>Duration: </label>
   <input name="duration" type="text" value="{{course.duration}}">
@@ -13,10 +13,10 @@
     <input type="submit" class="btn btn-primary" value="Save" />
 
   {{#if course.id}}
-    <a class="btn btn-danger" href="#" id="delete"><i class="icon-trash icon-white"></i> Delete</a>
+    <a class="btn btn-danger"user id="delete"><i class="icon-trash icon-white"></i> Delete</a>
   {{/if}}
 
-  <a id="list" href="#" class="btn"><i class="icon-list"></i> List</a>
+  <a id="list"user class="btn"><i class="icon-list"></i> List</a>
   
   
 </form>

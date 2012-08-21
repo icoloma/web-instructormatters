@@ -1,8 +1,8 @@
 <form class="well">
 
   <label>Course: </label>
-  <select name="course" required="true">
-    <option value="">--</option>
+  <select name="course" required>
+    <option value="" disabled>--</option>
     {{#courses}}
       <option value="{{this.id}}">{{this.name}}</option>
     {{/courses}}
@@ -10,14 +10,14 @@
 
 
   <label>Venue: </label>
-  <input name="venue" type="text" value="{{edition.venue}}" required="required">
+  <input name="venue" type="text" value="{{edition.venue}}" required>
 
   <label>Date: </label>
-  <input name="date" type="date" value="{{edition.date}}" required="required" autocomplete="off" placeholder="yyyy-mm-dd">
+  <input name="date" type="date" value="{{edition.date}}" required autocomplete="off" placeholder="yyyy-mm-dd">
  
   <label>Instructor: </label>
-  <select name="instructor" required="true">
-    <option value="">--</option>
+  <select name="instructor" required>
+    <option value="" disabled>--</option>
     {{#instructors}}
       <option value="{{this.id}}" >{{this.name}}</option>
     {{/instructors}}
@@ -28,13 +28,24 @@
 
 
   {{#if edition.id }}
-    <a id="delete" href="#" class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
+    <a class="btn btn-danger delete" ><i class="icon-trash icon-white"></i> Delete</a>
   {{/if}}
 
-  <a id="list" href="#" class="btn"><i class="icon-list"></i> List</a>
+  <a id="list"user class="btn"><i class="icon-list"></i> List</a>
   
 </form>
-<script>
-  $("select[name=course] option[value={{edition.course}}]").attr("selected", true);
-  $("select[name=instructor] option[value={{edition.instructor}}]").attr("selected", true);
-</script>
+
+{{#if edition.id }}
+<a id="new" href="/admin/editions/{{edition.id}}/certificates/new" class="btn btn-primary"><i class="icon-file icon-white"></i> New Certificate</a>
+{{/if}}
+
+
+{{#if certificates}}
+  <ul>
+   {{#certificates}}
+      <li><a href="/admin/editions/{{this.edition}}/certificates/{{this.id}}">{{this.name}} - {{this.email}}</a></li>
+    {{/certificates}}
+  </ul>
+
+{{/if}}
+

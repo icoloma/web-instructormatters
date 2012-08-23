@@ -5,16 +5,12 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
 
       events: {
         'click #delete' : 'delete',
-        'click #list' : 'list',
+        'click .cancel' :  function(e) { location.href = '/courses/' + this.model.get('uuid');},
         'submit form': 'save',
         'change input': function(e) {
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
         }
-      },
-
-      list : function() {
-        window.location = this.model.urlRoot ;
       },
 
       render: function() {
@@ -26,11 +22,11 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
 
       
       save: function(e) {
-        var self = this;
+        var self = this;       
         this.model.save({}, {
-         
+
           success: function(resp, status, xhr) {
-            window.location = self.model.url()  + "?code=updated";
+            window.location = '/courses/' + self.model.attributes.uuid  + "?code=updated";
           },
 
           error: function(resp, status, xhr){
@@ -51,7 +47,7 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
         var self=this;
         this.model.destroy({
           success: function(resp, status, xhr) {
-            window.location=self.model.urlRoot+ "?code=deleted";;
+            window.location= "/courses/?code=deleted";;
           },
           error: function(resp, status, xhr){
             Core.renderMessage({ level:'error', message:status.statusText});

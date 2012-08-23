@@ -1,0 +1,32 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+ 
+  .main  
+    p 
+      span Name:
+      | !{course.name}
+    p 
+      span Description:
+      | !{course.description}
+    p 
+      span Duration:
+      | !{course.duration}
+
+     a(href="/admin/courses/" + course.id ).btn.btn-primary Edit
+     a(href="/courses/").btn
+      i.icon-list 
+      &nbsp;List
+
+    ul
+    -editions.forEach(function (edition) {
+      li  
+        a(href='/courses/' + course.uuid + '/editions/' + edition.id ) !{edition.date} - !{edition.venue}
+            
+    -})
+     a(href="/admin/courses/" + course.id + "/editions/new").btn.btn-primary Add Edition
+    
+
+   

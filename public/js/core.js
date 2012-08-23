@@ -1,5 +1,5 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootstrap_alert', 'lib/messages', 'hbs!./lib/message'], 
-  function($, _, Backbone, BootstrapAlert, Messages, messageTmpl) {
+  function($, _, _unused, BootstrapAlert, Messages, messageTmpl) {
   
   window.B = Backbone;
 

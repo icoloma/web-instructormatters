@@ -1,9 +1,11 @@
 
 var models = require('../db/models');
 
+
+
 /*
   Listado de todas las ediciones
-*/
+
 exports.list =  function (req, res) {
   models.Editions
     .find({deleted: false})
@@ -52,9 +54,10 @@ exports.list =  function (req, res) {
       }
     )
 };
+*/
 
 /*
-* Mostrar una ediciones
+* Mostrar una edicion (admin)
 */
 exports.view = function (req, res) {
   models.Editions.findById(req.params.id, function (err, item) {
@@ -65,37 +68,77 @@ exports.view = function (req, res) {
     } else {
       res.format({
         html: function () {
+
           async.parallel([
             function (cb) {
+              // Recuperamos el curso asociado
               models.Courses
-                .find({deleted: false})
-                .select('name')
-                .sort('name','ascending')
-                .exec(cb)
+               .findById(item.course)
+               .exec(cb)
             }, function (cb) {
+              // Recuperamos todos los instructores
               models.Users
                 .find({deleted: false})
-                .select('name')
+                .select('name') 
                 .sort('name','ascending')
                 .exec(cb)
+            }], function (err, results) {
+              // TODO: error handling
+              // Mostramos
+              res.render('admin/edition', {
+                title: 'Edition',
+                edition: item,
+                instructors: results[1],
+                course: results[0]
+              });
+          });
+        },
+        json: function(){
+          res.json(item);
+        }
+      });
+    };
+  });
+};
+
+/*
+* Mostrar una edicion (public)
+*/
+exports.showDetails = function (req, res) {
+  models.Editions.findById(req.params.id, function (err, item) {
+    if(err) {
+      res.send(500, err.message)
+    } else if(!item || (item && item.deleted)) {
+      res.send(404);
+    } else {
+      res.format({
+        html: function () {
+          async.parallel([
+            function (cb) {
+              // recuperamos el curso asociado
+              models.Courses
+                .findById(item.course)
+                .exec(cb)
             }, function (cb) {
-              models.Certificates
-                .find({deleted: false })
+              // recuperamos el instructor
+              models.Users
+                .findById(item.instructor)
                 .exec(cb)
             }], function (err, results) {
-                // TODO: error handling
-                if (err){
-                  console.log(err);
-                  res.send(500,err.message);
-                } else {
-                  res.render('admin/edition', {
-                    title: 'Edition',
-                    edition: item,
-                    courses: results[0],
-                    instructors: results[1],
-                    certificates: results[2]
-                  });
-                }
+              // Mostramos 
+              // TODO: error handling
+              if (err){
+                console.log(err);
+                res.send(500,err.message);
+              } else {
+                var edition = item.toJSON();
+                res.render('public/edition', {
+                  title: 'Course Edition',
+                  edition: edition,
+                  course: results[0],
+                  instructor: results[1]
+                });
+              }
             });
 
         },
@@ -112,12 +155,12 @@ exports.view = function (req, res) {
   Añadir edición - ventana 
 */
 exports.add = function(req,res){
+  console.log("foo");
   async.parallel([
     function (cb) {
       models.Courses
-        .find({deleted: false})
+        .find({deleted:false, _id:req.params.idCourse})
         .select('name')
-        .sort('name','ascending')
         .exec(cb)
     }, function (cb) {
       models.Users
@@ -126,13 +169,15 @@ exports.add = function(req,res){
         .sort('name','ascending')
         .exec(cb)
     }], function (err, results) {
-        //error handling
-          res.render('admin/edition', {
-            title: 'Edition',
-            edition: {},
-            instructors: results[1],
-            courses: results[0]
-          });
+      //error handling
+      var defaultCourse = results[0][0];
+      var defaultInstructor = results[1][0];
+      res.render('admin/edition', {
+        title: 'Edition',
+        edition: { instructor: defaultInstructor.id, course: defaultCourse.id},
+        instructors: results[1],
+        course: defaultCourse
+      });
     });
 };
 
@@ -144,17 +189,56 @@ exports.add = function(req,res){
     if (!req.accepts('application/json')){
       res.send(406);  //  Not Acceptable
     }
-    var edition = new models.Editions(req.body);
-    edition.save(function (err) {
-      if(err) {
-        console.log(err);
-        res.send(500, err.message);
-      } else {
-        res.header('location',  req.url + '/' + this.emitted.complete[0]._id);
-        res.send(201);
+    var json = req.body;
+    var certificates = json.certificates;
+    delete json.certificates;
+    var edition = new models.Editions(json);
 
-      }
-    });
+    async.parallel([
+
+        function(cb){
+          // Necesitamos recuperar el curso para luego redirigir mediante el uuid
+          models.Courses
+            .findById(edition.course)
+            .exec(cb);
+        },
+
+        function(cb){
+          // Guardamos
+          edition.save(function (err) {
+            if(err) {
+              console.log(err);
+              res.send(500, err.message);
+            } else {
+              cb(err, this.emitted.complete[0]);
+            }
+          });
+        }],
+
+        function(err, results){
+          // Redirigimos a la URL pública
+          var course = results[0];
+          var edition = results[1];
+          res.header('location',  '/courses/' + course.uuid + '/editions/' + edition.id);
+          res.send(201);
+        }
+      );
+
+
+/*
+        for (i in certificates) {
+          var certificate = new models.Certificates(certificates[i]);
+          certificate.edition = edition._id;
+          certificate.uuid=  UUID.genV4();
+          certificate.save(function (err) {
+            if(err) {
+              console.log(err);
+              
+            } 
+          });
+        }
+*/  
+
   };
 
 
@@ -182,16 +266,33 @@ exports.add = function(req,res){
     if (!req.accepts('application/json')){
        res.send(406);  //  Not Acceptable
     }
-    console.log(JSON.stringify(req.body));
-    models.Editions.update({_id: req.params.id}, req.body, function (err, num) {
-      if(err) {
-        console.log(err);
-        res.send(500, err.message);
-      } else if(!num) {
-        res.send(404);   // not found
-      } else {
-        res.send(204);   // OK, no content
-      }
-    });
+   
+    async.parallel([
+      function(cb){
+        models.Courses
+            .findById(req.params.idCourse)
+            .exec(cb);
+      }, function(cb){
+        models.Editions
+          .update({_id: req.params.id}, req.body)
+          .exec(cb);
+
+      }],function(err, results){
+        var course = results[0];
+        var num = results[1];
+        if(err) {
+          console.log(err);
+          res.send(500, err.message);
+        } else if(!num) {
+          res.send(404);   // not found
+        } else {
+          res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.id);
+          res.send(204);   // OK, no content
+        }
+
+      });
+   
+      
+    
   };
 

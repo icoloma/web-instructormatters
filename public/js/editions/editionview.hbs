@@ -1,14 +1,9 @@
 <form class="well">
 
+
   <label>Course: </label>
-  <select name="course" required>
-    <option value="" disabled>--</option>
-    {{#courses}}
-      <option value="{{this.id}}">{{this.name}}</option>
-    {{/courses}}
-  </select>
-
-
+  <input type="text" value="{{course.name}}" disabled />
+  <input type="hidden" name="course" value="{{course.id}}"/>    
   <label>Venue: </label>
   <input name="venue" type="text" value="{{edition.venue}}" required>
 
@@ -17,7 +12,6 @@
  
   <label>Instructor: </label>
   <select name="instructor" required>
-    <option value="" disabled>--</option>
     {{#instructors}}
       <option value="{{this.id}}" >{{this.name}}</option>
     {{/instructors}}
@@ -31,21 +25,10 @@
     <a class="btn btn-danger delete" ><i class="icon-trash icon-white"></i> Delete</a>
   {{/if}}
 
-  <a id="list"user class="btn"><i class="icon-list"></i> List</a>
+  <a href="/courses/{{course.uuid}}/editions/{{edition.id}}" class="btn cancel"><i class="icon-remove"></i>Cancel</a>
   
 </form>
 
-{{#if edition.id }}
-<a id="new" href="/admin/editions/{{edition.id}}/certificates/new" class="btn btn-primary"><i class="icon-file icon-white"></i> New Certificate</a>
-{{/if}}
+<a class="btn btn-primary addCertificate"><i class="icon-file icon-white"></i> New Certificate</a>
 
-
-{{#if certificates}}
-  <ul>
-   {{#certificates}}
-      <li><a href="/admin/editions/{{this.edition}}/certificates/{{this.id}}">{{this.name}} - {{this.email}}</a></li>
-    {{/certificates}}
-  </ul>
-
-{{/if}}
-
+<div class="certificates"></div>

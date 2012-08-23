@@ -2,6 +2,13 @@
 
   <label>Course name: </label>
   <input name="name" type="text" value="{{course.name}}" required>
+
+  <label>Course uuid: </label>
+{{#if course.id  }}
+  <input name="uuid" type="text" value="{{course.uuid}}" disabled>
+{{else}}  
+  <input name="uuid" type="text" value="{{course.uuid}}" required>
+{{/if}}  
  
   <label>Duration: </label>
   <input name="duration" type="text" value="{{course.duration}}">
@@ -16,7 +23,8 @@
     <a class="btn btn-danger"user id="delete"><i class="icon-trash icon-white"></i> Delete</a>
   {{/if}}
 
-  <a id="list"user class="btn"><i class="icon-list"></i> List</a>
-  
+{{#if course.id  }}
+  <a href="/courses/{{course.uuid}}" class="btn"><i class="icon-remove"></i> Cancel</a>
+{{/if}}    
   
 </form>

@@ -1,0 +1,34 @@
+
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+ 
+  .main  
+   .form-actions
+      
+      p
+        span Course:
+        | !{course.name}
+
+      p 
+        span Date: 
+        | !{edition.date}
+      
+      p
+        span Venue: 
+        | !{edition.venue}
+
+      p
+        span Instructor: 
+        | !{instructor.name} &nbsp;
+        a( ).btn.contact
+          i.icon-envelope
+          &nbsp;Contact
+
+      a( href='/admin/courses/' + course.id + '/editions/' + edition.id).btn.btn-primary Edit
+      a( href='/courses/' + course.uuid ).btn 
+        i.icon-remove 
+        &nbsp;Cancel
+

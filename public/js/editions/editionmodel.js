@@ -3,8 +3,6 @@ define([ 'core', 'certificates/certificatemodel' ],
 
   return Backbone.Model.extend({
 
-    urlRoot : '/admin/editions',
-
     initialize: function() {
       this.certificates = new Backbone.Collection(this.get('certificates'), {
         model: CertificateModel

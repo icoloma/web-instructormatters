@@ -1,24 +1,23 @@
-define([ 'core', 'backbone', 'hbs!./editionview' ], 
-  function(Core, B, template) {
+define([ 'core', 'certificates/certificatecollectionview', 'certificates/certificatemodel', 'hbs!./editionview' ], 
+  function(Core, CertificateCollectionView,CertificateModel, template) {
 
-    return Backbone.View.extend({
+    return B.View.extend({
 
       events: {
-        'click .delete' : 'delete',
-        'click #list' : 'list',
-        'submit form': 'save',
-        'change input': function(e) {
-          var $ct = $(e.currentTarget);
-          this.model.set($ct.attr('name'), $ct.val());
-        },
-        'change select': function(e) {
-          var $ct = $(e.currentTarget);
-          this.model.set($ct.attr('name'), $ct.val());
-        }
+        'click .delete'         : 'delete',
+        'submit form'           : 'save',
+        'click .cancel'         : 'cancel',
+        'click .addCertificate' : 'addCertificate',
+        'change input, select'  : 'onChange'
       },
 
-      list : function() {
-        window.location = this.model.urlRoot ;
+      onChange : function(e) {
+        var $ct = $(e.currentTarget);
+        this.model.set($ct.attr('name'), $ct.val());
+      },
+
+      cancel : function(e) { 
+        window.location = '/courses/' + this.options.course.uuid + '/editions/' + this.model.id;  
       },
 
       render: function() {
@@ -26,20 +25,33 @@ define([ 'core', 'backbone', 'hbs!./editionview' ],
         this.$el.html( template( {
           edition: this.model.toJSON(),
           instructors : this.options.instructors,
-          courses : this.options.courses,
+          course : this.options.course,
           certificates : this.options.certificates
         })); 
-        this.$("select[name=course]").val(json.course);
         this.$("select[name=instructor]").val(json.instructor);
+
+        // certificates
+        var certificatesView = new CertificateCollectionView({
+          collection: this.model.certificates,
+          el: this.$('.certificates')
+        }).render();
       },
 
-      save: function() {
+    
+      addCertificate : function(){
+        this.model.certificates.push( new CertificateModel({}));
+        this.render();
+      },
+
+      save: function(e) {
+        var self = this;
+        var editionUrl = this.$('.cancel')[0].href;
+
+        this.model.urlRoot = '/admin/courses/' + this.model.get('course') + '/editions';
         this.model.save({}, {
 
-          context: this,
-         
           success: function(resp, status, xhr) {
-            window.location = this.model.url()  + "?code=updated";
+            window.location = '/courses/' + self.options.course.uuid + '/editions/' + self.model.id  + "?code=updated";
           },
 
           error: function(resp, status, xhr){
@@ -52,17 +64,21 @@ define([ 'core', 'backbone', 'hbs!./editionview' ],
             }
           }
         });
+        e.preventDefault();
       },
 
-      delete: function(){
+      delete: function(){ 
+
+        var self = this;
+
+        this.model.urlRoot = '/admin/courses/' + this.model.get('course') + '/editions'
         this.model.destroy({
-          context: this,
           success: function() {
-            location.href = this.model.urlRoot+ "?code=deleted";;
-          }/*,
+            location.href = '/courses/'+ self.options.course.uuid + '?code=deleted';
+          },
           error: function(resp, status, xhr){
             Core.renderMessage({ level:'error', message:status.statusText});
-          }*/
+          }
         });
       }
 

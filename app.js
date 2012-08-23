@@ -6,6 +6,8 @@
 mongoose = require('mongoose'),
   async = require('async');
   _ = require('./public/js/lib/underscore');
+  UUID = require('./lib/uuid');
+
 
 var express = require('express')
   , routes = require('./routes')

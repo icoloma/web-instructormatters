@@ -1,40 +1,14 @@
 
 var models = require('../db/models');
 
-/*
-  Listado de todos los cursos
-*/
-exports.list =  function (req, res) {
-  models.Courses
-    .find({deleted: false})
-    .sort('name','ascending')
-    .exec( 
-      function (err, items) {
-        if(err) {
-          console.log(err);
-          res.send(500, err.message);
-        } else {
-          res.format({
-            html: function(){
-              res.render('admin/courses', {
-                title: 'Courses',
-                courses: items
-              });
-            },
-            json: function(){
-              res.json(items);
-            }
-          });
-        };
-      }
-    )
-};
 
 /*
-  Mostrar un curso
+  Mostrar un curso (edicion)
 */
 exports.view = function (req, res) {
-  models.Courses.findById(req.params.id, function (err, item) {
+  models.Courses
+  .findById(req.params.id)
+  .exec(function (err, item) {
     if(err) {
       console.log(err);
       res.send(500, err.message)
@@ -44,8 +18,8 @@ exports.view = function (req, res) {
       res.format({
         html: function(){
           res.render('admin/course', {
-            title: 'Course ' + item.name,
-            course: item.toJSON()
+            title: 'Course',
+            course: item
           });
         },
         json: function(){
@@ -54,7 +28,100 @@ exports.view = function (req, res) {
       });
     };
   });
+}
+
+
+
+/*
+  Mostrar un curso (public)
+*/
+exports.showDetails = function (req, res) {
+  findCourseByUUID(req.params.uuid, res, function(items){
+    var course = items[0];
+    res.format({
+            html: function(){
+               async.parallel(
+                [function (cb) {
+                   models.Editions
+                    .find({deleted: false, course:course.id})
+                    .sort('date','ascending')
+                    .exec(cb);
+                }],
+               function( err, results){
+                  var editions = results[0];
+                  res.render('public/course', {
+                    title: 'Course',
+                    course: course,
+                    editions: editions
+                  });
+                }
+              );
+            },
+            json: function(){
+              res.json(course);
+            }
+          });
+  });
 };
+
+/*
+  Búsqueda de un curso
+  Gestiona el envío de errores 404 y los 500
+*/
+function findCourseByUUID(uuid, res, callback ){
+  models.Courses
+  .find({uuid:uuid, deleted:false})
+  .exec(function (err, item) {
+    if(err) {
+      console.log(err);
+      res.send(500, err.message)
+    } else if(!item || (item && item.deleted)) {
+      res.send(404);
+    } else {
+      callback(item);
+    };
+  });
+}
+
+
+/*
+  Listado de todos los cursos
+*/
+exports.list =  function (req, res) {
+
+  findAllCourses(res, function(items){
+    res.format({
+      html: function(){
+        res.render('public/courses', {
+          title: 'Courses',
+          courses: items
+        });
+      },
+      json: function(){
+        res.json(items);
+      }
+    });
+  });
+};
+
+/*
+  Búsqueda de todos los cursos
+  Gestiona el envío de errores 404 y los 500
+*/
+function findAllCourses( res, callback ){
+  models.Courses
+  .find({ deleted:false})
+  .sort('name','ascending')
+  .exec(function (err, items) {
+    if(err) {
+      console.log(err);
+      res.send(500, err.message)
+    } else {
+      callback(items);
+    };
+  });
+}
+
 
 /*
   Añadir curso - ventana 
@@ -80,7 +147,7 @@ exports.add = function(req,res){
         console.log(err);
         res.send(500, err.message);
       } else {
-        res.header('location',  req.url + '/' + this.emitted.complete[0]._id);
+        res.header('location',  '/courses/'+  course.uuid);
         res.send(201);
 
       }

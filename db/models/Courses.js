@@ -5,6 +5,7 @@
 */
 
 var CourseSchema = new mongoose.Schema({
+  uuid: {type: String, required: true },
   name: {type: String, required: true},
   duration: String, 
   deleted: {type: Boolean, default: false},   // private field
@@ -17,6 +18,7 @@ var Courses = mongoose.model('Courses', CourseSchema);
 Courses.prototype.toJSON = function(){
   return {
     id: this._id,
+    uuid: this.uuid,
     name: this.name,
     duration: this.duration,
     description: this.description

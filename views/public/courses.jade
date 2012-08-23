@@ -1,0 +1,18 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+  
+  a(href="/admin/courses/new").btn.btn-info New Course
+   
+  ul
+    -courses.forEach(function (course) {
+      li
+        h3
+          a(href="/courses/" + course.uuid ) !{course.name}
+            
+    -})
+
+
+

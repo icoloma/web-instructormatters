@@ -1,113 +1,220 @@
 
 var models = require('../db/models');
+var Pdfkit = require('pdfkit');
+var fs = require('fs');
+
+/*
+* Mostrar un certificado 
+*/
+exports.view = function (req, res) {
+  models.Certificates
+    .findOne({uuid:req.params.uuid, deleted:false})
+    .exec(function (err, certificate) {
+      if(err) {
+        res.send(500, err.message)
+      } else if(!certificate || (certificate && certificate.deleted)) {
+        res.send(404);
+      } else {
+        res.format({
+          html: function () {
+
+            models.Editions.findById(certificate.edition, function (err, edition) {
+
+               async.parallel([
+
+                function (cb) {
+                  // find Course
+                  models.Courses.findOne({uuid:edition.courseUUID, deleted:false}, cb);
+                }, function (cb) {
+                  // find instructor
+                  models.Users.findById(edition.instructor, cb);
+                }], function (err, results) {
+                  // TODO: error handling
+                  res.render('public/certificate', {
+                    title: 'Certificate of training',
+                    certificate: certificate,
+                    edition :edition,
+                    course: results[0],
+                    instructor: results[1]
+                  });
+                });
+              });
+          },
+          json: function(){
+            res.json(certificate);
+          }
+        });
+      };
+    });
+};
 
 
 /*
-  Añadir edición - ventana 
+* Certificados de una edición en concreto
 */
-exports.add = function(req,res){
-  models.Editions.findById(req.params.idEdition, function (err, edition) {
-
-   async.parallel([
-
-    function (cb) {
-      // find Course
-      models.Courses.findById(edition.course, cb);
-    }, function (cb) {
-      // find instructor
-      models.Users.findById(edition.instructor, cb);
-    }], function (err, results) {
-      // TODO: error handling
-    
-      res.render('admin/certificate', {
-        title: 'Certificate',
-        certificate: {},
-        edition :edition,
-        course: results[0],
-        instructor: results[1]
-      });
-
+exports.list = function (req, res) {
+  models.Certificates
+    .find({edition:req.params.id, deleted:false})
+    .exec(function (err, items) {
+      if(err) {
+        res.send(500, err.message)
+      } else {
+        res.format({
+          json: function(){
+            res.json(items);
+          }
+        });
+      };
     });
-  });
 };
 
 /**
-  Crear Certificado
+  Crear/Actualizar Certificado
 */
-  exports.create =  function (req, res) {
+  exports.save =  function (req, res) {
+
+    req.setEncoding('utf8');
 
     if (!req.accepts('application/json')){
       res.send(406);  //  Not Acceptable
     }
-    var certificate = new models.Certificates(req.body);
-    
-    // TODO: Generar un uuid automáticamente
-    certificate.uuid = "1";
-    certificate.edition =  /.*\/editions\/(.*)\/certificates.*/.exec(req.url)[1];
 
-    certificate.save(function (err) {
-      if(err) {
-        console.log(err);
-        res.send(500, err.message);
-      } else {
-        res.header('location',  req.url + '/' + this.emitted.complete[0]._id);
+     //TODO: Comprobar que el estado es NEW, si no es así, devolver un código de error
+
+       
+    var certificates = req.body;
+
+    async.forEachSeries( certificates, 
+      function(certificate, callback){
+        if (certificate.id){
+          // update
+          models.Certificates
+          .update({_id: certificate.id}, certificate)
+          .exec(callback);
+        } else {
+          // create
+          var certificate = new models.Certificates(certificate);
+          certificate.edition =  req.params.id;
+          certificate.uuid =  UUID.genV4();
+          certificate.save(function (err) {
+            callback(err);
+          });
+
+        }
+
+      },
+      function(err, num) {
+        if (err) {
+          console.log(err);
+          res.send(500, err.message);
+          return;  
+        }
+        res.header('location',  '/courses/' + req.params.uuid + '/editions/' + req.params.id );
         res.send(201);
-
-      }
+       
     });
   };
 
+  exports.del = function (req, res) {
+    models.Certificates.update({_id: req.params.id}, {deleted: true}, function (err, num) {
+      if(err) {
+        console.log(err);
+        res.send(500, err.message);
+        return;
+      } 
+      if(!num) {
+        res.send(404);  // not found
+        return;
+      } 
+      res.send(204);  // OK, no content
+    });
+      
+  }
 
-  /*
-* Mostrar un certificado
-*/
-exports.view = function (req, res) {
-  models.Certificates.findById(req.params.id, function (err, item) {
-    if(err) {
-      res.send(500, err.message)
-    } else if(!item || (item && item.deleted)) {
-      res.send(404);
-    } else {
-      res.format({
-        html: function () {
-
-          models.Editions.findById(req.params.idEdition, function (err, edition) {
-
-             async.parallel([
-
-              function (cb) {
-                // find Course
-                models.Courses.findById(edition.course, cb);
-              }, function (cb) {
-                // find instructor
-                models.Users.findById(edition.instructor, cb);
-              }, function (cb) {
-                // find certificates
-                models.Certificates
-                  .find({edition: edition})
-                  .exec(cb);
-              }], function (err, results) {
+  exports.pdf = function( req, resp ){
+     
+    var filename = 'certificates/' + req.params.uuid + '.pdf';
+    
+    try {
+      fs.statSync(filename);
+      resp.sendfile(filename);
+      return;
+    } catch(err){
+      if (err.code ==='ENOENT'){
+        async.parallel([
+          function(callback){
+            // recuperamos el certificado
+            models.Certificates
+              .findOne({uuid:req.params.uuid, deleted:false})
+              .exec(function (err, certificate) {
                 // TODO: error handling
+                models.Editions.findById(certificate.edition, function (err, edition) {
+                  async.parallel([
+                    function (cb) {
+                      // find Course
+                      models.Courses.findOne({uuid:edition.courseUUID, deleted:false}, cb);
+                    }, function (cb) {
+                      // find instructor
+                      models.Users.findById(edition.instructor, cb);
+                    }], function (err, results) {
+                      // TODO: error handling
+                      var course = results[0];
+                      var instructor = results[1];
+                      this.generatePDF( certificate, edition, course, instructor, callback);
 
-                console.log(results);
-              
-                res.render('admin/certificate', {
-                  title: 'Certificate',
-                  certificate: item,
-                  edition :edition,
-                  course: results[0],
-                  instructor: results[1],
-                  certificates: results[2]
+                    });
                 });
-
               });
-            });
-        },
-        json: function(){
-          res.json(item);
-        }
-      });
-    };
-  });
-};
+          }
+
+        ], function(err,results){
+          if (!err){
+            resp.sendfile(filename);
+          } else{
+            resp.send(500,err);
+          }
+
+        });
+     
+      } else {
+        resp.send(500,err);
+      }
+    }
+
+
+  },
+
+  generatePDF = function (certificate, edition, course, instructor, callback){
+    var urlCertificate = 'http://instructormatters.com/certificates/' + certificate.uuid;
+    var urlCourse = 'http://instructormatters.com/courses/' + course.uuid;
+    var doc = new Pdfkit({layout:'landscape'});
+
+    //Register a font name for use later
+    doc.registerFont('Palatino', 'fonts/PalatinoBold.ttf');
+
+    doc
+      .font('Palatino')
+      .fontSize(15)
+      .text('This is to certify that', 100, 100)
+      .fontSize(25)
+      .text(certificate.name)
+      .moveDown()
+      .fontSize(15)
+      .text('is herby recongized for having succesfully completed ')
+      .fontSize(25)
+      .text(course.name)
+      .moveDown()
+      .fontSize(15)
+      .text('Instructor: ' + instructor.name)
+      .text('Location  : ' + edition.venue)
+      .text('Date      : ' + edition.date)
+      .text('Duration  : ' + course.duration)
+      .text('URL       : ' + urlCourse)  
+      .fontSize(15)
+      .moveDown()
+      .moveDown()
+      .text(urlCertificate)
+      .write('certificates/' + certificate.uuid + '.pdf', callback);
+  }
+
 

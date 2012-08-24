@@ -5,8 +5,8 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
 
       events: {
         'click #delete' : 'delete',
-        'click .cancel' :  function(e) { location.href = '/courses/' + this.model.get('uuid');},
         'submit form': 'save',
+        'click .cancel' :  function(e) { location.href = this.model.url() },
         'change input': function(e) {
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
@@ -22,11 +22,11 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
 
       
       save: function(e) {
-        var self = this;       
+      
         this.model.save({}, {
 
           success: function(resp, status, xhr) {
-            window.location = '/courses/' + self.model.attributes.uuid  + "?code=updated";
+            window.location =  resp.url() + "?code=updated";
           },
 
           error: function(resp, status, xhr){
@@ -39,6 +39,7 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
             }
           }
         });
+
         e.preventDefault();
       },
 

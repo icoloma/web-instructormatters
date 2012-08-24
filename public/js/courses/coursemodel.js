@@ -2,7 +2,8 @@ define([ 'core' ], function() {
   
   return Backbone.Model.extend({
     
-    urlRoot : '/admin/courses',
+    urlRoot : '/courses',
+    idAttribute : 'uuid'
    
   })
 

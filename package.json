@@ -12,7 +12,9 @@
     "mongoose": "*",
     "passport": "*",
     "node-minify": "*",
-    "async": "*"
+    "async": "*",
+    "fs": "*",
+    "pdfkit": "*"
   },
 
    "devDependencies": {

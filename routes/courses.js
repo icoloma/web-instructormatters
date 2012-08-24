@@ -6,27 +6,19 @@ var models = require('../db/models');
   Mostrar un curso (edicion)
 */
 exports.view = function (req, res) {
-  models.Courses
-  .findById(req.params.id)
-  .exec(function (err, item) {
-    if(err) {
-      console.log(err);
-      res.send(500, err.message)
-    } else if(!item || (item && item.deleted)) {
-      res.send(404);
-    } else {
-      res.format({
+  findCourseByUUID(req.params.uuid, res, function(items){
+    var course = items[0];
+    res.format({
         html: function(){
           res.render('admin/course', {
             title: 'Course',
-            course: item
+            course: course
           });
         },
         json: function(){
-          res.json(item);
+          res.json(course);
         }
-      });
-    };
+    });
   });
 }
 
@@ -43,7 +35,7 @@ exports.showDetails = function (req, res) {
                async.parallel(
                 [function (cb) {
                    models.Editions
-                    .find({deleted: false, course:course.id})
+                    .find({deleted: false, courseUUID:course.uuid})
                     .sort('date','ascending')
                     .exec(cb);
                 }],
@@ -135,57 +127,61 @@ exports.add = function(req,res){
 
 
 /**
-  Crear curso
+  Crear/Actualizar un curso
+  Hack: backbone siempre interpretará las inserciones como actualizaciones  (simpre existe uuid) y por tanto
+  siempre hará un PUT a /courses/:uuid. 
+  Hay que distinguir en el lado servidor cuando es inserción y cuando actualización
 */
-  exports.create =  function (req, res) {
-    if (!req.accepts('application/json')){
-      res.send(406);  //  Not Acceptable
-    }
-    var course = new models.Courses(req.body);
-    course.save(function (err) {
-      if(err) {
-        console.log(err);
-        res.send(500, err.message);
-      } else {
-        res.header('location',  '/courses/'+  course.uuid);
-        res.send(201);
-
-      }
-    });
-  };
-
-
-/**
-  Actualizar un curso
-*/
-  exports.update = function (req, res) {
+  exports.save = function (req, res) {
     if (!req.accepts('application/json')){
        res.send(406);  //  Not Acceptable
+       return;
     }
-    models.Courses.update({_id: req.params.id}, req.body, function (err, num) {
-      if(err) {
-        console.log(err);
-        res.send(500, err.message);
-      } else if(!num) {
-        res.send(404);   // not found
-      } else {
-        res.send(204);   // OK, no content
-      }
-    });
-  };
+
+    var json = req.body;
+
+    if (!json.id) {
+      // Inserción 
+      var course = new models.Courses(json);
+      course.save(function (err) {
+        if(err) {
+          console.log(err);
+          res.send(500, err.message);
+        } else {
+          res.header('location',  '/courses/'+  course.uuid);
+          res.send(201);
+        }
+      });
+    } else {
+      // actualizamos
+      models.Courses.update({uuid: req.params.uuid}, json, function (err, num) {
+        if(err) {
+          console.log(err);
+          res.send(500, err.message);
+        } else if(!num) {
+          res.send(404);   // not found
+        } else {
+          res.send(204);   // OK, no content
+        }
+      });
+    }
+ };
 
   /**
     Eliminar un curso
   */
   exports.del = function (req, res) {
-    models.Courses.update({_id: req.params.id}, {deleted: true}, function (err, num) {{
+    models.Courses.update({uuid: req.params.uuid}, {deleted: true}, function (err, num) {{
       if(err) {
         console.log(err);
         res.send(500, err.message);
-      } else if(!num) {
+        return;
+      } 
+      if(!num) {
         res.send(404);  // not found
-      } else {
-        res.send(204);  // OK, no content
-      }
+        return;
+      } 
+      res.send(204);  // OK, no content
+      
     }});
   };

@@ -7,7 +7,7 @@ append content
  
   .main  
    .form-actions
-      
+
       p
         span Course:
         | !{course.name}
@@ -27,8 +27,88 @@ append content
           i.icon-envelope
           &nbsp;Contact
 
-      a( href='/admin/courses/' + course.id + '/editions/' + edition.id).btn.btn-primary Edit
-      a( href='/courses/' + course.uuid ).btn 
-        i.icon-remove 
-        &nbsp;Cancel
+      p
+        span State:
+        | !{edition.state}
 
+      p
+        if (edition.state ==  'NEW')
+          a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn.btn-primary Edit
+       
+        a( href='/courses/' + course.uuid ).btn 
+          i.icon-remove 
+          &nbsp;Cancel
+
+
+
+      
+    .certificates
+
+  
+append scripts
+  if (edition.state =='NEW')
+    //- Edición de certificados
+    script 
+      define('editview', 
+        [ 'certificates/certificatemodel', 'certificates/certificatecollectionview',  'jquery' ], 
+
+          function(CertificateModel, CertificateCollectionView) {
+          
+            var CertificateCollection = Backbone.Collection.extend({
+              model: CertificateModel,
+              url   : '/courses/!{course.uuid}/editions/!{edition.id}/certificates'
+            });
+
+           var certificates = new CertificateCollection();
+
+           certificates.fetch({ 
+              success: function(collection, response){
+
+               
+                  new CertificateCollectionView({
+                    collection: collection,
+                    edition : '!{edition.id}',
+                    courseUUID : '!{course.uuid}',
+                    el: this.$('.certificates')
+                  }).render();
+
+
+
+                
+              },
+
+              error: function(){
+                alert("Error loading certificates");
+              }
+            });
+      });
+  else
+    //- Modo solo lectura
+    script
+      define('editview', 
+        [ 'certificates/certificatemodel', 'certificates/listcertificatesview',  'jquery' ], 
+
+          function(CertificateModel, ListCertificatesView) {
+          
+            var CertificateCollection = Backbone.Collection.extend({
+              model: CertificateModel,
+              url   : '/courses/!{course.uuid}/editions/!{edition.id}/certificates'
+            });
+
+           var certificates = new CertificateCollection();
+
+           certificates.fetch({ 
+              success: function(collection, response){
+
+                  new ListCertificatesView({
+                    collection: collection,
+                    el: this.$('.certificates')
+                  }).render();
+                
+              },
+
+              error: function(){
+                alert("Error loading certificates");
+              }
+            });
+      });

@@ -1,0 +1,40 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+ 
+  .main  
+   
+
+    p This is to certify that
+    p 
+      h2 !{certificate.name}
+    p is herby recongized for having succesfully completed 
+    p 
+      h2 !{course.name}
+      a(href="/courses/" + course.uuid)  http://instructormatters/courses/!{course.uuid}
+
+    dl.dl-horizontale
+      dt Instructor
+      dd !{instructor.name}
+     
+      dt Date 
+      dd !{edition.date}
+
+      dt Location
+      dd !{edition.venue}
+
+      dt URL
+      dd 
+        a(href="/certificates/" + certificate.uuid)  http://instructormatters/certificates/!{certificate.uuid} 
+
+      dt PDF
+      dd 
+        a(href="/certificates/" + certificate.uuid + "/pdf")  http://instructormatters/certificates/!{certificate.uuid}/pdf
+
+
+      
+
+
+

@@ -2,60 +2,6 @@
 var models = require('../db/models');
 
 
-
-/*
-  Listado de todas las ediciones
-
-exports.list =  function (req, res) {
-  models.Editions
-    .find({deleted: false})
-    .sort('date','ascending')
-    .exec( 
-      function (err, items) {
-        if(err) {
-          console.log(err);
-          res.send(500, err.message);
-        } else {
-          res.format({
-            html: function(){
-
-              // hay que añadirle el nombre de los instructores
-              async.parallel(
-                [function (cb) {
-                  // Recuperamos los instructores que aparecen en las ediciones
-                  var instructorIds = _.uniq(_.map(items, function(item) {return item.instructor.toJSON();}));
-                  models.Users
-                    .find({ _id : { $in : instructorIds } })
-                    .select('name')
-                    .exec(cb);  
-                },
-                function (cb) {
-                  // Recuperamos los cursos que aparecen en las ediciones
-                  var coursesIds = _.uniq(_.map(items, function(item) {return item.course.toJSON();}));
-                  models.Courses
-                    .find({ _id : { $in : coursesIds } })
-                    .select('name')
-                    .exec(cb);  
-                }],
-                function (err, results) {
-                  res.render('admin/editions', {
-                    title: 'Editions',
-                    editions: items,
-                    instructors: results[0],
-                    courses: results[1]
-                  });
-                });
-            },
-            json: function(){
-              res.json(items);
-            }
-          });
-        };
-      }
-    )
-};
-*/
-
 /*
 * Mostrar una edicion (admin)
 */
@@ -73,7 +19,7 @@ exports.view = function (req, res) {
             function (cb) {
               // Recuperamos el curso asociado
               models.Courses
-               .findById(item.course)
+               .findOne({uuid:item.courseUUID})
                .exec(cb)
             }, function (cb) {
               // Recuperamos todos los instructores
@@ -106,61 +52,60 @@ exports.view = function (req, res) {
 */
 exports.showDetails = function (req, res) {
   models.Editions.findById(req.params.id, function (err, item) {
+    // TODO: mirar como hacer el error handlings con express 
     if(err) {
       res.send(500, err.message)
-    } else if(!item || (item && item.deleted)) {
+      return;
+    } 
+    if(!item || item.deleted) {
       res.send(404);
-    } else {
-      res.format({
-        html: function () {
-          async.parallel([
-            function (cb) {
-              // recuperamos el curso asociado
-              models.Courses
-                .findById(item.course)
-                .exec(cb)
-            }, function (cb) {
-              // recuperamos el instructor
-              models.Users
-                .findById(item.instructor)
-                .exec(cb)
-            }], function (err, results) {
-              // Mostramos 
-              // TODO: error handling
-              if (err){
-                console.log(err);
-                res.send(500,err.message);
-              } else {
-                var edition = item.toJSON();
-                res.render('public/edition', {
-                  title: 'Course Edition',
-                  edition: edition,
-                  course: results[0],
-                  instructor: results[1]
-                });
-              }
-            });
+      return;
+    } 
 
-        },
-        json: function(){
-          res.json(item);
-        }
-      });
-    };
+    res.format({
+      html: function () {
+        async.parallel([
+          function (cb) {
+            models.Courses .findOne({uuid:item.courseUUID}) .exec(cb)
+          }, function (cb) {
+            models.Users .findById(item.instructor) .exec(cb)
+           }, function (cb) {
+            models.Certificates .find({edition:item._id}) .exec(cb)
+          }], function (err, results) {
+            if(err) {
+              res.send(500, err.message)
+              return;
+            } 
+
+            var edition = item.toJSON();
+            res.render('public/edition', {
+              title: 'Course Edition',
+              edition: edition,
+              course: results[0],
+              instructor: results[1],
+              certificates: results[2]
+            });
+          });
+
+      },
+      json: function(){
+        res.json(item);
+      }
+    });
   });
 };
-
-
+/*
+    
+*/
 /*
   Añadir edición - ventana 
 */
 exports.add = function(req,res){
-  console.log("foo");
   async.parallel([
     function (cb) {
       models.Courses
-        .find({deleted:false, _id:req.params.idCourse})
-        .select('name')
+        .findOne({deleted:false, uuid:req.params.uuid})
+        .select('name uuid')
         .exec(cb)
     }, function (cb) {
       models.Users
@@ -170,11 +115,11 @@ exports.add = function(req,res){
         .exec(cb)
     }], function (err, results) {
       //error handling
-      var defaultCourse = results[0][0];
+      var defaultCourse = results[0];
       var defaultInstructor = results[1][0];
       res.render('admin/edition', {
         title: 'Edition',
-        edition: { instructor: defaultInstructor.id, course: defaultCourse.id},
+        edition: { instructor: defaultInstructor.id, courseUUID: defaultCourse.uuid},
         instructors: results[1],
         course: defaultCourse
       });
@@ -190,16 +135,15 @@ exports.add = function(req,res){
       res.send(406);  //  Not Acceptable
     }
     var json = req.body;
-    var certificates = json.certificates;
-    delete json.certificates;
     var edition = new models.Editions(json);
+    var course = json.courseUUID;
 
     async.parallel([
 
         function(cb){
           // Necesitamos recuperar el curso para luego redirigir mediante el uuid
           models.Courses
-            .findById(edition.course)
+            .findOne({uuid:course})
             .exec(cb);
         },
 
@@ -217,27 +161,10 @@ exports.add = function(req,res){
 
         function(err, results){
           // Redirigimos a la URL pública
-          var course = results[0];
-          var edition = results[1];
-          res.header('location',  '/courses/' + course.uuid + '/editions/' + edition.id);
+          res.header('location',  '/courses/' + results[0].uuid + '/editions/' + edition.id);
           res.send(201);
         }
       );
-
-
-/*
-        for (i in certificates) {
-          var certificate = new models.Certificates(certificates[i]);
-          certificate.edition = edition._id;
-          certificate.uuid=  UUID.genV4();
-          certificate.save(function (err) {
-            if(err) {
-              console.log(err);
-              
-            } 
-          });
-        }
-*/  
 
   };
 
@@ -267,12 +194,15 @@ exports.add = function(req,res){
        res.send(406);  //  Not Acceptable
     }
    
+    //TODO: Comprobar que el estado es NEW, si no es así, devolver un código de error
+
     async.parallel([
       function(cb){
         models.Courses
-            .findById(req.params.idCourse)
+            .findOne({uuid:req.body.courseUUID})
             .exec(cb);
       }, function(cb){
+        console.log("updating " + req.body);
         models.Editions
           .update({_id: req.params.id}, req.body)
           .exec(cb);

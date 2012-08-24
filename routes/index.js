@@ -15,23 +15,31 @@ module.exports = function (server) {
 
 
   // Courses
-  server.get( '/admin/courses/new', courses.add);
-  server.post('/admin/courses',     courses.create);
-  server.get( '/admin/courses/:id', courses.view);
-  server.put( '/admin/courses/:id', courses.update);
-  server.del( '/admin/courses/:id', courses.del);
+  server.get( '/courses',             courses.list);        // listado de todos los cursos
+  server.get( '/courses/new',         courses.add);         // muestra formulario para crear curso 
+  server.get( '/courses/:uuid',       courses.showDetails); // muestra un curso - readOnly
+  server.get( '/courses/:uuid/edit',  courses.view);        // muestra un curso - edición
+  server.put( '/courses/:uuid',       courses.save);        // crear / actualizar curso
+  server.del( '/courses/:uuid',       courses.del);         // eliminar curso
+  //server.post('/courses',             courses.create);  // not used
 
   // Editions
-  server.post('/admin/courses/:idCourse/editions',     editions.create);
-  server.get( '/admin/courses/:idCourse/editions/new', editions.add);
-  server.get( '/admin/courses/:idCourse/editions/:id', editions.view);
-  server.put( '/admin/courses/:idCourse/editions/:id', editions.update);
-  server.del( '/admin/courses/:idCourse/editions/:id', editions.del); 
+  server.post('/courses/:uuid/editions',          editions.create);
+  server.get( '/courses/:uuid/editions/new',      editions.add);
+  server.get( '/courses/:uuid/editions/:id',      editions.showDetails);
+  server.put( '/courses/:uuid/editions/:id',      editions.update);
+  server.del( '/courses/:uuid/editions/:id',      editions.del); 
+  server.get( '/courses/:uuid/editions/:id/edit', editions.view);
   
   // Certificates
-  server.get( '/admin/courses/:idCourse/editions/:idEdition/certificates/new', certificates.add);
+  
+  server.get( '/certificates/:uuid',                      certificates.view);
+  server.post('/courses/:uuid/editions/:id/certificates', certificates.save);
+  server.get( '/courses/:uuid/editions/:id/certificates', certificates.list);
+  server.del( '/certificates/:id',                        certificates.del);
+  server.get( '/certificates/:uuid/pdf',                  certificates.pdf);
 /*
-  server.post('/admin/courses/:idCourse/editions/:idEdition/certificates',     certificates.create);
+  server.get( '/admin/courses/:idCourse/editions/:idEdition/certificates/new', certificates.add);
 */
 
 
@@ -42,20 +50,6 @@ module.exports = function (server) {
   server.get( '/admin/users/:id',  users.view);
   server.put( '/admin/users/:id',  users.update);
   server.del( '/admin/users/:id',  users.del);
-
-  
-  // Parte pública
-  server.get( '/courses',                     courses.list);
-  server.get( '/courses/:uuid',               courses.showDetails);
-  server.get( '/courses/:uuid/editions/:id',  editions.showDetails);
-  server.get( '/certificates/:uuid',          certificates.view);
-
-
-  /*
-  server.get( '/admin/certificates',      certificates.list);
-  server.put( '/admin/certificates/:id',  certificates.update);
-  server.del( '/admin/certificates/:id',  certificates.del);
-  */
 
 
   // server.get('/users', function(req, res) {

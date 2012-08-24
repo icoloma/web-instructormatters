@@ -12,8 +12,9 @@ var EditionSchema = new mongoose.Schema({
   date: {type: String, required: true},
   venue: {type: String, required: true},
   instructor: {type: ObjectId, ref: 'Users', required: true},
-  course: {type: ObjectId, ref: 'Courses', required: true},
+  courseUUID: {type: String, required: true},
   deleted: {type: Boolean, default: false},
+  state: {type:String, default:'NEW'}   // values NEW | PENDING | PAID
 }, {strict: true});
 
 var Editions = mongoose.model('Editions', EditionSchema);
@@ -25,7 +26,8 @@ Editions.prototype.toJSON = function(){
     date: this.date,
     venue: this.venue,
     instructor: this.instructor,
-    course: this.course
+    courseUUID: this.courseUUID,
+    state: this.state
   }
 };
  

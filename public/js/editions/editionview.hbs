@@ -3,7 +3,7 @@
 
   <label>Course: </label>
   <input type="text" value="{{course.name}}" disabled />
-  <input type="hidden" name="course" value="{{course.id}}"/>    
+  <input type="hidden" name="courseUUID" value="{{course.uuid}}"/>    
   <label>Venue: </label>
   <input name="venue" type="text" value="{{edition.venue}}" required>
 
@@ -17,6 +17,15 @@
     {{/instructors}}
   </select> 
 
+
+  <label>State:</label>
+  <select name="state" required>
+      <option value="NEW">New</option>
+      <option value="PENDING">Pending</option>
+      <option value="PAID">Paid</option>
+  </select>
+
+
   <p>
     <input type="submit" class="btn btn-primary" value="Save" />
 
@@ -25,10 +34,6 @@
     <a class="btn btn-danger delete" ><i class="icon-trash icon-white"></i> Delete</a>
   {{/if}}
 
-  <a href="/courses/{{course.uuid}}/editions/{{edition.id}}" class="btn cancel"><i class="icon-remove"></i>Cancel</a>
+  <a href="/courses/{{course.uuid}}" class="btn cancel"><i class="icon-remove"></i>Cancel</a>
   
 </form>
-
-<a class="btn btn-primary addCertificate"><i class="icon-file icon-white"></i> New Certificate</a>
-
-<div class="certificates"></div>

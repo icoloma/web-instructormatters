@@ -35,7 +35,7 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
               var location = status.getResponseHeader("location") + "?code=saved";
               window.location=location;              
             } else {
-              Core.renderMessage({ level:'error', message: status.statusText});             
+              Core.renderMessage({ level:'error', message: status.responseText});             
             }
           }
         });

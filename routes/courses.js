@@ -31,28 +31,28 @@ exports.showDetails = function (req, res) {
   findCourseByUUID(req.params.uuid, res, function(items){
     var course = items[0];
     res.format({
-            html: function(){
-               async.parallel(
-                [function (cb) {
-                   models.Editions
-                    .find({deleted: false, courseUUID:course.uuid})
-                    .sort('date','ascending')
-                    .exec(cb);
-                }],
-               function( err, results){
-                  var editions = results[0];
-                  res.render('public/course', {
-                    title: 'Course',
-                    course: course,
-                    editions: editions
-                  });
-                }
-              );
-            },
-            json: function(){
-              res.json(course);
+        html: function(){
+           async.parallel(
+            [function (cb) {
+               models.Editions
+                .find({deleted: false, courseUUID:course.uuid})
+                .sort('date','ascending')
+                .exec(cb);
+            }],
+           function( err, results){
+              var editions = results[0];
+              res.render('public/course', {
+                title: 'Course',
+                course: course,
+                editions: editions
+              });
             }
-          });
+          );
+        },
+        json: function(){
+          res.json(course);
+        }
+      });
   });
 };
 
@@ -80,39 +80,30 @@ function findCourseByUUID(uuid, res, callback ){
   Listado de todos los cursos
 */
 exports.list =  function (req, res) {
-
-  findAllCourses(res, function(items){
-    res.format({
-      html: function(){
-        res.render('public/courses', {
-          title: 'Courses',
-          courses: items
-        });
-      },
-      json: function(){
-        res.json(items);
+  models.Courses
+    .find({deleted:false})
+    .sort('name','ascending')
+    .exec(function (err, items) {
+      if(err) {
+        console.log(err);
+        res.send(500, err.message)
+        return;
       }
-    });
+
+      res.format({
+        html: function(){
+          res.render('public/courses', {
+            title: 'Courses',
+            courses: items
+          });
+        },
+        json: function(){
+          res.json(items);
+        }
+     });
+
   });
 };
-
-/*
-  Búsqueda de todos los cursos
-  Gestiona el envío de errores 404 y los 500
-*/
-function findAllCourses( res, callback ){
-  models.Courses
-  .find({ deleted:false})
-  .sort('name','ascending')
-  .exec(function (err, items) {
-    if(err) {
-      console.log(err);
-      res.send(500, err.message)
-    } else {
-      callback(items);
-    };
-  });
-}
 
 
 /*
@@ -146,7 +137,7 @@ exports.add = function(req,res){
       course.save(function (err) {
         if(err) {
           console.log(err);
-          res.send(500, err.message);
+          res.send(500, err.message.match(/E11000.+/) ? 'Course UUID already exists' : err.message);
         } else {
           res.header('location',  '/courses/'+  course.uuid);
           res.send(201);

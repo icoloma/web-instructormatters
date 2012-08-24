@@ -10,7 +10,7 @@ append content
     p This is to certify that
     p 
       h2 !{certificate.name}
-    p is herby recongized for having succesfully completed 
+    p is hereby recongized for having succesfully completed 
     p 
       h2 !{course.name}
       a(href="/courses/" + course.uuid)  http://instructormatters/courses/!{course.uuid}
@@ -25,9 +25,9 @@ append content
       dt Location
       dd !{edition.venue}
 
-      dt URL
-      dd 
-        a(href="/certificates/" + certificate.uuid)  http://instructormatters/certificates/!{certificate.uuid} 
+      //-dt URL
+      //-dd 
+      //-  a(href="/certificates/" + certificate.uuid)  http://instructormatters/certificates/!{certificate.uuid} 
 
       dt PDF
       dd 

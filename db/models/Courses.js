@@ -5,7 +5,7 @@
 */
 
 var CourseSchema = new mongoose.Schema({
-  uuid: {type: String, required: true },
+  uuid: {type: String, required: true, unique: true},
   name: {type: String, required: true},
   duration: String, 
   deleted: {type: Boolean, default: false},   // private field

@@ -9,7 +9,7 @@
   "dependencies": {
     "express": "3.0.0rc1",
     "jade": "*",
-    "mongoose": "*",
+    "mongoose": "2.7.3",
     "passport": "*",
     "passport-local" : "*",
     "node-minify": "*",

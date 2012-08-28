@@ -54,7 +54,7 @@ exports.view = function (req, res) {
 */
 exports.list = function (req, res) {
   models.Certificates
-    .find({edition:req.params.id, deleted:false})
+    .find({edition:req.params.idEdition, deleted:false})
     .exec(function (err, items) {
       if(err) {
         res.send(500, err.message)
@@ -94,7 +94,7 @@ exports.list = function (req, res) {
         } else {
           // create
           var certificate = new models.Certificates(certificate);
-          certificate.edition =  req.params.id;
+          certificate.edition =  req.params.idEdition;
           certificate.uuid =  UUID.genV4();
           certificate.save(function (err) {
             callback(err);
@@ -109,7 +109,7 @@ exports.list = function (req, res) {
           res.send(500, err.message);
           return;  
         }
-        res.header('location',  '/courses/' + req.params.uuid + '/editions/' + req.params.id );
+        res.header('location',  '/courses/' + req.params.uuid + '/editions/' + req.params.idEdition );
         res.send(201);
        
     });

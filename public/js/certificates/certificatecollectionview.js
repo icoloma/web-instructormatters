@@ -56,22 +56,6 @@ define([ 'core', 'certificates/certificatetrview', 'certificates/certificatemode
         });
 
 
-       
-        /*
-        var self = this;
-        var editionUrl = this.$('.cancel')[0].href;
-
-        this.collection.urlRoot = '/admin/courses/' + this.model.get('course') + '/editions';
-        this.model.save({}, {
-
-          success: function(resp, status, xhr) {
-            window.location = '/courses/' + self.options.course.uuid + '/editions/' + self.model.id  + "?code=updated";
-          },
-
-          
-        });
-        e.preventDefault();
-        */
       }
 
     });

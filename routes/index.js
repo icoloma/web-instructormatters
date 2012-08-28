@@ -41,11 +41,11 @@ module.exports = function (server) {
   
   // Certificates
   
-  server.get( '/certificates/:uuid',                      certificates.view);
-  server.post('/courses/:uuid/editions/:id/certificates', certificates.save);
-  server.get( '/courses/:uuid/editions/:id/certificates', certificates.list);
-  server.del( '/certificates/:id',                        certificates.del);
-  server.get( '/certificates/:uuid/pdf',                  certificates.pdf);
+  server.get( '/certificates/:uuid',                                  certificates.view);
+  server.get( '/certificates/:uuid/pdf',                              certificates.pdf);
+  server.post('/courses/:uuid/editions/:idEdition/certificates',      certificates.save);
+  server.get( '/courses/:uuid/editions/:idEdition/certificates',      certificates.list);
+  server.del( '/courses/:uuid/editions/:idEdition/certificates/:id',  certificates.del);
 
   // Users
   server.get( '/admin/users',      users.list);

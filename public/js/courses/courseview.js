@@ -29,15 +29,15 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
             window.location =  resp.url() + "?code=updated";
           },
 
-          error: function(resp, status, xhr){
-            if (status.status === 201){   
+
+          on201: function(xhr){
               // Http status Ok, Created
-              var location = status.getResponseHeader("location") + "?code=saved";
+              var location = xhr.getResponseHeader("location") + "?code=saved";
               window.location=location;              
-            } else {
-              Core.renderMessage({ level:'error', message: status.responseText});             
-            }
+
           }
+
+
         });
 
         e.preventDefault();
@@ -49,9 +49,6 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
         this.model.destroy({
           success: function(resp, status, xhr) {
             window.location= "/courses/?code=deleted";;
-          },
-          error: function(resp, status, xhr){
-            Core.renderMessage({ level:'error', message:status.statusText});
           }
         });
         e.preventDefault();

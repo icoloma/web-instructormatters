@@ -46,39 +46,28 @@ append content
 
   
 append scripts
-  if (edition.state =='NEW')
+  if (edition.state == 'NEW')
     //- Edición de certificados
     script 
       define('editview', 
         [ 'certificates/certificatemodel', 'certificates/certificatecollectionview',  'jquery' ], 
 
           function(CertificateModel, CertificateCollectionView) {
-          
-            var CertificateCollection = Backbone.Collection.extend({
-              model: CertificateModel,
-              url   : '/courses/!{course.uuid}/editions/!{edition.id}/certificates'
-            });
+      
 
-           var certificates = new CertificateCollection();
-
-           certificates.fetch({ 
+            var certificates = new Backbone.Collection([], {
+                model: CertificateModel,
+              });
+            certificates.url = '/courses/!{course.uuid}/editions/!{edition.id}/certificates';
+            
+            certificates.fetch({ 
               success: function(collection, response){
-
-               
                   new CertificateCollectionView({
                     collection: collection,
                     edition : '!{edition.id}',
                     courseUUID : '!{course.uuid}',
                     el: this.$('.certificates')
                   }).render();
-
-
-
-                
-              },
-
-              error: function(){
-                alert("Error loading certificates");
               }
             });
       });
@@ -90,14 +79,12 @@ append scripts
 
           function(CertificateModel, ListCertificatesView) {
           
-            var CertificateCollection = Backbone.Collection.extend({
-              model: CertificateModel,
-              url   : '/courses/!{course.uuid}/editions/!{edition.id}/certificates'
-            });
+            var certificates = new Backbone.Collection([], {
+                model: CertificateModel,
+              });
+            certificates.url = '/courses/!{course.uuid}/editions/!{edition.id}/certificates';
 
-           var certificates = new CertificateCollection();
-
-           certificates.fetch({ 
+            certificates.fetch({ 
               success: function(collection, response){
 
                   new ListCertificatesView({
@@ -105,10 +92,6 @@ append scripts
                     el: this.$('.certificates')
                   }).render();
                 
-              },
-
-              error: function(){
-                alert("Error loading certificates");
               }
             });
       });

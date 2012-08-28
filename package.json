@@ -11,6 +11,7 @@
     "jade": "*",
     "mongoose": "*",
     "passport": "*",
+    "passport-local" : "*",
     "node-minify": "*",
     "async": "*",
     "fs": "*",

@@ -1,0 +1,18 @@
+extends ../layout
+
+
+append content
+ 
+  .main  
+    form(method="post", action='/login')
+      fieldset
+       
+          p
+            label(for="username") Username:
+              input(type="text", name="username", value=user.name, required)
+          p
+            label(for="password") password:
+              input(type="password", name="password", required)
+          p.buttons
+            input(type="submit", value="Login")
+

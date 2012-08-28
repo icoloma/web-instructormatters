@@ -30,13 +30,24 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap_alert', 'lib/messages', 
     }
 
     
-  };
+};
 
-  // render any existing messages
-  var messageKey = core.getParamValue('code');
-  messageKey && core.renderMessage(Messages[messageKey]);
+// Error handling for Ajax 
+$(document).ajaxError(function(e, xhr, settings, exception) {
+  if ( xhr.status == 201 && settings.on201){
+    settings.on201(xhr)
+  } else {
+    //alert('error in: ' + settings.url + ' \n'+'error:\n' + xhr.responseText );
+    core.renderMessage({ level:'error', message: xhr.responseText});  
+  }
+}); 
 
-  return core;
+  
+// render any existing messages
+var messageKey = core.getParamValue('code');
+messageKey && core.renderMessage(Messages[messageKey]);
+
+return core;
 
   
   

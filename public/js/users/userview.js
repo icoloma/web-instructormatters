@@ -33,14 +33,10 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
             window.location = self.model.url()  + "?code=updated";
           },
 
-          error: function(resp, status, xhr){
-            if (status.status === 201){   
-              // Http status Ok, Created
-              var location = status.getResponseHeader("location") + "?code=saved";
-              window.location=location;              
-            } else {
-              Core.renderMessage({ level:'error', message: status.statusText});             
-            }
+          on201: function( xhr) {
+            // Http status Ok, Created
+            var location = xhr.getResponseHeader("location") + "?code=saved";
+            window.location=location;              
           }
         });
         e.preventDefault();
@@ -52,9 +48,6 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
         this.model.destroy({
           success: function(resp, status, xhr) {
             window.location=self.model.urlRoot+ "?code=deleted";;
-          },
-          error: function(resp, status, xhr){
-            Core.renderMessage({ level:'error', message:status.statusText});
           }
         });
         e.preventDefault();

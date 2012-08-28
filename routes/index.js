@@ -4,14 +4,22 @@ var models  = require('../db/models')
   , courses = require('./courses')
   , certificates = require('./certificates')
   , users = require('./users')
-  , editions = require('./editions');
-
+  , security = require('./security')
+  , editions = require('./editions')
+  ;
  
 module.exports = function (server) {
 
+
+  // Default view
   server.get('/', function(req, res) {
     res.render('admin', { title: 'Admin' });
   });
+
+  // Security
+  server.get( '/login',   security.show);
+  server.post('/login',   security.login);
+  server.get( '/logout',  security.logout);
 
 
   // Courses
@@ -38,25 +46,15 @@ module.exports = function (server) {
   server.get( '/courses/:uuid/editions/:id/certificates', certificates.list);
   server.del( '/certificates/:id',                        certificates.del);
   server.get( '/certificates/:uuid/pdf',                  certificates.pdf);
-/*
-  server.get( '/admin/courses/:idCourse/editions/:idEdition/certificates/new', certificates.add);
-*/
-
 
   // Users
   server.get( '/admin/users',      users.list);
-  server.get( '/admin/users/new',   users.add);
+  server.get( '/admin/users/new',  users.add);
   server.post('/admin/users',      users.create);
   server.get( '/admin/users/:id',  users.view);
   server.put( '/admin/users/:id',  users.update);
   server.del( '/admin/users/:id',  users.del);
 
 
-  // server.get('/users', function(req, res) {
-  //   res.render('admin/users', { title: 'Users' });
-  // });
-
-  // server.get('/', function(req, res) {
-  //   res.render('admin/editions', { title: 'Editions' });
-  // });
+ 
 }

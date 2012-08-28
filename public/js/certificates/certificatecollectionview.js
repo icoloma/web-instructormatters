@@ -46,14 +46,11 @@ define([ 'core', 'certificates/certificatetrview', 'certificates/certificatemode
           success: function(data, textStatus, jqXHR) {
             window.location = '/courses/' + self.options.course.uuid + '/editions/' + self.model.id  + "?code=updated";
           },
-          error: function(data, textStatus, jqXHR){
-            if (data.status === 201){   
+
+          on201: function(xhr){
               // Http status Ok, Created
-              var location = data.getResponseHeader("location") + "?code=saved";
+              var location = xhr.getResponseHeader("location") + "?code=saved";
               window.location=location;              
-            } else {
-              Core.renderMessage({ level:'error', message: data.status.statusText});             
-            }
           }
 
         });

@@ -41,14 +41,10 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
             location.href = resp.url() + "?code=updated";
           },
 
-          error: function(resp, status, xhr){
-            if (status.status === 201){   
-              // Http status Ok, Created
-              var location = status.getResponseHeader("location") + "?code=saved";
-              window.location=location;              
-            } else {
-              Core.renderMessage({ level:'error', message: status.statusText});             
-            }
+          on201: function(xhr){
+            // Http status Ok, Created
+            var location = xhr.getResponseHeader("location") + "?code=saved";
+            window.location=location;              
           }
         });
         e.preventDefault();

@@ -1,20 +1,27 @@
 <form class="well">
 
   <label>User e-mail: </label>
-  <input name="email" type="text" value="{{user.email}}" required > 
+  <input name="email" type="text" value="{{user.email}}" required {{#if user.oauth}} disabled {{/if}} > 
 
   {{#if user.name}}
     <label>User name: </label>
     <input name="name" type="text" value="{{user.name}}" disabled >
   {{/if}}
  
+  {{#each courses}}
+    <p><input type="checkbox" name="courses_{{this.id}}" value="{{this.id}}" class="checkbox"> {{this.name}} 
+  {{/each}}
+
   <p>
     <input type="submit" class="btn btn-primary" value="Save" />
 
   {{#if user.id}}
-    <a id="delete"user class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
+    <a id="delete" class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
   {{/if}}
 
-  <a id="list"user class="btn"><i class="icon-list"></i> List</a>
+ 
+    
+
+  <coures id="list" class="btn"><i class="icon-list"></i> List</a>
   
 </form>

@@ -1,4 +1,6 @@
 
+
+var ObjectId = mongoose.Schema.ObjectId;
 /*
 Modelo de un usuario
 
@@ -14,6 +16,7 @@ Flag de administrador
 var UserSchema = new mongoose.Schema({
   name: String,
   email: {type: String, required: true},
+  courses: [ {  id: {type: ObjectId, ref: 'Users'}}],
   expires: Date,
   oauth: String,
   admin: {type: Boolean, default: false},
@@ -30,7 +33,8 @@ Users.prototype.toJSON = function(){
     email: this.email,
     oauth: this.oauth,
     expires: this.expires,
-    admin: this.admin
+    admin: this.admin,
+    courses:this.courses
   }
 };
 

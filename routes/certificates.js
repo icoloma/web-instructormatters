@@ -7,45 +7,33 @@ var fs = require('fs');
 * Mostrar un certificado 
 */
 exports.view = function (req, res) {
-  models.Certificates
-    .findOne({uuid:req.params.uuid, deleted:false})
-    .exec(function (err, certificate) {
-      if(err) {
-        res.send(500, err.message)
-      } else if(!certificate || (certificate && certificate.deleted)) {
-        res.send(404);
-      } else {
-        res.format({
-          html: function () {
 
-            models.Editions.findById(certificate.edition, function (err, edition) {
+  res.format({
+    html: function () {
 
-               async.parallel([
-
-                function (cb) {
-                  // find Course
-                  models.Courses.findOne({uuid:edition.courseUUID, deleted:false}, cb);
-                }, function (cb) {
-                  // find instructor
-                  models.Users.findById(edition.instructor, cb);
-                }], function (err, results) {
-                  // TODO: error handling
-                  res.render('public/certificate', {
-                    title: 'Certificate of training',
-                    certificate: certificate,
-                    edition :edition,
-                    course: results[0],
-                    instructor: results[1]
-                  });
-                });
-              });
-          },
-          json: function(){
-            res.json(certificate);
-          }
+       async.parallel([
+        function (cb) {
+          // find Course
+          models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
+        }, function (cb) {
+          // find instructor
+          models.Users.findById(req.edition.instructor, cb);
+        }], function (err, results) {
+          // TODO: error handling
+          res.render('public/certificate', {
+            title: 'Certificate of training',
+            certificate: req.certificate,
+            edition: req.edition,
+            course: results[0],
+            instructor: results[1]
+          });
         });
-      };
-    });
+
+    },
+    json: function(){
+      res.json(certificate);
+    }
+  });
 };
 
 
@@ -142,47 +130,54 @@ exports.list = function (req, res) {
     } catch(err){
       if (err.code ==='ENOENT'){
         async.parallel([
-          function(callback){
-            // recuperamos el certificado
-            models.Certificates
-              .findOne({uuid:req.params.uuid, deleted:false})
-              .exec(function (err, certificate) {
-                // TODO: error handling
-                models.Editions.findById(certificate.edition, function (err, edition) {
-                  async.parallel([
-                    function (cb) {
-                      // find Course
-                      models.Courses.findOne({uuid:edition.courseUUID, deleted:false}, cb);
-                    }, function (cb) {
-                      // find instructor
-                      models.Users.findById(edition.instructor, cb);
-                    }], function (err, results) {
-                      // TODO: error handling
-                      var course = results[0];
-                      var instructor = results[1];
-                      this.generatePDF( certificate, edition, course, instructor, callback);
-
-                    });
-                });
-              });
-          }
-
-        ], function(err,results){
-          if (!err){
-            resp.sendfile(filename);
-          } else{
-            resp.send(500,err);
-          }
-
-        });
-     
+          function (cb) {
+            // find Course
+            models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
+          }, function (cb) {
+            // find instructor
+            models.Users.findById(req.edition.instructor, cb);
+          }], function (err, results) {
+            // TODO: error handling
+            var course = results[0];
+            var instructor = results[1];
+            this.generatePDF( req.certificate, req.edition, course, instructor, function(err, resp) {
+              if (!err) {
+                resp.sendFile(filename);
+              } else {
+                resp.send(500, err);
+              }
+            });
+          });
       } else {
         resp.send(500,err);
       }
     }
-
-
+    
   },
+
+  exports.checkAvailability = function(req, res, next) {
+    models.Certificates
+    .findOne({uuid:req.params.uuid, deleted:false})
+    .exec(function (err, certificate) {
+      if(err) {
+        res.send(500, err.message)
+      } else if(!certificate) {
+        res.send(404);
+      } else {
+        models.Editions.findById(certificate.edition, function(err, edition) {
+          if (err || !edition || edition.state != 'PAID') {
+            //if the edition's state is not paid, the certificate should not be available
+            res.send(404);
+          } else {
+            //make available to the next callbacks the certificate & edition through request
+            req.certificate = certificate;
+            req.edition = edition;
+            return next();
+          }
+        });
+      };
+    });
+  }
 
   generatePDF = function (certificate, edition, course, instructor, callback){
     var urlCertificate = 'http://instructormatters.com/certificates/' + certificate.uuid;

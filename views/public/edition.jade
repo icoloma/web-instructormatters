@@ -39,12 +39,16 @@ append content
           i.icon-remove 
           &nbsp;Cancel
 
-
-
       
     .certificates
+    if (edition.state != 'NEW') 
+      ul
+        - certificates.forEach(function (certificate){
+          li 
+            a( href='/certificates/' + certificate.uuid)
+              !{certificate.name} - !{certificate.email}
+        - })
 
-  
 append scripts
   if (edition.state == 'NEW')
     //- Edición de certificados
@@ -68,30 +72,6 @@ append scripts
                     courseUUID : '!{course.uuid}',
                     el: this.$('.certificates')
                   }).render();
-              }
-            });
-      });
-  else
-    //- Modo solo lectura
-    script
-      define('editview', 
-        [ 'certificates/certificatemodel', 'certificates/listcertificatesview',  'jquery' ], 
-
-          function(CertificateModel, ListCertificatesView) {
-          
-            var certificates = new Backbone.Collection([], {
-                model: CertificateModel,
-              });
-            certificates.url = '/courses/!{course.uuid}/editions/!{edition.id}/certificates';
-
-            certificates.fetch({ 
-              success: function(collection, response){
-
-                  new ListCertificatesView({
-                    collection: collection,
-                    el: this.$('.certificates')
-                  }).render();
-                
               }
             });
       });

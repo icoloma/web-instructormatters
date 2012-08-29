@@ -130,37 +130,29 @@ exports.list = function (req, res) {
     } catch(err){
       if (err.code ==='ENOENT'){
         async.parallel([
-          function(callback){
-              async.parallel([
-                function (cb) {
-                  // find Course
-                  models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
-                }, function (cb) {
-                  // find instructor
-                  models.Users.findById(req.edition.instructor, cb);
-                }], function (err, results) {
-                  // TODO: error handling
-                  var course = results[0];
-                  var instructor = results[1];
-                  this.generatePDF( req.certificate, req.edition, course, instructor, callback);
-                });
-          }
-
-        ], function(err,results){
-          if (!err){
-            resp.sendfile(filename);
-          } else{
-            resp.send(500,err);
-          }
-
-        });
-     
+          function (cb) {
+            // find Course
+            models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
+          }, function (cb) {
+            // find instructor
+            models.Users.findById(req.edition.instructor, cb);
+          }], function (err, results) {
+            // TODO: error handling
+            var course = results[0];
+            var instructor = results[1];
+            this.generatePDF( req.certificate, req.edition, course, instructor, function(err, resp) {
+              if (!err) {
+                resp.sendFile(filename);
+              } else {
+                resp.send(500, err);
+              }
+            });
+          });
       } else {
         resp.send(500,err);
       }
     }
-
-
+    
   },
 
   exports.checkAvailability = function(req, res, next) {

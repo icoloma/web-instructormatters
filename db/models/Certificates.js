@@ -14,7 +14,6 @@ var CertificateSchema = new mongoose.Schema({
   deleted: {type: Boolean, default: false},
 }, {strict: true});
 
-
 var Certificates = mongoose.model('Certificates', CertificateSchema);
 
 Certificates.prototype.toJSON = function(){

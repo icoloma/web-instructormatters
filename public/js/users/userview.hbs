@@ -1,10 +1,12 @@
 <form class="well">
 
   <label>User e-mail: </label>
-  <input name="email" type="text" value="{{user.email}}" required>
+  <input name="email" type="text" value="{{user.email}}" required > 
 
-  <label>User name: </label>
-  <input name="name" type="text" value="{{user.name}}" >
+  {{#if user.name}}
+    <label>User name: </label>
+    <input name="name" type="text" value="{{user.name}}" disabled >
+  {{/if}}
  
   <p>
     <input type="submit" class="btn btn-primary" value="Save" />

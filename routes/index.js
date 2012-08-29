@@ -4,22 +4,15 @@ var models  = require('../db/models')
   , courses = require('./courses')
   , certificates = require('./certificates')
   , users = require('./users')
-  , security = require('./security')
   , editions = require('./editions')
   ;
  
 module.exports = function (server) {
 
-
   // Default view
   server.get('/', function(req, res) {
     res.render('admin', { title: 'Admin' });
   });
-
-  // Security
-  server.get( '/login',   security.show);
-  server.post('/login',   security.login);
-  server.get( '/logout',  security.logout);
 
 
   // Courses
@@ -55,6 +48,30 @@ module.exports = function (server) {
   server.put( '/admin/users/:id',  users.update);
   server.del( '/admin/users/:id',  users.del);
 
+  /* 
+    Security
+  */
+  
+  // login (via google oauth )
+  server.get('/login', 
+      passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
+                                              'https://www.googleapis.com/auth/userinfo.email'] }), 
+      // The request will be redirected to Google for authentication, so this
+      // function will not be called.
+      function(req, res){}
+      );
+
+// Logout
+  server.get('/logout', function(req, res){
+    req.logOut();
+    res.redirect('/');
+  });
+
+  // Google Oauth callback
+  server.get('/auth/google/callback', 
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    passport.checkUser
+    );
 
  
 }

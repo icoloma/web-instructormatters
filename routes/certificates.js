@@ -11,27 +11,24 @@ exports.view = function (req, res) {
   res.format({
     html: function () {
 
-      models.Editions.findById(req.certificate.edition, function (err, edition) {
-
-         async.parallel([
-
-          function (cb) {
-            // find Course
-            models.Courses.findOne({uuid:edition.courseUUID, deleted:false}, cb);
-          }, function (cb) {
-            // find instructor
-            models.Users.findById(edition.instructor, cb);
-          }], function (err, results) {
-            // TODO: error handling
-            res.render('public/certificate', {
-              title: 'Certificate of training',
-              certificate: req.certificate,
-              edition :edition,
-              course: results[0],
-              instructor: results[1]
-            });
+       async.parallel([
+        function (cb) {
+          // find Course
+          models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
+        }, function (cb) {
+          // find instructor
+          models.Users.findById(req.edition.instructor, cb);
+        }], function (err, results) {
+          // TODO: error handling
+          res.render('public/certificate', {
+            title: 'Certificate of training',
+            certificate: req.certificate,
+            edition: req.edition,
+            course: results[0],
+            instructor: results[1]
           });
         });
+
     },
     json: function(){
       res.json(certificate);
@@ -134,22 +131,19 @@ exports.list = function (req, res) {
       if (err.code ==='ENOENT'){
         async.parallel([
           function(callback){
-            models.Editions.findById(req.certificate.edition, function (err, edition) {
               async.parallel([
                 function (cb) {
                   // find Course
-                  models.Courses.findOne({uuid:edition.courseUUID, deleted:false}, cb);
+                  models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
                 }, function (cb) {
                   // find instructor
-                  models.Users.findById(edition.instructor, cb);
+                  models.Users.findById(req.edition.instructor, cb);
                 }], function (err, results) {
                   // TODO: error handling
                   var course = results[0];
                   var instructor = results[1];
-                  this.generatePDF( certificate, edition, course, instructor, callback);
-
+                  this.generatePDF( req.certificate, req.edition, course, instructor, callback);
                 });
-            });
           }
 
         ], function(err,results){

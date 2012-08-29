@@ -134,28 +134,22 @@ exports.list = function (req, res) {
       if (err.code ==='ENOENT'){
         async.parallel([
           function(callback){
-            // recuperamos el certificado
-            models.Certificates
-              .findOne({uuid:req.params.uuid, deleted:false})
-              .exec(function (err, certificate) {
-                // TODO: error handling
-                models.Editions.findById(certificate.edition, function (err, edition) {
-                  async.parallel([
-                    function (cb) {
-                      // find Course
-                      models.Courses.findOne({uuid:edition.courseUUID, deleted:false}, cb);
-                    }, function (cb) {
-                      // find instructor
-                      models.Users.findById(edition.instructor, cb);
-                    }], function (err, results) {
-                      // TODO: error handling
-                      var course = results[0];
-                      var instructor = results[1];
-                      this.generatePDF( certificate, edition, course, instructor, callback);
+            models.Editions.findById(req.certificate.edition, function (err, edition) {
+              async.parallel([
+                function (cb) {
+                  // find Course
+                  models.Courses.findOne({uuid:edition.courseUUID, deleted:false}, cb);
+                }, function (cb) {
+                  // find instructor
+                  models.Users.findById(edition.instructor, cb);
+                }], function (err, results) {
+                  // TODO: error handling
+                  var course = results[0];
+                  var instructor = results[1];
+                  this.generatePDF( certificate, edition, course, instructor, callback);
 
-                    });
                 });
-              });
+            });
           }
 
         ], function(err,results){
@@ -189,7 +183,9 @@ exports.list = function (req, res) {
             //if the edition's state is not paid, the certificate should not be available
             res.send(404);
           } else {
+            //make available to the next callbacks the certificate & edition through request
             req.certificate = certificate;
+            req.edition = edition;
             return next();
           }
         });

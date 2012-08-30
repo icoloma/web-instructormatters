@@ -280,7 +280,7 @@ exports.add = function(req,res){
         }
         res.format({
           html: function(){
-            res.render('admin/editions', {
+            res.render('admin/myeditions', {
               title: 'My editions',
               editions: items[0]
             });

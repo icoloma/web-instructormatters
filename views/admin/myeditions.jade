@@ -7,6 +7,7 @@ append content
   ul
     -editions.forEach(function (edition) {
       li
+        //- TODO: mostrar el nombre del curso en lugar del UUID
         a(href="/courses/" + edition.courseUUID + "/editions/" + edition.id )  (#{edition.date}) #{edition.courseUUID} - #{edition.venue}
     -})
 

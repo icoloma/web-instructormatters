@@ -1,3 +1,4 @@
+
 define([ 'core', 'backbone', 'hbs!./userview' ], 
   function(Core, B, template) {
 
@@ -15,7 +16,7 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
           }
 
         },
-        'change input :not(.checkbox)': function(e) {
+        'change input.email,select': function(e) {
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
         }
@@ -32,10 +33,14 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
             courses: this.options.courses
           })); 
 
-        $.map(this.model.attributes.courses, function(item){ 
-          var query = 'input[name=courses_' + item + ']';
-          $(this.$(query)[0]).attr('checked', true);
-          });
+        $(this.$("select[name=admin]")[0]).val(JSON.stringify(this.model.attributes.admin));
+
+        if (this.model.attributes.id) {
+          $.map(this.model.attributes.courses, function(item){ 
+            var query = 'input[name=courses_' + item + ']';
+            $(this.$(query)[0]).attr('checked', true);
+            });
+          }
       },
 
       

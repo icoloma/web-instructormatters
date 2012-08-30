@@ -7,8 +7,9 @@ append content
   ul
     -users.forEach(function (user) {
       li
-        a(href="/admin/users/" + user._id ) !{user.name} (!{user.email})
+        a(href="/users/" + user._id ) #{user.name} (#{user.email})
     -})
 
-  a(href="/admin/users/new").btn.btn-info New User
+  if (locals.currentUser && locals.currentUser.admin) 
+    a(href="/users/new").btn.btn-info New User
   

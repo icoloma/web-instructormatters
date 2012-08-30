@@ -6,5 +6,7 @@ append content
     ul
       li
         a(href="/courses") Courses
-      li
-        a(href="/admin/users") Users
+
+      if (locals.isAdmin)
+        li
+          a(href="/users") Users

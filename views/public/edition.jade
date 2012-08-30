@@ -10,29 +10,29 @@ append content
 
       p
         span Course:
-        | !{course.name}
+        | #{course.name}
 
       p 
         span Date: 
-        | !{edition.date}
+        | #{edition.date}
       
       p
         span Venue: 
-        | !{edition.venue}
+        | #{edition.venue}
 
       p
         span Instructor: 
-        | !{instructor.name} &nbsp;
+        | #{instructor.name} &nbsp;
         a( ).btn.contact
           i.icon-envelope
           &nbsp;Contact
 
       p
         span State:
-        | !{edition.state}
+        | #{edition.state}
 
       p
-        if (edition.state ==  'NEW')
+        if (locals.isAllowedInstructor && edition.state ==  'NEW')
           a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn.btn-primary Edit
        
         a( href='/courses/' + course.uuid ).btn 
@@ -41,16 +41,16 @@ append content
 
       
     .certificates
-    if (edition.state != 'NEW') 
+    if (locals.isAllowedInstructor && edition.state != 'NEW') 
       ul
         - certificates.forEach(function (certificate){
           li 
             a( href='/certificates/' + certificate.uuid)
-              !{certificate.name} - !{certificate.email}
+              #{certificate.name} - #{certificate.email}
         - })
 
 append scripts
-  if (edition.state == 'NEW')
+  if (locals.isAllowedInstructor && edition.state == 'NEW')
     //- Edición de certificados
     script 
       define('editview', 
@@ -62,7 +62,7 @@ append scripts
             var certificates = new Backbone.Collection([], {
                 model: CertificateModel,
               });
-            certificates.url = '/courses/!{course.uuid}/editions/!{edition.id}/certificates';
+            certificates.url = '/courses/#{course.uuid}/editions/#{edition.id}/certificates';
             
             certificates.fetch({ 
               success: function(collection, response){

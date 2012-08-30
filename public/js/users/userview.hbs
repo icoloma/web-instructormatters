@@ -1,16 +1,33 @@
 <form class="well">
 
-  <label>User e-mail: </label>
-  <input name="email" type="text" value="{{user.email}}" required {{#if user.oauth}} disabled {{/if}} > 
+
+  <label class="control-label" for="email">User e-mail: </label>
+  <div class="controls">
+      <div class="input-prepend">
+        <span class="add-on"><i class="icon-envelope"></i></span>
+        <input class="email" name="email" type="text" value="{{user.email}}" required {{#if user.oauth}} disabled {{/if}} > 
+      </div>
+  </div>  
+
 
   {{#if user.name}}
     <label>User name: </label>
     <input name="name" type="text" value="{{user.name}}" disabled >
   {{/if}}
  
+
+  <label>Courses:</label>
   {{#each courses}}
-    <p><input type="checkbox" name="courses_{{this.id}}" value="{{this.id}}" class="checkbox"> {{this.name}} 
+      <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox"> {{this.name}} 
   {{/each}}
+
+
+ <p>
+  <label>Is admin:</label>
+  <select name="admin" >
+    <option value="true">Yes</option>
+    <option value="false">No</option>
+  </select>
 
   <p>
     <input type="submit" class="btn btn-primary" value="Save" />
@@ -19,9 +36,5 @@
     <a id="delete" class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
   {{/if}}
 
- 
-    
-
-  <coures id="list" class="btn"><i class="icon-list"></i> List</a>
   
 </form>

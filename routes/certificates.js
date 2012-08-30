@@ -1,7 +1,8 @@
 
-var models = require('../db/models');
-var Pdfkit = require('pdfkit');
-var fs = require('fs');
+var models = require('../db/models')
+  , Pdfkit = require('pdfkit')
+  , fs = require('fs')
+  , UUID = require('../lib/uuid');
 
 /*
 * Mostrar un certificado 

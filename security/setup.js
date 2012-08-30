@@ -47,13 +47,6 @@ passport.use(new GoogleStrategy({
 
 
 
-//  exponemos el usuario logado 
-passport.currentUser = function (req,res,next){
-  res.locals.currentUser = req.user;
-  next();
-
-}
-
 
 // Se ha autenticado con Google, pero ¿ está en nuestra bdd ?
 passport.checkUser = function (req,res) {
@@ -79,7 +72,7 @@ passport.checkUser = function (req,res) {
         return;
       } 
       
-      // actualizamos el token
+      // actualizamos el token y el displayName
       async.parallel([
         function(cb){
           models.Users

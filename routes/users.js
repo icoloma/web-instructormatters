@@ -41,6 +41,7 @@ exports.add = function(req,res){
       models.Courses
         .find({deleted:false})
         .sort('name','ascending')
+        .select('uuid, name')
         .exec(cb);
 
     }], function(err,results){
@@ -51,7 +52,7 @@ exports.add = function(req,res){
 
       res.render('admin/user', {
           title: 'New User',
-          user: {},
+          user: { admin:false , courses: []},
           courses: results[0]
         });
       
@@ -89,6 +90,7 @@ exports.add = function(req,res){
        models.Courses
         .find({deleted:false})
         .sort('name','ascending')
+        .select('uuid name')
         .exec(cb);
 
     }], function(err,results){

@@ -16,7 +16,7 @@ Flag de administrador
 var UserSchema = new mongoose.Schema({
   name: String,
   email: {type: String, required: true},
-  courses: [ {  id: {type: ObjectId, ref: 'Users'}}],
+  courses: [ { uuid: {type: String}}],
   expires: Date,
   oauth: String,
   admin: {type: Boolean, default: false},

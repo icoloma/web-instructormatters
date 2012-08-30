@@ -6,14 +6,14 @@
   mongoose = require('mongoose');
   async = require('async');
   _ = require('./public/js/lib/underscore');
-  UUID = require('./lib/uuid');
-  passport = require('./security/setup');
 
 
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
   , path = require('path')
+  , passport = require('./security/setup')
+  , security = require('./security/securityutils')
  ;
 
 
@@ -32,7 +32,7 @@ var app = express();
   app.use(express.session({ secret: 'keyboard cat' }));
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(passport.currentUser);
+  app.use(security.exposeCurrentUser);
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });

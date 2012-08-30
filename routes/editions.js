@@ -1,6 +1,29 @@
 
 var models = require('../db/models');
 
+/*
+  Buscamos los instructores
+  Si el usuario es admin, se mostrarán todos los instructores asociados al curso de la edición
+  en caso contrario, solo se mostrará a el mismo
+*/
+
+var getInstructors = function(req , callback){
+
+  if (req.user.admin){
+    // TOOD : Buscar solo los instructores asignados al curso
+    models.Users
+      .find({deleted:false})
+      .select('name') 
+      .sort('name','ascending')
+      .exec(callback)
+  } else {
+    // Solo le permitimos asignarse a si mismo como instructor
+    callback(null, [req.user]);
+  }
+
+
+}
+
 
 /*
 * Mostrar una edicion (admin)
@@ -22,12 +45,7 @@ exports.view = function (req, res) {
                .findOne({uuid:item.courseUUID})
                .exec(cb)
             }, function (cb) {
-              // Recuperamos todos los instructores
-              models.Users
-                .find({deleted: false})
-                .select('name') 
-                .sort('name','ascending')
-                .exec(cb)
+                getInstructors(req,cb);
             }], function (err, results) {
               // TODO: error handling
               // Mostramos
@@ -108,11 +126,7 @@ exports.add = function(req,res){
         .select('name uuid')
         .exec(cb)
     }, function (cb) {
-      models.Users
-        .find({deleted: false})
-        .select('name') 
-        .sort('name','ascending')
-        .exec(cb)
+      getInstructors(req, cb);
     }], function (err, results) {
       //error handling
       var defaultCourse = results[0];
@@ -221,8 +235,43 @@ exports.add = function(req,res){
         }
 
       });
+  };
    
+  /**
+    Listado de las ediciones asociadas al usuario
+  */
+  exports.list = function(req, res){
+    if (!req.user) {
+      res.send(401);
+      return;
+    }
+
+    async.parallel([
+      function(cb){
+        models.Editions
+             .find( {deleted:false, instructor: req.user.id})
+             .sort('date','descending')
+             .exec(cb);
+      }], function(err, items){
+        if(err) {
+          console.log(err);
+          res.send(500, err.message);
+          return;
+        }
+        res.format({
+          html: function(){
+            res.render('admin/editions', {
+              title: 'My editions',
+              editions: items[0]
+            });
+          },
+          json: function(){
+            res.json(items);
+          }
+        });
+      });
+  };
+
       
     
-  };
 

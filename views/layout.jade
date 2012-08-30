@@ -12,14 +12,24 @@ html
   body
 
     .page-header    
-      a(href="/").btn
+      a(href="/", title="Home").btn
         i.icon-home 
 
+      a( href="/courses",  title="Courses").btn   
+        i.icon-book
+
+      if(locals.isAdmin)
+        a(href="/users", title="Users").btn
+          i.icon-user
+     
+      if(locals.currentUser && ! locals.isAdmin)
+        a(href="/myeditions", title="My editions").btn
+          i.icon-list
 
       if (locals.currentUser) 
         p
-          | Wellcome !{locals.currentUser.name} 
-          a(href='/logout') (Logout)
+          | Wellcome #{locals.currentUser.name} - (#{locals.currentUser.email}) 
+          a(href='/logout') - Logout 
       else
         p
           a(href='/login') Login

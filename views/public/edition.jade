@@ -45,8 +45,7 @@ append content
       ul
         - certificates.forEach(function (certificate){
           li 
-            a( href='/certificates/' + certificate.uuid)
-              #{certificate.name} - #{certificate.email}
+            a( href='/certificates/' + certificate.uuid) #{certificate.name} - #{certificate.email}
         - })
 
 append scripts

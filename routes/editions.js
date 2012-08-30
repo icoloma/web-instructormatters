@@ -35,6 +35,12 @@ exports.view = function (req, res) {
     } else if(!item || (item && item.deleted)) {
       res.send(404);
     } else {
+     
+      if (item.state != "NEW") {
+        res.send(500, "It's not allowed to modify this Edition")
+        return;
+      }
+   
       res.format({
         html: function () {
 
@@ -208,33 +214,47 @@ exports.add = function(req,res){
        res.send(406);  //  Not Acceptable
     }
    
-    //TODO: Comprobar que el estado es NEW, si no es así, devolver un código de error
-
+    //Comprobamos que el estado es NEW, si no es así, devolver un código de error
     async.parallel([
       function(cb){
-        models.Courses
-            .findOne({uuid:req.body.courseUUID})
+        models.Editions.findById(req.params.id).exec(cb);
+    }], function (err, items){
+      if(err) {
+        console.log(err);
+        res.send(500, err.message);
+        return;
+      } 
+      if (items[0].state != "NEW") {
+        res.send(500, "It's not allowed to modify this Edition")
+        return;
+      }
+
+      async.parallel([
+        function(cb){
+          models.Courses
+              .findOne({uuid:req.body.courseUUID})
+              .exec(cb);
+        }, function(cb){
+          console.log("updating " + req.body);
+          models.Editions
+            .update({_id: req.params.id}, req.body)
             .exec(cb);
-      }, function(cb){
-        console.log("updating " + req.body);
-        models.Editions
-          .update({_id: req.params.id}, req.body)
-          .exec(cb);
 
-      }],function(err, results){
-        var course = results[0];
-        var num = results[1];
-        if(err) {
-          console.log(err);
-          res.send(500, err.message);
-        } else if(!num) {
-          res.send(404);   // not found
-        } else {
-          res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.id);
-          res.send(204);   // OK, no content
-        }
+        }],function(err, results){
+          var course = results[0];
+          var num = results[1];
+          if(err) {
+            console.log(err);
+            res.send(500, err.message);
+          } else if(!num) {
+            res.send(404);   // not found
+          } else {
+            res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.id);
+            res.send(204);   // OK, no content
+          }
 
-      });
+        });
+    });
   };
    
   /**

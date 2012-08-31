@@ -269,7 +269,12 @@ exports.add = function(req,res){
 */
 exports.following = function( req, res) {
     var now =  /(.+)T.+/.exec(new Date().toISOString());
-    var editions =  getEditionsWithCourseNames( {deleted:false, "date" : { "$gte" : now[1] } }
+    var editions =  getEditionsWithCourseNames( {
+        deleted:false, 
+        "date" : { 
+          "$gte" : now[1] 
+        } 
+      }
       , function( err, editions){
           if(err) {
             console.log(err);
@@ -279,7 +284,7 @@ exports.following = function( req, res) {
           res.format({
             html: function(){
               res.render('public/following', {
-                title: 'Wellcome to InstructorMatters.com',
+                title: 'Welcome to InstructorMatters.com',
                 editions: editions
               });
             },
@@ -299,9 +304,10 @@ exports.following = function( req, res) {
 
 var getInstructors = function(req , callback){
   if (req.user.admin){
-    // TOOD : Buscar solo los instructores asignados al curso
     models.Users
-      .find({deleted:false})
+      .find({  
+          deleted:false
+        , courses: req.params.uuid})
       .select('name') 
       .sort('name','ascending')
       .exec(callback)
@@ -335,15 +341,17 @@ var getEditionsWithCourseNames = function( query, callback ){
           return;
         }
 
-        var editions = items[0];
-        var courses = items[1];
+        var editions = items[0]
+          , courses = items[1]
+          , coursesMap = {}
 
-        var coursesMap = _.reduce( courses, function( memo, course) {
-          memo[course.uuid] = course.name;
-          return memo;
-          }, {} );
+        courses.forEach(function(course) {
+          coursesMap[course.uuid] = course.name;
+        })
 
-        _.map( editions, function(edition){ edition.courseName = coursesMap[edition.courseUUID]; });
+        _.each( editions, function(edition){ 
+          edition.courseName = coursesMap[edition.courseUUID]; 
+        });
         callback( null, editions);
       });
 }

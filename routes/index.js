@@ -12,9 +12,11 @@ var models  = require('../db/models')
 module.exports = function (server) {
 
   // Default view
-  server.get('/', function(req, res) {
-    res.render('home', { title: 'Home' });
-  });
+  server.get('/', editions.following);
+  
+  //server.get('/', function(req, res) {
+  //  res.render('home', { title: 'Home' });
+  //});
 
   // Courses
   server.get( '/courses',             courses.list);                                              // listado de todos los cursos

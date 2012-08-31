@@ -1,29 +1,6 @@
 
 var models = require('../db/models');
 
-/*
-  Buscamos los instructores
-  Si el usuario es admin, se mostrarán todos los instructores asociados al curso de la edición
-  en caso contrario, solo se mostrará a el mismo
-*/
-
-var getInstructors = function(req , callback){
-
-  if (req.user.admin){
-    // TOOD : Buscar solo los instructores asignados al curso
-    models.Users
-      .find({deleted:false})
-      .select('name') 
-      .sort('name','ascending')
-      .exec(callback)
-  } else {
-    // Solo le permitimos asignarse a si mismo como instructor
-    callback(null, [req.user]);
-  }
-
-
-}
-
 
 /*
 * Mostrar una edicion (admin)
@@ -266,32 +243,107 @@ exports.add = function(req,res){
       return;
     }
 
-    async.parallel([
+    var editions = getEditionsWithCourseNames(  {deleted:false, instructor: req.user.id}
+      , function( err, editions){
+          if(err) {
+            console.log(err);
+            res.send(500, err.message);
+            return;
+          }
+          res.format({
+            html: function(){
+              res.render('admin/myeditions', {
+                title: 'My editions',
+                editions: editions
+              });
+            },
+            json: function(){
+              res.json(editions);
+            }
+        });
+      });
+};
+
+/**
+  Listado de las próximas ediciones
+*/
+exports.following = function( req, res) {
+    var now =  /(.+)T.+/.exec(new Date().toISOString());
+    var editions =  getEditionsWithCourseNames( {deleted:false, "date" : { "$gte" : now[1] } }
+      , function( err, editions){
+          if(err) {
+            console.log(err);
+            res.send(500, err.message);
+            return;
+          }
+          res.format({
+            html: function(){
+              res.render('public/following', {
+                title: 'Wellcome to InstructorMatters.com',
+                editions: editions
+              });
+            },
+            json: function(){
+              res.json(editions);
+            }
+        });
+      });
+}
+
+
+/*
+  Buscamos los instructores
+  Si el usuario es admin, se mostrarán todos los instructores asociados al curso de la edición
+  en caso contrario, solo se mostrará a el mismo
+*/
+
+var getInstructors = function(req , callback){
+  if (req.user.admin){
+    // TOOD : Buscar solo los instructores asignados al curso
+    models.Users
+      .find({deleted:false})
+      .select('name') 
+      .sort('name','ascending')
+      .exec(callback)
+  } else {
+    // Solo le permitimos asignarse a si mismo como instructor
+    callback(null, [req.user]);
+  }
+}
+
+/*
+  Retornamos las ediciones junto con el nombre del curso
+*/
+var getEditionsWithCourseNames = function( query, callback ){
+  async.parallel([
       function(cb){
+
         models.Editions
-             .find( {deleted:false, instructor: req.user.id})
-             .sort('date','descending')
-             .exec(cb);
+         .find( query )
+         .sort('date','descending')
+         .exec(cb);
+      },
+      function(cb){
+        models.Courses
+          .find( {deleted:false })
+          .select( "name uuid")
+          .exec(cb)    
       }], function(err, items){
         if(err) {
           console.log(err);
-          res.send(500, err.message);
+          callback(err,items)
           return;
         }
-        res.format({
-          html: function(){
-            res.render('admin/myeditions', {
-              title: 'My editions',
-              editions: items[0]
-            });
-          },
-          json: function(){
-            res.json(items);
-          }
-        });
+
+        var editions = items[0];
+        var courses = items[1];
+
+        var coursesMap = _.reduce( courses, function( memo, course) {
+          memo[course.uuid] = course.name;
+          return memo;
+          }, {} );
+
+        _.map( editions, function(edition){ edition.courseName = coursesMap[edition.courseUUID]; });
+        callback( null, editions);
       });
-  };
-
-      
-    
-
+}

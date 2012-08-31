@@ -67,6 +67,7 @@ passport.checkUser = function (req,res) {
         return;
       }
 
+      // TODO: Comprobar el oauth con el existente en la base de datos
       if (dbUser.oauth){
         res.redirect('/');
         return;

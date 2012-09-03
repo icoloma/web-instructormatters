@@ -5,17 +5,18 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
 
       events : {
         'submit form' : 'send',
-        'change input, textarea' : 'onChange'
+        'change input, textarea' : 'onChange',
+        'click .btn.contact' : 'render'
       },
 
       render: function() {
         this.model.attributes.to = this.options.instructor.email;
+        this.hiddenContent = this.$el.html();
         this.$el.html(template({
             instructor : this.options.instructor,
             course : this.options.course
           })
         );
-        this.$("[name=toAddress]").val(this.options.instructor.email);
       },
 
       onChange : function(e) {
@@ -25,16 +26,25 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
 
       send: function(e) {
         e.preventDefault();
+        var self = this;
         try {
-
           this.model.save({}, {
             success:  function(resp, status, xhr) {
-              console.log('sucess');
+              this.view.remove()
+            },
+            on201: function(xhr) {
+              //after a sucessful mail delivery, we remove the view.
+              self.restore();
             }
           });
         } catch (err) {
           console.log(err);
         }
+      },
+
+      restore: function(e) {
+        console.log("removing view");
+        this.$el.html(this.hiddenContent);
       }
 
     });

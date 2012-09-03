@@ -3,7 +3,7 @@ define(['core'],
     return B.Model.extend({
       
       url: function() {
-        return 'contact';
+        return this.get('editionId') + '/contact';
       }
 
     });

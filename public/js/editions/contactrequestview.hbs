@@ -1,5 +1,8 @@
 <form class="well">
 
+  <input type="hidden" name="courseUUID" value="{{course.uuid}}"/>   
+  <input type="hidden" name="editionId" value="{{edition.id}}/>" 
+
   <label>to</label>
   <input name="instructor" type="text" value="{{instructor.name}}" readonly>
   <input name="to" type="hidden" value="{{contactrequest.email}}" readonly>

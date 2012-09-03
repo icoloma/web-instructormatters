@@ -13,7 +13,6 @@ function MailSender() {
   });
 
   this.sendMail = function(contactRequest) {
-    console.log("Sending email as requested from " + JSON.stringify(contactRequest));
     contactRequest.replyTo = contactRequest.from;
     transport.sendMail(contactRequest,  function(error){
         if(error) {

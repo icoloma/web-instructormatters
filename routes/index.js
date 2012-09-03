@@ -38,6 +38,9 @@ module.exports = function (server) {
   server.put( '/courses/:uuid/editions/:id',      editions.update);
   server.del( '/courses/:uuid/editions/:id',      editions.del); 
   server.get( '/courses/:uuid/editions/:id/edit', editions.view);
+
+  server.get( '/courses/:uuid/editions/:id/contact', editions.contactForm);
+  server.post('/courses/:uuid/editions/:id/contact', editions.sendMail);
   
   // Certificates
   server.get( '/certificates/:uuid',                                  certificates.checkAvailability, certificates.view);

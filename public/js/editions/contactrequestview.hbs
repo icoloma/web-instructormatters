@@ -1,0 +1,18 @@
+<form class="well">
+
+  <label>to</label>
+  <input name="to" type="text" value="{{instructor.name}}" readonly>
+  <input name="toAddress" type="email" value="{{instructor.email}}" readonly>
+
+  <label>from</label>
+  <input name="from" type="email" value="{{contactrequest.from}}">
+
+  <label>subject</label>
+  <input name="subject" type="text" value="{{contactrequest.subject}}">
+
+  <label>body</label>
+  <textarea name="body" value="{{contactrequest.body}}"/>
+
+  <input type="submit" class="btn btn-primary" value="Send"/>
+
+</form>

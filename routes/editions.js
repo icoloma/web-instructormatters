@@ -222,7 +222,40 @@ exports.add = function(req,res){
 
       });
    
-      
-    
+
   };
 
+  exports.contactForm = function(req, res) {
+    models.Editions.findById(req.params.id, function (err, edition) {
+      if(err) {
+        res.send(500, err.message)
+      } else if(!edition || (edition && edition.deleted)) {
+        res.send(404);
+      } else {
+        async.parallel([
+            function(cb) {
+              models.Courses
+                .findOne({uuid:req.params.uuid})
+                .exec(cb);
+          }, function(cb) {
+              models.Users
+                .findById(edition.instructor)
+                .exec(cb)
+          }
+          ],function(err,results) {
+            res.render('public/contact', {
+                      title: 'Contact course instructor',
+                      edition: edition,
+                      course: results[0],
+                      instructor: results[1]
+            });
+          });
+      }
+    });
+  };
+
+  exports.sendMail = function(req, res) {
+    console.log(JSON.stringify(req.body));
+    res.send(201); //Ok. No content
+  };
+  

@@ -1,0 +1,38 @@
+
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+  .test
+    p Course : !{course.name}
+
+    p Date : !{edition.date}
+
+    p Venue : !{edition.venue}
+
+    p State : !{edition.state}
+
+    p Instructor : !{instructor.name}
+
+    p Email : !{instructor.email}
+
+  .main  
+
+append scripts
+  script
+    define('contactView',
+      ['editions/contactrequestview', 'editions/contactrequestmodel', 'jquery'],
+
+      function(ContactRequestView, ContactRequestModel) {
+        var view = new ContactRequestView({
+          model: new ContactRequestModel(),
+          edition: !{JSON.stringify(edition)},
+          instructor: !{JSON.stringify(instruct
+          el: $('.main')
+        });
+
+        view.render();
+      });
+
+

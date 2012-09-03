@@ -7,6 +7,7 @@ var require = {
     hbs: 'lib/hbs',
     Handlebars: 'lib/Handlebars',
     bootstrap_alert: 'lib/bootstrap-alert',
+    bootstrap_dropdown: 'lib/bootstrap-dropdown',
     messages: 'lib/messages'
   },
   deps: [

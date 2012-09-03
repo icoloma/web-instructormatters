@@ -1,45 +1,48 @@
 doctype 5
-html
+html( lang="en")
   head
     meta(charset="utf-8")
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
-    link(rel='stylesheet', href='/stylesheets/bootstrap-responsive.css')
+    link(rel='stylesheet', href='/css/styles.css')
     //if lt IE 10
       script
         window.location.href=/(http(s?):\/\/[^\/]+).*/.exec(window.location.href)[1] + '/browser-not-supported.html'
   body
+    .navbar.navbar-fixed-top 
+      .navbar-inner
+        .container 
+          a.brand(href="/") InstructorMatters
+          ul.nav 
+            li
+              a(href="/courses") Courses  
+            li
+              if(locals.isAdmin)
+                a(href="/users")Users
+             
+              if(locals.currentUser && ! locals.isAdmin)
+                a(href="/myeditions") My editions
 
-    .page-header    
-      a(href="/", title="Home").btn
-        i.icon-home 
+          ul.nav.pull-right
+            if (locals.currentUser) 
+              li.dropdown
+                a.dropdown-toggle(href="#", data-toggle="dropdown") #{locals.currentUser.name}
+                  b.caret  
+                ul.dropdown-menu
+                  li 
+                    a(href='/logout') Logout 
+            else
+              li
+                a(href='/login') Login
 
-      a( href="/courses",  title="Courses").btn   
-        i.icon-book
+    h1= title  
 
-      if(locals.isAdmin)
-        a(href="/users", title="Users").btn
-          i.icon-user
+    .container 
      
-      if(locals.currentUser && ! locals.isAdmin)
-        a(href="/myeditions", title="My editions").btn
-          i.icon-list
-
-      if (locals.currentUser) 
-        p
-          | Wellcome #{locals.currentUser.name} - (#{locals.currentUser.email}) 
-          a(href='/logout') - Logout 
-      else
-        p
-          a(href='/login') Login
-
-      h1= title  
       
-    .messages-container
+      .messages-container
     
     
-    block content
+      block content
     
     script(src='/js/app.js')
     script(src='/js/lib/require.js')

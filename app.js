@@ -3,10 +3,9 @@
  * Module dependencies.
  */
 
-mongoose = require('mongoose');
+  mongoose = require('mongoose');
   async = require('async');
   _ = require('./public/js/lib/underscore');
-  UUID = require('./lib/uuid');
 
 
 var express = require('express')
@@ -14,7 +13,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , passport = require('./security/setup')
-;
+  , security = require('./security/securityutils')
+ ;
 
 
   
@@ -26,13 +26,14 @@ var app = express();
   app.set('view engine', 'jade');
   app.use(express.favicon());
   app.use(express.logger('dev'));
-  app.use(express.bodyParser());
   app.use(express.cookieParser()); 
-  app.use(app.router);
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
   app.use(express.session({ secret: 'keyboard cat' }));
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(express.methodOverride());
+  app.use(security.exposeCurrentUser);
+  app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
@@ -47,7 +48,6 @@ mongoose.connect('mongodb://localhost/instructormatters');
 
 
 routes(app);
-
 
 
 http.createServer(app).listen(app.get('port'), function(){

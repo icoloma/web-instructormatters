@@ -1,7 +1,8 @@
 
-var models = require('../db/models');
-var Pdfkit = require('pdfkit');
-var fs = require('fs');
+var models = require('../db/models')
+  , Pdfkit = require('pdfkit')
+  , fs = require('fs')
+  , UUID = require('../lib/uuid');
 
 /*
 * Mostrar un certificado 
@@ -119,40 +120,35 @@ exports.list = function (req, res) {
       
   }
 
-  exports.pdf = function( req, resp ){
+  exports.pdf = function( req, res ){
      
     var filename = 'certificates/' + req.params.uuid + '.pdf';
     
-    try {
-      fs.statSync(filename);
-      resp.sendfile(filename);
-      return;
-    } catch(err){
-      if (err.code ==='ENOENT'){
-        async.parallel([
-          function (cb) {
-            // find Course
-            models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
-          }, function (cb) {
-            // find instructor
-            models.Users.findById(req.edition.instructor, cb);
-          }], function (err, results) {
-            // TODO: error handling
-            var course = results[0];
-            var instructor = results[1];
-            this.generatePDF( req.certificate, req.edition, course, instructor, function(err, resp) {
-              if (!err) {
-                resp.sendFile(filename);
-              } else {
-                resp.send(500, err);
-              }
-            });
-          });
-      } else {
-        resp.send(500,err);
-      }
+    if (fileExists(filename)){
+        res.sendfile(filename);
+        return;
     }
-    
+
+    async.parallel([
+      function (cb) {
+        // find Course
+        models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
+      }, function (cb) {
+        // find instructor
+        models.Users.findById(req.edition.instructor, cb);
+      }], function (err, results) {
+        // TODO: error handling
+        var course = results[0];
+        var instructor = results[1];
+        generatePDF( req.certificate, req.edition, course, instructor, function(err) {
+          if (!err) {
+            res.sendfile(filename);
+          } else {
+            res.send(500, err);
+          }
+        });
+      });
+     
   },
 
   exports.checkAvailability = function(req, res, next) {
@@ -179,7 +175,7 @@ exports.list = function (req, res) {
     });
   }
 
-  generatePDF = function (certificate, edition, course, instructor, callback){
+  var generatePDF = function (certificate, edition, course, instructor, callback){
     var urlCertificate = 'http://instructormatters.com/certificates/' + certificate.uuid;
     var urlCourse = 'http://instructormatters.com/courses/' + course.uuid;
     var doc = new Pdfkit({layout:'landscape'});
@@ -208,8 +204,24 @@ exports.list = function (req, res) {
       .fontSize(15)
       .moveDown()
       .moveDown()
-      .text(urlCertificate)
-      .write('certificates/' + certificate.uuid + '.pdf', callback);
+      .text(urlCertificate);
+
+    async.series([
+      function(cb){
+        doc.write('certificates/' + certificate.uuid + '.pdf', cb);
+      }], function(err, results){
+        callback(err,results);
+      }
+      );
   }
+
+  var fileExists = function (path) {
+    try { 
+      fs.statSync(d); 
+      return true;
+    } catch (er) { 
+      return false; 
+    }
+}
 
 

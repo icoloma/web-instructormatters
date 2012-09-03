@@ -10,10 +10,31 @@ html
       script
         window.location.href=/(http(s?):\/\/[^\/]+).*/.exec(window.location.href)[1] + '/browser-not-supported.html'
   body
-    
-    a(href="/").btn
-      i.icon-home 
-    h1= title  
+
+    .page-header    
+      a(href="/", title="Home").btn
+        i.icon-home 
+
+      a( href="/courses",  title="Courses").btn   
+        i.icon-book
+
+      if(locals.isAdmin)
+        a(href="/users", title="Users").btn
+          i.icon-user
+     
+      if(locals.currentUser && ! locals.isAdmin)
+        a(href="/myeditions", title="My editions").btn
+          i.icon-list
+
+      if (locals.currentUser) 
+        p
+          | Wellcome #{locals.currentUser.name} - (#{locals.currentUser.email}) 
+          a(href='/logout') - Logout 
+      else
+        p
+          a(href='/login') Login
+
+      h1= title  
       
     .messages-container
     

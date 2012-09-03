@@ -15,6 +15,7 @@ append scripts
         // Create view
         var view = new UserView({
           model: new UserModel(!{JSON.stringify(user)}),
+          courses: !{JSON.stringify(courses)},
           el: $('.main')
         });
 

@@ -7,26 +7,24 @@ append content
   .main  
     p 
       span Name:
-      | !{course.name}
+      | #{course.name}
     p 
       span Description:
-      | !{course.description}
+      | #{course.description}
     p 
       span Duration:
-      | !{course.duration}
+      | #{course.duration}
 
-     a(href="/courses/" + course.uuid + '/edit').btn.btn-primary Edit
-     a(href="/courses/").btn
-      i.icon-list 
-      &nbsp;List
-
+    if (locals.isAdmin)  
+      a(href="/courses/" + course.uuid + '/edit').btn.btn-primary Edit
+      
     ul
     -editions.forEach(function (edition) {
       li  
-        a(href='/courses/' + course.uuid + '/editions/' + edition.id ) !{edition.date} - !{edition.venue}
+        a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} - #{edition.venue}
             
     -})
-     a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
-    
 
-   
+    if (locals.isAllowedInstructor)  
+      a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
+    

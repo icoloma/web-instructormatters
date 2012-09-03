@@ -36,9 +36,26 @@ exports.list =  function (req, res) {
 * Añadir usuario
 */
 exports.add = function(req,res){
-  res.render('admin/user', {
-      title: 'New User',
-      user: {}
+  async.parallel([
+    function(cb){
+      models.Courses
+        .find({deleted:false})
+        .sort('name','ascending')
+        .select('uuid, name')
+        .exec(cb);
+
+    }], function(err,results){
+      if (err){
+        res.send(500,err.message);
+        return;
+      }
+
+      res.render('admin/user', {
+          title: 'New User',
+          user: { admin:false , courses: []},
+          courses: results[0]
+        });
+      
     });
 }
 
@@ -69,25 +86,37 @@ exports.add = function(req,res){
 * Mostrar un usuario
 */
   exports.view = function (req, res) {
-    models.Users.findById(req.params.id, function (err, item) {
-      if(err) {
-        res.send(500, err.message)
-      } else if(!item || (item && item.deleted)) {
-        res.send(404);
-      } else {
-        res.format({
-          html: function () {
-            res.render('admin/user', {
-              title: 'Edit user',
-              user: item
-            });
-          },
-          json : function () {
-            res.send(item);
-          }
-        });        
-      }
+    async.parallel([function(cb){
+       models.Courses
+        .find({deleted:false})
+        .sort('name','ascending')
+        .select('uuid name')
+        .exec(cb);
+
+    }], function(err,results){
+      models.Users.findById(req.params.id, function (err, item) {
+        if(err) {
+          res.send(500, err.message)
+        } else if(!item || (item && item.deleted)) {
+          res.send(404);
+        } else {
+          res.format({
+            html: function () {
+              res.render('admin/user', {
+                title: 'Edit user',
+                user: item,
+                courses: results[0]
+              });
+            },
+            json : function () {
+              res.send(item);
+            }
+          });        
+        }
+      });
+
     });
+
   };
 
 /**

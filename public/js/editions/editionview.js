@@ -19,12 +19,6 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
         this.$("select[name=instructor]").val(this.model.attributes.instructor);
         this.$("select[name=state]").val(this.model.attributes.status);
 
-        // certificates
-        /*
-        var certificatesView = new CertificateCollectionView({
-          collection: this.model.certificates,
-          el: this.$('.certificates')
-        }).render();*/
       },
 
       onChange : function(e) {
@@ -58,9 +52,6 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
         this.model.destroy({
           success: function() {
             location.href = '/courses/'+ self.options.course.uuid + '?code=deleted';
-          },
-          error: function(resp, status, xhr){
-            Core.renderMessage({ level:'error', message:status.statusText});
           }
         });
       }

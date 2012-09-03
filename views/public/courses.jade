@@ -4,15 +4,15 @@ include ../includes/admin-mixins
 
 append content
   
-  a(href="/courses/new").btn.btn-info New Course
-   
   ul
     -courses.forEach(function (course) {
       li
-        h3
-          a(href="/courses/" + course.uuid ) !{course.name}
+        a(href="/courses/" + course.uuid ) #{course.name}
             
     -})
 
+  if (locals.currentUser && locals.currentUser.admin) 
+    a(href="/courses/new").btn.btn-info New Course
+   
 
 

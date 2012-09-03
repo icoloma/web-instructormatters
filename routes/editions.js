@@ -12,6 +12,12 @@ exports.view = function (req, res) {
     } else if(!item || (item && item.deleted)) {
       res.send(404);
     } else {
+     
+      if (item.state != "NEW") {
+        res.send(500, "It's not allowed to modify this Edition")
+        return;
+      }
+   
       res.format({
         html: function () {
 
@@ -22,12 +28,7 @@ exports.view = function (req, res) {
                .findOne({uuid:item.courseUUID})
                .exec(cb)
             }, function (cb) {
-              // Recuperamos todos los instructores
-              models.Users
-                .find({deleted: false})
-                .select('name') 
-                .sort('name','ascending')
-                .exec(cb)
+                getInstructors(req,cb);
             }], function (err, results) {
               // TODO: error handling
               // Mostramos
@@ -108,11 +109,7 @@ exports.add = function(req,res){
         .select('name uuid')
         .exec(cb)
     }, function (cb) {
-      models.Users
-        .find({deleted: false})
-        .select('name') 
-        .sort('name','ascending')
-        .exec(cb)
+      getInstructors(req, cb);
     }], function (err, results) {
       //error handling
       var defaultCourse = results[0];
@@ -194,33 +191,174 @@ exports.add = function(req,res){
        res.send(406);  //  Not Acceptable
     }
    
-    //TODO: Comprobar que el estado es NEW, si no es así, devolver un código de error
-
+    //Comprobamos que el estado es NEW, si no es así, devolver un código de error
     async.parallel([
       function(cb){
-        models.Courses
-            .findOne({uuid:req.body.courseUUID})
-            .exec(cb);
-      }, function(cb){
-        console.log("updating " + req.body);
-        models.Editions
-          .update({_id: req.params.id}, req.body)
-          .exec(cb);
+        models.Editions.findById(req.params.id).exec(cb);
+    }], function (err, items){
+      if(err) {
+        console.log(err);
+        res.send(500, err.message);
+        return;
+      } 
+      if (items[0].state != "NEW") {
+        res.send(500, "It's not allowed to modify this Edition")
+        return;
+      }
 
-      }],function(err, results){
-        var course = results[0];
-        var num = results[1];
+      async.parallel([
+        function(cb){
+          models.Courses
+              .findOne({uuid:req.body.courseUUID})
+              .exec(cb);
+        }, function(cb){
+          console.log("updating " + req.body);
+          models.Editions
+            .update({_id: req.params.id}, req.body)
+            .exec(cb);
+
+        }],function(err, results){
+          var course = results[0];
+          var num = results[1];
+          if(err) {
+            console.log(err);
+            res.send(500, err.message);
+          } else if(!num) {
+            res.send(404);   // not found
+          } else {
+            res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.id);
+            res.send(204);   // OK, no content
+          }
+
+        });
+    });
+  };
+   
+  /**
+    Listado de las ediciones asociadas al usuario
+  */
+  exports.list = function(req, res){
+    if (!req.user) {
+      res.send(401);
+      return;
+    }
+
+    var editions = getEditionsWithCourseNames(  {deleted:false, instructor: req.user.id}
+      , function( err, editions){
+          if(err) {
+            console.log(err);
+            res.send(500, err.message);
+            return;
+          }
+          res.format({
+            html: function(){
+              res.render('admin/myeditions', {
+                title: 'My editions',
+                editions: editions
+              });
+            },
+            json: function(){
+              res.json(editions);
+            }
+        });
+      });
+};
+
+/**
+  Listado de las próximas ediciones
+*/
+exports.following = function( req, res) {
+    var now =  /(.+)T.+/.exec(new Date().toISOString());
+    var editions =  getEditionsWithCourseNames( {
+        deleted:false, 
+        "date" : { 
+          "$gte" : now[1] 
+        } 
+      }
+      , function( err, editions){
+          if(err) {
+            console.log(err);
+            res.send(500, err.message);
+            return;
+          }
+          res.format({
+            html: function(){
+              res.render('public/following', {
+                title: 'Welcome to InstructorMatters.com',
+                editions: editions
+              });
+            },
+            json: function(){
+              res.json(editions);
+            }
+        });
+      });
+}
+
+
+/*
+  Buscamos los instructores
+  Si el usuario es admin, se mostrarán todos los instructores asociados al curso de la edición
+  en caso contrario, solo se mostrará a el mismo
+*/
+
+var getInstructors = function(req , callback){
+  if (req.user.admin){
+    models.Users
+      .find({  
+          deleted:false
+        , courses: req.params.uuid})
+      .select('name') 
+      .sort('name','ascending')
+      .exec(callback)
+  } else {
+    // Solo le permitimos asignarse a si mismo como instructor
+    callback(null, [req.user]);
+  }
+}
+
+/*
+  Retornamos las ediciones junto con el nombre del curso
+*/
+var getEditionsWithCourseNames = function( query, callback ){
+  async.parallel([
+      function(cb){
+
+        models.Editions
+         .find( query )
+         .sort('date','descending')
+         .exec(cb);
+      },
+      function(cb){
+        models.Courses
+          .find( {deleted:false })
+          .select( "name uuid")
+          .exec(cb)    
+      }], function(err, items){
         if(err) {
           console.log(err);
-          res.send(500, err.message);
-        } else if(!num) {
-          res.send(404);   // not found
-        } else {
-          res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.id);
-          res.send(204);   // OK, no content
+          callback(err,items)
+          return;
         }
 
+        var editions = items[0]
+          , courses = items[1]
+          , coursesMap = {}
+
+        courses.forEach(function(course) {
+          coursesMap[course.uuid] = course.name;
+        })
+
+        _.each( editions, function(edition){ 
+          edition.courseName = coursesMap[edition.courseUUID]; 
+        });
+        callback( null, editions);
       });
+   
+      
+    
+  };
+
    
 
   };
@@ -259,3 +397,4 @@ exports.add = function(req,res){
     res.send(201); //Ok. No content
   };
   
+}

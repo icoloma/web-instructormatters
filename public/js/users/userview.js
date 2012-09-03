@@ -1,3 +1,4 @@
+
 define([ 'core', 'backbone', 'hbs!./userview' ], 
   function(Core, B, template) {
 
@@ -7,7 +8,15 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
         'click #delete' : 'delete',
         'click #list' : 'list',
         'submit form': 'save',
-        'change input': function(e) {
+        'change input.checkbox' : function(e){
+          if (e.currentTarget.checked){
+            this.model.attributes.courses.push(e.currentTarget.value);
+          } else  {
+            this.model.attributes.courses = _.without(this.model.attributes.courses, e.currentTarget.value);
+          }
+
+        },
+        'change input.email,select': function(e) {
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
         }
@@ -20,8 +29,18 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
       render: function() {
         var edition = this.model.edition;
         this.$el.html( template( {
-            user: this.model.toJSON()
+            user: this.model.toJSON(),
+            courses: this.options.courses
           })); 
+
+        $(this.$("select[name=admin]")[0]).val(JSON.stringify(this.model.attributes.admin));
+
+        if (this.model.attributes.id) {
+          $.map(this.model.attributes.courses, function(item){ 
+            var query = 'input[name=courses_' + item + ']';
+            $(this.$(query)[0]).attr('checked', true);
+            });
+          }
       },
 
       

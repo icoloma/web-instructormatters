@@ -1,19 +1,149 @@
 @import "bootstrap/bootstrap";
 @import "bootstrap/responsive";
-
+@import "flexslider/flexslider";
 @import "modules/home";
+@import url(http://fonts.googleapis.com/css?family=Lato);
+@import url(http://fonts.googleapis.com/css?family=Vollkorn);
 
 body {
   padding-top: 40px;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: #717576;
+  line-height: 1.5em;
+  background: url('img/noise.png') #A00;
 }
 
-/*
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+h2{
+  font-family: 'Lato', serif;
+  color: #A00;
 }
 
-a {
-  color: #00B7FF;
+.inner {  
+  padding:10px 0px; 
 }
-*/
+
+.navbar .brand {
+  display: block;
+  width: 90px;
+  height: 34px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 12px;
+  margin-left: 10px;
+  overflow: hidden;
+  line-height: 600px;
+  color: #333;
+  background: url(../img/logo.png) no-repeat 0 0;
+}
+
+.navbar li{
+  font-family: 'Vollkorn', serif;
+  color: #6B6B6B;
+  font-weight: 400;
+  line-height: 1.3em;
+  font-style: normal;
+  word-spacing: 1px;
+}
+.navbar .nav > li > a {
+  padding: 19px 10px 21px;
+}
+
+.navbar-fixed-top {
+  border-bottom: 1px solid #000;
+}
+
+.navbar-inner {
+  min-height: 60px;
+}
+
+
+#header_wrapper {     
+  padding-top: 40px;
+  padding-bottom: 5px;
+  color:white;
+  height: auto;
+  border: none;
+  overflow: hidden;
+}
+
+.image-slider h2 {
+  margin-top: 120px; /*specify 'margin-top' as per your your choice*/
+  font-family: 'Lato', sans-serif;
+  font-size: 42px;
+  font-weight: 300;
+  color: #ffffff;
+  text-shadow: 0px 1px 1px #d4d4d4;
+  text-transform: uppercase;
+  word-spacing: 10px;
+  z-index: 10;
+}
+.image-slider p {
+  /*font-family: 'Lato', sans-serif;*/
+  font-size: 16px;
+  font-weight: 300;
+  color: #aff;
+  text-align: left;
+  word-spacing: 3px;
+}
+.navbar .nav > li > a.user {
+  color: #A00;
+}
+
+
+#intro{
+  background:url('../img/bg-footer.png'); 
+  padding-top:10px;
+  color:#fff;
+  text-align:center;
+}
+
+#intro h1{text-transform: uppercase;}
+#intro .container{
+  border-bottom: 1px solid #DDD;
+  padding: 10px;
+}
+
+
+#features {
+  background: url(../img/pattern1.jpg) repeat #ebebeb;
+  height: auto;
+  padding-top: 10px;
+}
+#features h1{
+  font-family: 'Vollkorn', serif;
+  color: #6B6B6B;
+  font-weight: 400;
+  line-height: 1.3em;
+  font-style: normal;
+  word-spacing: 1px;
+  text-align: center;
+  font-size: 32px;
+}
+
+
+
+#extra {  
+  border-top: 1px solid #fff;
+  background: url('../img/noise.png') #a00;
+}
+
+#extra .inner { 
+  color: #fff;
+  border-top: 1px solid #000;
+  font-family: 'Vollkorn', serif;
+  font-weight: 400;
+  line-height: 1.3em;
+  font-style: normal;
+  word-spacing: 1px;
+}
+
+#extra h3 { 
+  font-weight: 400;
+  border-bottom: 1px solid #fff;
+  background: url('../img/bg-footer.png');
+  padding: 5px;
+}
+
+

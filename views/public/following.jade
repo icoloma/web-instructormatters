@@ -1,16 +1,52 @@
-extends ../layout
-
+extends ../bare-layout
 
 append content
 
-  .container
+  div.container#header_wrapper
+    .flexslider.image-slider
+      ul.slides
+        -editions.forEach(function (edition) {
+          li
+            .span5.slide
+              h2 #{edition.course.name}
+              p #{edition.date} - #{edition.venue}
+              p #{edition.course.description}
+              a.btn.btn-large.pull-right( href='/courses/' + edition.courseUUID)
+                &nbsp; Go for it !!
+            .span6
+              img( src="img/slides/html5.png", alt="#{edition.course.name}")
+             
+        -})
+
+  div#intro
+    .container
+        h1 What's that ?
+        p Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat acer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum.
+
+
+
+  div#features
+    .container
+      .row
+        .span12
+          h1 Hey !!!
+          p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat interdum auctor. Integer id diam et nulla facilisis lobortis sit amet ut purus. Nullam sed mi erat, eget ultricies orci. Sed magna odio, pulvinar sed pretium ac, hendrerit vel tortor. Aliquam sit amet congue urna. Phasellus vitae sapien non ipsum feugiat sagittis et vel nulla. Vivamus aliquet luctus eros, tempus lacinia tellus porttitor egestas. Nunc metus leo, sagittis sed iaculis nec, mollis in nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam condimentum augue vel
+          p source template: 
+            a(href='http://wbpreview.com/previews/WB0095C2A/') shield
+
+
+
+
+
+append scripts
+  script
+    define( 'home', ['jquery' ], 
+        function(jQuery) {
+      
+          $(window).load(function() {
+            $('.flexslider').flexslider({
+              animation: "slide"
+            });
+          });
+        });
     
-    p Here, the following the editions :
-
-    ul
-      -editions.forEach(function (edition) {
-        li
-          a(href="/courses/" + edition.courseUUID + "/editions/" + edition.id )  (#{edition.date}) #{edition.courseName} - #{edition.venue}
-      -})
-
-

@@ -1,0 +1,53 @@
+doctype 5
+html( lang="en")
+  head
+    meta(charset="utf-8")
+    title= title
+    link(rel='stylesheet', href='/css/styles.css')
+    //if lt IE 10
+      script
+        window.location.href=/(http(s?):\/\/[^\/]+).*/.exec(window.location.href)[1] + '/browser-not-supported.html'
+  body
+    .navbar.navbar-fixed-top 
+      .navbar-inner
+        .container 
+          a.brand(href="/") InstructorMatters
+          ul.nav 
+            li
+              a(href="/courses") Courses  
+            li
+              if(locals.isAdmin)
+                a(href="/users")Users
+             
+              if(locals.currentUser && ! locals.isAdmin)
+                a(href="/myeditions") My editions
+
+          ul.nav.pull-right
+            if (locals.currentUser) 
+              li.dropdown.user
+                a.dropdown-toggle.user(href="#", data-toggle="dropdown") #{locals.currentUser.name} 
+                  b.caret  
+                ul.dropdown-menu
+                  li 
+                    a(href='/logout') Logout 
+            else
+              li
+                a(href='/login')
+                  i.icon-user
+                  &nbsp;Login
+
+    block content
+
+
+    div#extra
+      .inner
+        .container
+          .row
+            .span4
+              H3 InstructorMatters 
+              p Become an instructor
+      
+    script(src='/js/app.js')
+    script(src='/js/lib/require.js')
+    
+    block scripts

@@ -14,10 +14,7 @@ module.exports = function (server) {
   // Default view
   server.get('/', editions.following);
   
-  //server.get('/', function(req, res) {
-  //  res.render('home', { title: 'Home' });
-  //});
-
+ 
   // Courses
   server.get( '/courses',             courses.list);                                              // listado de todos los cursos
   server.get( '/courses/new',         security.isAdmin,                     courses.add);         // muestra formulario para crear curso 

@@ -8,6 +8,7 @@ var require = {
     Handlebars: 'lib/Handlebars',
     bootstrap_alert: 'lib/bootstrap-alert',
     bootstrap_dropdown: 'lib/bootstrap-dropdown',
+    flexslider: 'lib/jquery.flexslider',
     messages: 'lib/messages'
   },
   deps: [

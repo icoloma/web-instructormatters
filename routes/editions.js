@@ -243,7 +243,7 @@ exports.add = function(req,res){
       return;
     }
 
-    var editions = getEditionsWithCourseNames(  {deleted:false, instructor: req.user.id}
+    var editions = getEditionsWithCourseInfo(  {deleted:false, instructor: req.user.id}
       , function( err, editions){
           if(err) {
             console.log(err);
@@ -269,7 +269,7 @@ exports.add = function(req,res){
 */
 exports.following = function( req, res) {
     var now =  /(.+)T.+/.exec(new Date().toISOString());
-    var editions =  getEditionsWithCourseNames( {
+    var editions =  getEditionsWithCourseInfo( {
         deleted:false, 
         "date" : { 
           "$gte" : now[1] 
@@ -320,7 +320,7 @@ var getInstructors = function(req , callback){
 /*
   Retornamos las ediciones junto con el nombre del curso
 */
-var getEditionsWithCourseNames = function( query, callback ){
+var getEditionsWithCourseInfo = function( query, callback ){
   async.parallel([
       function(cb){
 
@@ -332,7 +332,7 @@ var getEditionsWithCourseNames = function( query, callback ){
       function(cb){
         models.Courses
           .find( {deleted:false })
-          .select( "name uuid")
+          .select( "name description uuid")
           .exec(cb)    
       }], function(err, items){
         if(err) {
@@ -346,11 +346,11 @@ var getEditionsWithCourseNames = function( query, callback ){
           , coursesMap = {}
 
         courses.forEach(function(course) {
-          coursesMap[course.uuid] = course.name;
+          coursesMap[course.uuid] = {name: course.name, description: course.description};
         })
 
         _.each( editions, function(edition){ 
-          edition.courseName = coursesMap[edition.courseUUID]; 
+          edition.course = coursesMap[edition.courseUUID]; 
         });
         callback( null, editions);
       });

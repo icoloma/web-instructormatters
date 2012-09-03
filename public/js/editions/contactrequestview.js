@@ -4,16 +4,23 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
     return B.View.extend({
 
       events : {
-        'submit form' : 'send'
+        'submit form' : 'send',
+        'change input, textarea' : 'onChange'
       },
 
       render: function() {
-        console.log('Rendering view');
+        this.model.attributes.toAddress = this.options.instructor.email;
         this.$el.html(template({
             instructor : this.options.instructor,
             course : this.options.course
           })
         );
+        this.$("[name=toAddress]").val(this.options.instructor.email);
+      },
+
+      onChange : function(e) {
+        var $ct = $(e.currentTarget);
+        this.model.set($ct.attr('name'), $ct.val());
       },
 
       send: function(e) {

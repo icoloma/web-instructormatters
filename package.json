@@ -11,6 +11,7 @@
     "less": "*",
     "jade": "*",
     "mongoose": "2.7.3",
+    "nodemailer" : "0.3.22",
     "passport": "*",
     "passport-google-oauth" : "*",
     "node-minify": "*",

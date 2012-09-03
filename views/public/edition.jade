@@ -23,6 +23,7 @@ append content
       p
         span Instructor: 
         | #{instructor.name} &nbsp;
+      .contact
         a( ).btn.contact
           i.icon-envelope
           &nbsp;Contact
@@ -74,3 +75,21 @@ append scripts
               }
             });
       });
+
+  script
+    define('contactView',
+      ['editions/contactrequestview', 'editions/contactrequestmodel', 'jquery'],
+
+      function(ContactRequestView, ContactRequestModel) {
+        var view = new ContactRequestView({
+          model: new ContactRequestModel(),
+          edition: !{JSON.stringify(edition)},
+          instructor: !{JSON.stringify(instructor)},
+          el: $('.contact')
+        });
+
+        console.log("contactRequestView created");
+
+      });
+
+

@@ -33,6 +33,10 @@ module.exports = function (server) {
   server.get( '/courses/:uuid/editions/:id/edit', security.isAllowedInstructor,         editions.view);
   server.get( '/myeditions', editions.list); 
   
+  server.get( '/courses/:uuid/editions/:id/contact', editions.contactForm);
+  server.post('/courses/:uuid/editions/:id/contact', editions.sendMail);
+
+  
   // Certificates
   server.get( '/certificates/:uuid',                                  certificates.checkAvailability, certificates.view);
   server.get( '/certificates/:uuid/pdf',                              certificates.checkAvailability, certificates.pdf);

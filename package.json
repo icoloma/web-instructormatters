@@ -10,6 +10,7 @@
     "express": "3.0.0rc1",
     "jade": "*",
     "mongoose": "2.7.3",
+    "nodemailer" : "0.3.22",
     "passport": "*",
     "passport-google-oauth" : "*",
     "node-minify": "*",

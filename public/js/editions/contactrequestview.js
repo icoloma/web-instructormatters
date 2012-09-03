@@ -9,7 +9,7 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
       },
 
       render: function() {
-        this.model.attributes.toAddress = this.options.instructor.email;
+        this.model.attributes.to = this.options.instructor.email;
         this.$el.html(template({
             instructor : this.options.instructor,
             course : this.options.course

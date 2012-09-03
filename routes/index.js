@@ -35,6 +35,7 @@ module.exports = function (server) {
   server.del( '/courses/:uuid/editions/:id',      security.isAllowedInstructor,         editions.del); 
   server.get( '/courses/:uuid/editions/:id/edit', security.isAllowedInstructor,         editions.view);
   server.get( '/myeditions', editions.list); 
+  
   server.get( '/courses/:uuid/editions/:id/contact', editions.contactForm);
   server.post('/courses/:uuid/editions/:id/contact', editions.sendMail);
 

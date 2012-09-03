@@ -354,12 +354,6 @@ var getEditionsWithCourseNames = function( query, callback ){
         });
         callback( null, editions);
       });
-   
-      
-    
-  };
-
-   
 
   };
 
@@ -393,8 +387,7 @@ var getEditionsWithCourseNames = function( query, callback ){
   };
 
   exports.sendMail = function(req, res) {
-    console.log(JSON.stringify(req.body));
-    res.send(201); //Ok. No content
+    console.log('Sending contact mail ' + JSON.stringify(req.body));
+    res.send(201, 'Mail sent'); //Ok. No content
   };
   
-}

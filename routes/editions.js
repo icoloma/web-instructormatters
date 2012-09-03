@@ -1,5 +1,6 @@
 
 var models = require('../db/models');
+var mailSender = require('../mailer/setup');
 
 /*
 * Mostrar una edicion (admin)
@@ -385,11 +386,9 @@ var getEditionsWithCourseNames = function( query, callback ){
     });
   };
 
-  exports.sendMail = function(req, res) {
-    console.log('Sending contact mail ' + JSON.stringify(req.body));
-    var MailSender = new require('../mailer/setup.js').MailSender;
-    var mailSender = new MailSender();
-    mailSender.sendMail(req.body);
-    res.send(201, 'Mail sent');
-  };
+exports.sendMail = function(req, res) {
+  console.log('Sending contact mail ' + JSON.stringify(req.body));
+  mailSender.sendMail(req.body);
+  res.send(201, 'Mail sent');
+};
   

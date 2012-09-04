@@ -3,13 +3,20 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
+
+  h2 Instructors & admins 
   
   ul
     -users.forEach(function (user) {
       li
-        a(href="/users/" + user._id ) #{user.name} (#{user.email})
+        a(href="/users/" + user._id ) 
+          if (user.name)
+            &nbsp; #{user.name} 
+          else
+            &nbsp; --
+          &nbsp; (#{user.email})
     -})
 
   if (locals.currentUser && locals.currentUser.admin) 
-    a(href="/users/new").btn.btn-info New User
+    a(href="/users/new").btn.btn-primary New User
   

@@ -113,7 +113,7 @@ exports.add = function(req,res){
     }], function (err, results) {
       //error handling
       var defaultCourse = results[0];
-      var defaultInstructor = results[1][0];
+      var defaultInstructor = results[1][0] ? results[1][0] : req.user;
       res.render('admin/edition', {
         title: 'Edition',
         edition: { instructor: defaultInstructor.id, courseUUID: defaultCourse.uuid},

@@ -29,7 +29,7 @@ html( lang="en")
 
               li
                 if(locals.isAdmin)
-                  a(href="/users")Users
+                  a(href="/users") Users
                
                 if(locals.currentUser && ! locals.isAdmin)
                   a(href="/myeditions") My editions
@@ -46,6 +46,7 @@ html( lang="en")
                   a.dropdown-toggle.user(href="#", data-toggle="dropdown") #{locals.currentUser.name} 
                     b.caret  
                   ul.dropdown-menu
+
                     li 
                       a(href='/logout') Logout 
               else

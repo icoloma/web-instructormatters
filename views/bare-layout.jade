@@ -8,45 +8,54 @@ html( lang="en")
       script
         window.location.href=/(http(s?):\/\/[^\/]+).*/.exec(window.location.href)[1] + '/browser-not-supported.html'
   body
+    .a.github-ribbon(href='#') Fork me on GitHub
     .navbar.navbar-fixed-top 
       .navbar-inner
         .container 
+
+          //- btn-navbar is used as the toggle for collapsed navbar content 
+          a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          
           a.brand(href="/") InstructorMatters
-          ul.nav 
-            li
-              a(href="/courses") Courses  
-            li
-              if(locals.isAdmin)
-                a(href="/users")Users
-             
-              if(locals.currentUser && ! locals.isAdmin)
-                a(href="/myeditions") My editions
-
-          ul.nav.pull-right
-            if (locals.currentUser) 
-              li.dropdown.user
-                a.dropdown-toggle.user(href="#", data-toggle="dropdown") #{locals.currentUser.name} 
-                  b.caret  
-                ul.dropdown-menu
-                  li 
-                    a(href='/logout') Logout 
-            else
+          
+          .nav-collapse
+            
+            ul.nav 
               li
-                a(href='/login')
-                  i.icon-user
-                  &nbsp;Login
+                a(href="/courses") Courses  
 
-    block content
+              li
+                if(locals.isAdmin)
+                  a(href="/users")Users
+               
+                if(locals.currentUser && ! locals.isAdmin)
+                  a(href="/myeditions") My editions
+              
+              li 
+                a(href="/pricing") Pricing
 
+              li 
+                a(href="/contactUs") Contact
+             
+            ul.nav.pull-right
+              if (locals.currentUser) 
+                li.dropdown.user
+                  a.dropdown-toggle.user(href="#", data-toggle="dropdown") #{locals.currentUser.name} 
+                    b.caret  
+                  ul.dropdown-menu
+                    li 
+                      a(href='/logout') Logout 
+              else
+                li
+                  a(href='/login')
+                    i.icon-user
+                    &nbsp;Login
 
-    div#extra
-      .inner
-        .container
-          .row
-            .span4
-              H3 InstructorMatters 
-              p Become an instructor
-      
+    block main_content
+
     script(src='/js/app.js')
     script(src='/js/lib/require.js')
     

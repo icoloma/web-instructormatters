@@ -1,18 +1,18 @@
 extends ../layout
 
-include ../includes/admin-mixins
-
 append content
-  
-  ul
-    -courses.forEach(function (course) {
-      li
-        a(href="/courses/" + course.uuid ) #{course.name}
-            
-    -})
 
-  if (locals.currentUser && locals.currentUser.admin) 
-    a(href="/courses/new").btn.btn-info New Course
-   
+    h2 Our courses
+    
+    ul
+      -courses.forEach(function (course) {
+        li
+          a(href="/courses/" + course.uuid ) #{course.name}
+              
+      -})
+
+    if (locals.currentUser && locals.currentUser.admin) 
+      a(href="/courses/new").btn.btn-info New Course
+ 
 
 

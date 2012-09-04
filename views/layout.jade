@@ -1,12 +1,15 @@
 extends bare-layout
 
-h1= title  
+append main_content
+  .header_wrapper
+    .container
+      .page-heading
+        
+        h1= title
 
-.container 
- 
-  
-  .messages-container
+  .page
+    .messages-container 
+    .container
+      block content
 
-
-  block content
-    
+   

@@ -1,6 +1,7 @@
 
 
 var models  = require('../db/models')
+  , statics = require('./statics')
   , courses = require('./courses')
   , certificates = require('./certificates')
   , users = require('./users')
@@ -11,8 +12,12 @@ var models  = require('../db/models')
  
 module.exports = function (server) {
 
-  // Default view
-  server.get('/', editions.following);
+  
+  server.get('/', statics.home);
+  server.get('/pricing', statics.pricing);
+  server.get('/contactUs', statics.contactUs);
+
+  server.get('/following', editions.following);
   
  
   // Courses

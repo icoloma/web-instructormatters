@@ -1,0 +1,74 @@
+extends ../bare-layout
+
+append main_content
+
+  .home-header_wrapper
+    .container
+      .flexslider.home-image-slider
+        ul.slides
+          li
+            .span5.slide
+              h2 HTML5 & CSS3
+              p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat interdum auctor. Integer id diam et nulla facilisis lobortis si
+
+              a.btn.btn-large.pull-right( href='/courses/html5-css3')
+                &nbsp; Go for it !!
+            .span6
+              img( src="/img/slides/html5.png", alt="html5")
+
+          li
+            .span5.slide
+              h2 Mobile
+              p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat interdum auctor. Integer id diam et nulla facilisis lobortis si
+
+             
+            .span6
+              img( src="/img/slides/iphone.png", alt="html5")
+
+          li
+            .span5.slide
+              h2 Training
+              p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat interdum auctor. Integer id diam et nulla facilisis lobortis si
+
+             
+            .span6
+              img( src="/img/slides/draw.png", alt="html5")
+
+    .home-intro
+      .container
+          h1 What's that ?
+          p Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat acer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum.
+
+
+
+    .home-features
+      .container
+        .row
+          .span12
+            h1 Hey !!!
+            p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat interdum auctor. Integer id diam et nulla facilisis lobortis sit amet ut purus. Nullam sed mi erat, eget ultricies orci. Sed magna odio, pulvinar sed pretium ac, hendrerit vel tortor. Aliquam sit amet congue urna. Phasellus vitae sapien non ipsum feugiat sagittis et vel nulla. Vivamus aliquet luctus eros, tempus lacinia tellus porttitor egestas. Nunc metus leo, sagittis sed iaculis nec, mollis in nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam condimentum augue vel
+            p source template: 
+              a(href='http://wbpreview.com/previews/WB0095C2A/') shield
+
+    .footer
+      .inner
+        .container
+          .row
+            .span4
+              H3 InstructorMatters 
+              p Become an instructor
+
+
+
+append scripts
+  script
+    define( 'home', ['jquery' ], 
+        function(jQuery) {
+      
+          $(window).load(function() {
+            $('.flexslider').flexslider({
+              animation: "slide"
+            });
+          });
+        });
+    

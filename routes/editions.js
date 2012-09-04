@@ -284,7 +284,7 @@ exports.following = function( req, res) {
           res.format({
             html: function(){
               res.render('public/following', {
-                title: 'Welcome to InstructorMatters.com',
+                title: 'Following editions',
                 editions: editions
               });
             },

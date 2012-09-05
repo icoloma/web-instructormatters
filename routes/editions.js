@@ -356,7 +356,7 @@ var getEditionsWithCourseInfo = function( query, callback ){
       });
 
   };
-
+/*
   exports.contactForm = function(req, res) {
     models.Editions.findById(req.params.id, function (err, edition) {
       if(err) {
@@ -385,7 +385,7 @@ var getEditionsWithCourseInfo = function( query, callback ){
       }
     });
   };
-
+*/
 exports.sendMail = function(req, res) {
   console.log('Sending contact mail ' + JSON.stringify(req.body));
   mailSender.sendMail(req.body);

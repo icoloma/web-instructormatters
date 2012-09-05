@@ -35,10 +35,6 @@ append content
       p
         if (locals.isAllowedInstructor && edition.state ==  'NEW')
           a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn.btn-primary Edit
-       
-        a( href='/courses/' + course.uuid ).btn 
-          i.icon-remove 
-          &nbsp;Cancel
 
       
     .certificates

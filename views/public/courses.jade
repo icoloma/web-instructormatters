@@ -3,8 +3,10 @@ extends ../layout
 append content
 
     h2 Our courses
+
+    p Chanante ipsum dolor sit amet, incididunt ea mangurrián quis ad ut, saepe nisi gambitero. Artista ullamco, ojete moreno monetes eiusmod aliqua sed, droja one more time ojete calor cascoporro. Veniam et horcate quis tempor ojete calor veniam tempor ea incididunt adipisicing ex.
     
-    ul
+    ul.list1
       -courses.forEach(function (course) {
         li
           a(href="/courses/" + course.uuid ) #{course.name}

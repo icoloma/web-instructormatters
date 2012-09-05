@@ -36,13 +36,13 @@ exports.showDetails = function (req, res) {
             [function (cb) {
                models.Editions
                 .find({deleted: false, courseUUID:course.uuid})
-                .sort('date','ascending')
+                .sort('date','descending')
                 .exec(cb);
             }],
            function( err, results){
               var editions = results[0];
               res.render('public/course', {
-                title: 'Course',
+                title: course.name,
                 course: course,
                 editions: editions
               });

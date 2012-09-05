@@ -356,39 +356,14 @@ var getEditionsWithCourseInfo = function( query, callback ){
       });
 
   };
-/*
-  exports.contactForm = function(req, res) {
-    models.Editions.findById(req.params.id, function (err, edition) {
-      if(err) {
-        res.send(500, err.message)
-      } else if(!edition || (edition && edition.deleted)) {
-        res.send(404);
-      } else {
-        async.parallel([
-            function(cb) {
-              models.Courses
-                .findOne({uuid:req.params.uuid})
-                .exec(cb);
-          }, function(cb) {
-              models.Users
-                .findById(edition.instructor)
-                .exec(cb)
-          }
-          ],function(err,results) {
-            res.render('public/contact', {
-                      title: 'Contact course instructor',
-                      edition: edition,
-                      course: results[0],
-                      instructor: results[1]
-            });
-          });
-      }
-    });
-  };
-*/
+
 exports.sendMail = function(req, res) {
   console.log('Sending contact mail ' + JSON.stringify(req.body));
-  mailSender.sendMail(req.body);
-  res.send(201, 'Mail sent');
-};
-  
+  mailSender.sendMail(req.body, function(error, responseStatus) {
+    if (!error) {
+      res.send(201, responseStatus.message);      
+    } else {
+      res.send(500, error.message);
+    }
+  });
+};  

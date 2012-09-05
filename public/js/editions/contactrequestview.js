@@ -10,10 +10,10 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
       },
 
       render: function() {
-        this.model.attributes.to = this.options.instructor.email;
+        this.model.attributes.to = this.options.adressee.email;
         this.hiddenContent = this.$el.html();
         this.$el.html(template({
-            instructor : this.options.instructor,
+            adressee : this.options.adressee,
             course : this.options.course
           })
         );
@@ -43,8 +43,10 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
       },
 
       restore: function(e) {
-        console.log("removing view");
-        this.$el.html(this.hiddenContent);
+        if (this.hiddenContent != "") {
+          this.$el.html(this.hiddenContent);
+        } 
+        Core.renderMessage({level: 'info', message: 'Mail Sent'});
       }
 
     });

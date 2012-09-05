@@ -16,15 +16,12 @@ exports.pricing = function (req, res) {
   });
 }
 
-/*
-  Contact
-*/
-exports.contactUs = function (req, res) {
+exports.contactUsForm = function(req, res) {
   res.render('public/contactUs', {
-   title: 'Contact Us'
+    title: 'Contact Us',
+    adressee: {name : 'Instructor Matters', email:'info@extrema-sistemas.com'}
   });
 }
-
 
 
 

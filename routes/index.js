@@ -7,7 +7,8 @@ var models  = require('../db/models')
   , users = require('./users')
   , editions = require('./editions')
   , security = require('../security/securityutils')
-  , passport = require('../security/setup');
+  , passport = require('../security/setup')
+  , mailer = require('../mailer/setup')
   ;
  
 module.exports = function (server) {
@@ -15,10 +16,12 @@ module.exports = function (server) {
   
   server.get('/', statics.home);
   server.get('/pricing', statics.pricing);
-  server.get('/contactUs', statics.contactUs);
 
   server.get('/following', editions.following);
   
+  //ContactForm
+  server.get('/contactUs',  statics.contactUsForm);
+  server.post('/contactUs', mailer.sendMail);
  
   // Courses
   server.get( '/courses',             courses.list);                                              // listado de todos los cursos
@@ -38,8 +41,7 @@ module.exports = function (server) {
   server.get( '/courses/:uuid/editions/:id/edit', security.isAllowedInstructor,         editions.view);
   server.get( '/myeditions', editions.list); 
   
-  server.get( '/courses/:uuid/editions/:id/contact', editions.contactForm);
-  server.post('/courses/:uuid/editions/:id/contact', editions.sendMail);
+  server.post('/courses/:uuid/editions/:id/contact', mailer.sendMail);
 
   
   // Certificates
@@ -82,5 +84,4 @@ module.exports = function (server) {
     passport.checkUser
     );
 
- 
 }

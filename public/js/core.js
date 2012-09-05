@@ -50,5 +50,4 @@ messageKey && core.renderMessage(Messages[messageKey]);
 return core;
 
   
-  
 })

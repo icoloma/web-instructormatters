@@ -80,11 +80,9 @@ append scripts
         var view = new ContactRequestView({
           model: new ContactRequestModel(),
           edition: !{JSON.stringify(edition)},
-          instructor: !{JSON.stringify(instructor)},
+          adressee: !{JSON.stringify(instructor)},
           el: $('.contact')
         });
-
-        console.log("contactRequestView created");
 
       });
 

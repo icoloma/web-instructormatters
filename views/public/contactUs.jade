@@ -6,7 +6,8 @@ append content
 
     
     p We want to hear from you! Just enter your name, email address, and message into the form below and send away.
-    
+    .contactform
+
     .span5 
       p
         strong Address 
@@ -20,6 +21,24 @@ append content
         | Phone: (123) 123-4567
         br 
         | Fax: (123) 123-4567
+
+append scripts
+  script
+    define('contactView',
+      ['editions/contactrequestview', 'editions/contactrequestmodel', 'jquery'],
+
+      function(ContactRequestView, ContactRequestModel) {
+        var view = new ContactRequestView({
+          model: new ContactRequestModel(),
+          adressee: !{JSON.stringify(adressee)},
+          el: $('.contactform')
+        });
+
+        view.render();
+      });
+
+
+
       
   
   

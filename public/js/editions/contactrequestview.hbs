@@ -4,16 +4,19 @@
   <input type="hidden" name="editionId" value="{{edition.id}}/>" 
 
   <label>to</label>
-  <input name="instructor" type="text" value="{{instructor.name}}" readonly>
-  <input name="to" type="hidden" value="{{contactrequest.email}}" readonly>
+  <input name="adresse" type="text" value="{{adressee.name}}" readonly>
+  <input name="to" type="hidden" value="{{adressee.email}}" readonly>
 
-  <label>from</label>
+  <label>Your name</label>
+  <input name="senderName" type="text">
+
+  <label> Your email</label>
   <input name="from" type="email" value="{{contactrequest.from}}">
 
   <label>subject</label>
   <input name="subject" type="text" value="{{contactrequest.subject}}">
 
-  <label>body</label>
+  <label>Your message</label>
   <textarea name="text" value="{{contactrequest.body}}"/>
 
   <input type="submit" class="btn btn-primary" value="Send"/>

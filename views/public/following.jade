@@ -11,7 +11,7 @@ append content
             h3 #{edition.course.name}
             p #{edition.date} - #{edition.venue}
             p #{edition.course.description}
-            a.btn.btn-large( href='/courses/' + edition.courseUUID)
+            a.btn.btn-large( href='/courses/' + edition.courseUUID + '/editions/' + edition.id)
               &nbsp; Go for it !!
           
            

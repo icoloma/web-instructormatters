@@ -1,0 +1,21 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+ 
+  .main  
+
+
+append scripts
+  script 
+    define('editview', 
+      [ 'instructors/instructorview', 'instructors/instructormodel' ], 
+      function(InstructorView, InstructorModel) {
+
+        var instructorView = new InstructorView({
+          model: new InstructorModel( !{ JSON.stringify(instructor) } ),
+          el: $('.main')
+        }).render();
+
+    });

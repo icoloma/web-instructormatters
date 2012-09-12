@@ -1,0 +1,35 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+
+  .row
+    .span2
+      img(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
+    .span8
+      h3 #{instructor.name} 
+      p #{instructor.email}
+      p #{instructor.address}
+
+      -if(locals.currentUser && locals.currentUser.email == instructor.email){
+        a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit')
+          i.icon-user.icon-white
+          &nbsp;Edit
+      -}
+  .row  
+    -videos.forEach( function(video){
+      .span8
+        strong (#{video.locale})
+      .span8
+        <iframe src="#{video.url}" frameborder="1" allowfullscreen></iframe>
+       
+    -})
+
+
+
+  
+    
+
+
+  

@@ -1,0 +1,17 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+ 
+    h2 People behind this awesome project
+
+    -instructors.forEach(function (instructor) {
+      .span2
+        a(href="/instructors/" + instructor._id ) 
+          img(src='https://profiles.google.com/s2/photos/profile/' +instructor.oauth, alt=instructor.name)
+          h5 #{instructor.name}
+
+            
+    -})
+

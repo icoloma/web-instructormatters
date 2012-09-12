@@ -9,7 +9,7 @@ define([ 'core' ],
         this.collection.each(this.addLI, this);
       },
 
-      addLI : function(item, foo, bar, foobar){
+      addLI : function(item){
           this.$ul.append('<li><a href="/certificates/' + item.get('uuid') + '">' + item.get('name')  + ' - ' +  item.get('email')+ '</a></li>');
           
       }

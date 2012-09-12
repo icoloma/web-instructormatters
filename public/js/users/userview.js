@@ -16,7 +16,7 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
           }
 
         },
-        'change input.email,select': function(e) {
+        'change input.email,select,input.address': function(e) {
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
         }

@@ -39,22 +39,38 @@ db.courses.save({
 
 db.users.save({
     email: 'ehdez73@gmail.com',
+    name: 'Ernesto',
+    oauth: '116308562574216710328',
     admin: true,
-    deleted: false,
+    deleted: false,/
     courses: []
 })
 
 
 db.users.save({
     email: 'ehdez@extrema-sistemas.com',
+    name: 'Ernesto (ext)',
+    oauth: '109792900130705825881',
     admin: false,
     deleted: false,
-    courses: ['core-spring','spring-web','eis']
+    courses: ['core-spring','spring-web','eis'],
+    videos: [ { url: 'http://www.youtube.com/watch?v=IXXZEhjA5IY',
+                locale: 'en'
+              }, 
+              { url: 'http://www.youtube.com/watch?v=G0924T2uoiY',
+                locale: 'en'
+              }]
 })
+
 
 db.users.save({
     email: 'icoloma@gmail.com',
+    name: 'Ignacio Coloma',
+    oauth: '112843640399200525430',
     admin: false,
     deleted: false,
-    courses: ['html5-css3']
+    courses: ['html5-css3'],
+     videos: [ { url: 'http://www.youtube.com/watch?v=IXXZEhjA5IY',
+                locale: 'en'
+              }]
 })

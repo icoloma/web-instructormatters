@@ -15,6 +15,7 @@ h2{
 a {
   color: #aa1111;
   text-decoration: none;
+  cursor: pointer;
 }
 a:hover {
   color: #640a0a;
@@ -24,6 +25,7 @@ a:hover {
 .page{
   background: #FFF; 
   border-top:1px solid #000;
+  padding-top: 10px;
 }
 
 .header_wrapper {     
@@ -34,3 +36,13 @@ a:hover {
   background: url('img/noise.png') #A00;
 }
 
+// mensaje de validacion de webkit
+// el valor por defecto es
+// http://trac.webkit.org/browser/trunk/Source/WebCore/css/html.css?rev=81155#L588
+::-webkit-validation-bubble-message {
+  font: @sansFontFamily;
+  font-size: @baseFontSize;
+  line-height: @baseLineHeight;
+  -webkit-border-radius: 4px;
+  -webkit-box-shadow: 0 0 6px rgba(204,204,204,0.7)
+}

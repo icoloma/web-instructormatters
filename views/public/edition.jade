@@ -22,7 +22,7 @@ append content
 
       p
         span Instructor: 
-        | #{instructor.name} &nbsp;
+          a(href='/instructors/' + instructor.id)  #{instructor.name}
       .contact
         a( ).btn.contact
           i.icon-envelope

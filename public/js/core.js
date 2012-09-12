@@ -1,5 +1,5 @@
 define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message', 'bootstrap_alert', 'bootstrap_dropdown', 'bootstrap_collapse', 'flexslider'], 
-  function($, _, _unused, Messages, messageTmpl) {
+  function($, Underscore, _unused, Messages, messageTmpl) {
   
   window.B = Backbone;
 
@@ -30,6 +30,12 @@ define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message'
     }
 
     
+};
+
+_.templateSettings = {
+  interpolate : /\{\{(.+?)\}\}/g,
+  escape      : /\{\{-(.+?)\}\}/g,
+  evaluate: /<%([\s\S]+?)%>/g // no la usamos, pero underscore la tiene por ahi
 };
 
 // Error handling for Ajax 

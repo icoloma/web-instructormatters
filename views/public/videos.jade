@@ -1,0 +1,13 @@
+extends ../layout
+
+include ../includes/admin-mixins
+
+append content
+
+    -instructors.forEach(function (instructor) {
+        .row
+          a(href="/instructors/" + instructor._id ) 
+              h5 #{instructor.name}
+          <iframe src="#{instructor.firstVideo.url}" frameborder="1" allowfullscreen></iframe>
+
+    -})

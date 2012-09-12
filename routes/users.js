@@ -90,7 +90,7 @@ exports.add = function(req,res){
        models.Courses
         .find({deleted:false})
         .sort('name','ascending')
-        .select('uuid name')
+        .select('uuid name address')
         .exec(cb);
 
     }], function(err,results){
@@ -153,3 +153,4 @@ exports.add = function(req,res){
       }
     }});
   };
+

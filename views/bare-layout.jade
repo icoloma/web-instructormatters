@@ -26,22 +26,22 @@ html( lang="en")
             ul.nav 
               li
                 a(href="/following") Next editions  
-
               li
                 a(href="/courses") Courses  
-
               li
-                if(locals.isAdmin)
-                  a(href="/users") Users
-               
-                if(locals.currentUser && ! locals.isAdmin)
-                  a(href="/myeditions") My editions
-              
+                a(href="/instructors/videos") Videos  
+              li
+                a(href="/instructors") Instructors
               li 
-                a(href="/pricing") Pricing
-
+                 a(href="/pricing") Pricing
               li 
                 a(href="/contactUs") Contact
+              li
+                if(locals.currentUser && ! locals.isAdmin)
+                  a(href="/myeditions") My editions
+
+                if(locals.isAdmin)
+                  a(href="/users") Users
              
             ul.nav.pull-right
               if (locals.currentUser) 
@@ -49,6 +49,8 @@ html( lang="en")
                   a.dropdown-toggle.user(href="#", data-toggle="dropdown") #{locals.currentUser.name} 
                     b.caret  
                   ul.dropdown-menu
+                    li
+                      a(href='/instructors/' + locals.currentUser.id) My Profile
 
                     li 
                       a(href='/logout') Logout 

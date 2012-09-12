@@ -21,6 +21,15 @@ var UserSchema = new mongoose.Schema({
   oauth: String,
   admin: {type: Boolean, default: false},
   deleted: {type: Boolean, default: false},
+  address: String,
+  videos: [{ url: String,
+             title: String,
+             locale: String
+          }],
+  geopoint : { lat: {type:String},
+               lng: {type:String}
+              },
+  
 }, {strict: true});
 
 
@@ -34,7 +43,9 @@ Users.prototype.toJSON = function(){
     oauth: this.oauth,
     expires: this.expires,
     admin: this.admin,
-    courses:this.courses
+    courses:this.courses,
+    videos: this.videos,
+    address: this.address
   }
 };
 

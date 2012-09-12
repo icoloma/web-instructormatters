@@ -1,0 +1,27 @@
+
+<form>
+   <div class="row">
+      <div class="span8 well">
+
+        <label>instructor name: </label>
+        <input name="name" type="text" value="{{instructor.name}}" disabled >
+
+        <label>Address:</label>
+        <input name="address" type="text" value="{{instructor.address}}"/>
+
+        <p>
+          <input type="submit" class="btn btn-primary" value="Save" />
+          <a href="/instructors/{{instructor.id}}" class="btn">Cancel</a>
+        </p>
+      </div>
+
+      <div class="span2">
+        <img src='https://profiles.google.com/s2/photos/profile/{{instructor.oauth}}'/>
+      </div>
+    </div>
+  </div>
+
+  <div class="videos"></div>
+
+</form>
+

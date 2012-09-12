@@ -5,6 +5,7 @@ var models  = require('../db/models')
   , courses = require('./courses')
   , certificates = require('./certificates')
   , users = require('./users')
+  , instructors = require('./instructors')
   , editions = require('./editions')
   , security = require('../security/securityutils')
   , passport = require('../security/setup')
@@ -58,6 +59,18 @@ module.exports = function (server) {
   server.get( '/users/:id',  security.isAdmin,  users.view);
   server.put( '/users/:id',  security.isAdmin,  users.update);
   server.del( '/users/:id',  security.isAdmin,  users.del);
+
+  // Instructors
+  server.get( '/instructors', instructors.list);
+  server.get( '/instructors/videos', instructors.videos);
+  server.get( '/instructors/:id', security.exposeCurrentUser, instructors.show);
+  server.get( '/instructors/:id/edit', security.exposeCurrentUser, instructors.view);
+  server.put( '/instructors/:id', instructors.update);
+
+  
+
+
+
 
   /* 
     Security

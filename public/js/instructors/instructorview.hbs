@@ -1,5 +1,6 @@
 
 <form>
+   
    <div class="row">
       <div class="span8 well">
 
@@ -7,8 +8,10 @@
         <input name="name" type="text" value="{{instructor.name}}" disabled >
 
         <label>Address:</label>
-        <input name="address" type="text" value="{{instructor.address}}"/>
-
+        <input name="address" type="text" value="{{instructor.address}}" required />
+        
+        <div class="map" id="map_canvas" ></div>
+      
         <p>
           <input type="submit" class="btn btn-primary" value="Save" />
           <a href="/instructors/{{instructor.id}}" class="btn">Cancel</a>

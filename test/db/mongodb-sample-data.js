@@ -49,15 +49,21 @@ db.users.save({
 
 db.users.save({
     email: 'ehdez@extrema-sistemas.com',
-    name: 'Ernesto (ext)',
+    name: 'Ernesto (extrema)',
     oauth: '109792900130705825881',
     admin: false,
     deleted: false,
     courses: ['core-spring','spring-web','eis'],
-    videos: [ { url: 'http://www.youtube.com/watch?v=IXXZEhjA5IY',
+    videos: [ { id: 'IXXZEhjA5IY',
+                url: 'http://www.youtube.com/watch?v=IXXZEhjA5IY',
+                title: "Cloud Foundry's Auto-Reconfiguration Feature for Node.js Apps",
+                thumbnail: 'http://i.ytimg.com/vi/IXXZEhjA5IY/hqdefault.jpg',
                 locale: 'en'
-              }, 
-              { url: 'http://www.youtube.com/watch?v=G0924T2uoiY',
+              },
+              { id: 'vCjisAATDUM',
+                url: 'http://www.youtube.com/watch?v=vCjisAATDUM',
+                title: "SQL? NoSQL? NewSQL? What's a Java developer to do?",
+                thumbnail: 'http://i.ytimg.com/vi/vCjisAATDUM/hqdefault.jpg',
                 locale: 'en'
               }]
 })
@@ -70,7 +76,5 @@ db.users.save({
     admin: false,
     deleted: false,
     courses: ['html5-css3'],
-     videos: [ { url: 'http://www.youtube.com/watch?v=IXXZEhjA5IY',
-                locale: 'en'
-              }]
+    videos: []
 })

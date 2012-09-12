@@ -17,14 +17,20 @@ append content
           i.icon-user.icon-white
           &nbsp;Edit
       -}
-  .row  
-    -videos.forEach( function(video){
-      .span8
-        strong (#{video.locale})
-      .span8
-        <iframe src="#{video.url}" frameborder="1" allowfullscreen></iframe>
-       
-    -})
+
+  -if (instructor.videos.length > 0) {
+    h3 Videos:
+    .row 
+      -instructor.videos.forEach( function(video){
+        .span4
+          a(href=video.url, target='_blank')
+            img(src=video.thumbnail, title=video.title)
+            p #{video.locale}
+            p #{video.title}
+            p #{video.duration} secs.
+            
+      -})
+  -}
 
 
 

@@ -22,13 +22,17 @@ var UserSchema = new mongoose.Schema({
   admin: {type: Boolean, default: false},
   deleted: {type: Boolean, default: false},
   address: String,
-  videos: [{ url: String,
-             title: String,
-             locale: String
-          }],
-  geopoint : { lat: {type:String},
-               lng: {type:String}
-              },
+  videos: [{ 
+    id: String,
+    url: String,
+    thumbnail: String,
+    title: String,
+    locale: String
+   }],
+  geopoint : { 
+    lat: {type:String},
+    lng: {type:String}
+   },
   
 }, {strict: true});
 

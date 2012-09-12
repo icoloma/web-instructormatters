@@ -12,13 +12,14 @@ define([ 'core', 'hbs!videos/videosview' ,'videos/videotrview' ],
       render: function() {
         this.$el.html(template());
         this.$tbody = this.$('tbody');
-        this.collection.forEach(this.addRow, this.model);
+        this.collection.forEach(this.addRow.bind(this), this.model);
         return this;
       },
 
       addVideo : function(){
         this.collection.push( new Backbone.Model({ url:'', locale:'en'}));
         this.render();
+        this.enableAddBtn();
       },
 
 
@@ -28,7 +29,7 @@ define([ 'core', 'hbs!videos/videosview' ,'videos/videotrview' ],
         });
         this.$tbody = this.$('tbody');
         this.$tbody.append(trView.render().$el);
-
+        this.enableAddBtn();
       },
 
       enableAddBtn: function() {

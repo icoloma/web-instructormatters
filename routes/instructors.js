@@ -1,6 +1,6 @@
 
 var models = require('../db/models')
-  , videoHelper  = require('../videos/setup')
+  , youtube  = require('../videos/youtube')
 
 /*
 * Listado de todos los instructores
@@ -55,18 +55,9 @@ exports.show =  function (req, res) {
         } else {
           res.format({
             html: function(){
-              var videos =_.map( items[0].get('videos'), function( video ){
-                return { 
-                  title: video.title,
-                  locale: video.locale,
-                  url: videoHelper.getURLVideoEmbedded(video.url)
-                }
-              });
-
               res.render('public/instructor', {
                 title: 'instructor',
                 instructor: items[0],
-                videos: videos
               });
             },
             json: function(){
@@ -123,7 +114,6 @@ exports.view =  function (req, res) {
     if (!req.accepts('application/json')){
        res.send(406);  //  Not Acceptable
     }
-   
 
     models.Users.update({_id: req.params.id}, req.body, function (err, num) {
       if(err) {
@@ -157,8 +147,6 @@ exports.view =  function (req, res) {
       var instructors = _.compact(_.map( items, function(instructor){
           var video = instructor.get('videos')[0];
           if (video){
-            video.url = videoHelper.getURLVideoEmbedded( video.url);
-            delete instructor.videos;
             instructor.firstVideo = video;
             return instructor;
           }

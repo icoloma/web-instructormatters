@@ -8,6 +8,12 @@ append content
         .row
           a(href="/instructors/" + instructor._id ) 
               h5 #{instructor.name}
-          <iframe src="#{instructor.firstVideo.url}" frameborder="1" allowfullscreen></iframe>
+
+          .span4
+            a(href=instructor.firstVideo.url, target='_blank')
+              img(src=instructor.firstVideo.thumbnail, title=instructor.firstVideo.title)
+              p #{instructor.firstVideo.locale}
+              p #{instructor.firstVideo.title}
+              p #{instructor.firstVideo.duration} secs.
 
     -})

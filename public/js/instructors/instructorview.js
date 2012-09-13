@@ -30,6 +30,8 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
       save: function(e) {
         e.preventDefault();
 
+        this.model.get('geopoint').zoom = this.map.getZoom();
+
         if (this.model.videos.length == 0){
           this.doSave();
           return;
@@ -65,8 +67,8 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
 
           on201: function( xhr) {
             // Http status Ok, Created
-            var location = xhr.getResponseHeader("location") + "?code=saved";
-            window.location=location;              
+            var loc = xhr.getResponseHeader("loc") + "?code=saved";
+            window.location=loc;              
           }
         });
       },
@@ -106,37 +108,51 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
         var address = this.$('[name="address"]').val()
           , place = this.autocomplete.getPlace()
           , view = this
-          , location = GMaps.getLocation(place, this.model.get('geo'), function(location) {
-            view.map.setCenter(location);
-          });
+          , geopoint = this.model.get('geopoint')
+          , loc = GMaps.getLocation(place, geopoint, function(loc) {
+              view.map.setCenter(loc);
+            });
 
-        if (!location){
+        $($('input:submit')[0]).prop('disabled', !loc);
+
+        if (!loc){
+          this.marker.setVisible(false);
+          this.infoWindow.close();
+          Core.renderMessage({ level :'warn',  message :'Address not found,ill not be shown on the map' });
+          this.model.set({geopoint:{}})
           return;
         }  
-        if (this.map) {
-          if (place && place.geometry.viewport) {
-            this.map.fitBounds(place.geometry.viewport);
-          }
-          
-          // position map and marker 
-          this.map.setCenter(location);
-          this.marker.setPosition(location);
-
-          // position the information window
-          if (place && place.address_components) {
-            address = '<b>' + place.name + '</b><br>' + address;
-          }
-          if (address) {
-            this.infoWindow.setContent('<div>' + address + '</div>');
-            this.infoWindow.open(this.map, this.marker);
-          }
-        }
-    
+        
         this.model.set({ 
           address: address,
-          geo: { lat: location.lat() , lng: location.lng() }
-        });
-        this.$('.address-warn').remove();
+          geopoint: { 
+            lat: loc.lat(), 
+            lng: loc.lng(),
+            }
+          }
+        );
+
+        
+        if (place && place.geometry.viewport) {
+          this.map.fitBounds(place.geometry.viewport);
+        } else if (geopoint.zoom){
+          this.map.setZoom(geopoint.zoom);
+        }
+
+        // position map and marker 
+        this.map.setCenter(loc);
+        this.marker.setPosition(loc);
+        
+       
+        if (geopoint && geopoint.lat && geopoint.lng) {
+            this.marker.setVisible(true);
+            this.infoWindow.setContent('<div>' + address + '</div>');
+            this.infoWindow.open(this.map, this.marker);
+        } else {
+            this.marker.setVisible(false);
+             this.infoWindow.close();
+        }
+
         e && e.preventDefault();
       }
 

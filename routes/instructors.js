@@ -13,6 +13,7 @@ exports.list =  function (req, res) {
       name : { $exists: true}
     })
     .sort('name','ascending')
+    .select('name id geopoint address oauth')
     .exec( 
       function (err, items) {
         if(err) {
@@ -21,9 +22,11 @@ exports.list =  function (req, res) {
         } else {
           res.format({
             html: function(){
+              var json = JSON.stringify(items);
               res.render('public/instructors', {
                 title: 'instructors',
-                instructors: items
+                instructors: items,
+                json: json
               });
             },
             json: function(){
@@ -46,7 +49,7 @@ exports.show =  function (req, res) {
       deleted: false,
       admin: false,
     })
-    .select("id name address videos email oauth")
+    .select("id name address videos email oauth geopoint")
     .exec( 
       function (err, items) {
         if(err) {
@@ -58,6 +61,7 @@ exports.show =  function (req, res) {
               res.render('public/instructor', {
                 title: 'instructor',
                 instructor: items[0],
+                geolocation: items[0].geopoint.lat + ',' +  items[0].geopoint.lng + '&z=' + items[0].geopoint.zoom
               });
             },
             json: function(){
@@ -80,7 +84,7 @@ exports.view =  function (req, res) {
       deleted: false,
       admin: false,
     })
-    .select("id name address email oauth videos")
+    .select("id name address email oauth videos geopoint")
     .exec( 
       function (err, items) {
         if(err) {

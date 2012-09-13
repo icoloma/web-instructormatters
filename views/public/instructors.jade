@@ -3,15 +3,75 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
- 
-    h2 People behind this awesome project
-
+  h2 People behind this awesome project
+  .span9
     -instructors.forEach(function (instructor) {
-      .span2
+      .span3
         a(href="/instructors/" + instructor._id ) 
           img(src='https://profiles.google.com/s2/photos/profile/' +instructor.oauth, alt=instructor.name)
           h5 #{instructor.name}
-
-            
+           
     -})
+
+  .map#map_canvas.span9
+
+
+
+
+append scripts
+  script 
+   
+    define('view', 
+      [ 'lib/gmaps' ], 
+
+      function(Gmaps) {
+        Gmaps.loadMapsAPI(this.renderMap, this);
+      }
+    );
+
+        
+    var renderMap = function () {
+      
+       var instructors = !{json};
+       var mapOptions = {
+          zoom: 5,
+          center: new google.maps.LatLng(40.416698, -3.700333),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+        var bounds = new google.maps.LatLngBounds();
+        var template = _.template(
+          '<a href="/instructors/{{id}}">' +
+            '<div><img src="https://profiles.google.com/s2/photos/profile/{{oauth}}" alt="{{name}}" class="profile"></div>'+
+            '<div>'+
+              '<strong>{{name}}</strong><br/>' +
+              '{{address}}'+
+            '</div>'+
+          '</a>'
+          );
+
+        _.forEach( instructors, function(instructor){
+            var pos = new google.maps.LatLng( instructor.geopoint.lat, instructor.geopoint.lng);
+            bounds.extend(pos);
+            var marker = new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        title: instructor.name
+                    });
+
+            var contentString = template(instructor);
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.open(map,marker);
+            });
+          });
+        map.fitBounds(bounds);       
+    }
+
+
+
+   
 

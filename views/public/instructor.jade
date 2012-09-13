@@ -10,13 +10,17 @@ append content
     .span8
       h3 #{instructor.name} 
       p #{instructor.email}
-      p #{instructor.address}
+      p #{instructor.address} 
+
+        a(href='https://maps.google.es/maps?q=' + geolocation )
+          &nbsp; (show in google maps)
 
       -if(locals.currentUser && locals.currentUser.email == instructor.email){
         a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit')
           i.icon-user.icon-white
           &nbsp;Edit
       -}
+
 
   -if (instructor.videos.length > 0) {
     h3 Videos:
@@ -31,11 +35,7 @@ append content
             
       -})
   -}
-
-
-
-  
-    
+ 
 
 
   

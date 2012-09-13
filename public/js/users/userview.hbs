@@ -15,11 +15,6 @@
           <input name="name" type="text" value="{{user.name}}" disabled >
         {{/if}}
 
-{{user.address}}
-        <label>Address:</label>
-        <input class="address" name="address" value="{{user.address}}"/>
-
-
         <label>Courses:</label>
         {{#each courses}}
             <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox"> {{this.name}} 
@@ -30,8 +25,6 @@
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
-
-
 
         <p>
           <input type="submit" class="btn btn-primary" value="Save" />

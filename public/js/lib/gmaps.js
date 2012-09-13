@@ -37,14 +37,14 @@ function(K) {
     },
     /*
       @param place PlaceGeomnetry the details of a location as returned by Google Maps
-      @param geo '{lat:X,lng:Y}' the location as included in Venue.Model.geo
+      @param geo '{lat:X,lng:Y}' the location as included in User.Model.geopoint
       @param defaultLocationCallback a method to invoke if/when the user allows us to automatically locate it
     */
     getLocation: function(place, geo, defaultLocationCallback) {
       if (place) { // return the location provided by Google
         return place.geometry? place.geometry.location : place.location;
       } 
-      if (geo) { // the venue provides a location
+      if (geo && geo.lat && geo.lng) { // the User provides a location
         return new google.maps.LatLng(geo.lat, geo.lng);
       }
       if (navigator.geolocation) {  // try to use the browser geoposition

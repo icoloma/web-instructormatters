@@ -30,8 +30,9 @@ var UserSchema = new mongoose.Schema({
     locale: String
    }],
   geopoint : { 
-    lat: {type:String},
-    lng: {type:String}
+    lat: Number,
+    lng: Number,
+    zoom: Number
    },
   
 }, {strict: true});
@@ -49,7 +50,11 @@ Users.prototype.toJSON = function(){
     admin: this.admin,
     courses:this.courses,
     videos: this.videos,
-    address: this.address
+    address: this.address,
+    geopoint: { 
+      lat: this.geopoint.lat, 
+      lng: this.geopoint.lng, 
+      zoom: this.geopoint.zoom }
   }
 };
 

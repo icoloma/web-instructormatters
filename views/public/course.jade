@@ -14,6 +14,10 @@ append content
       if (locals.isAdmin)  
         a(href="/courses/" + course.uuid + '/edit').btn.btn-primary Edit
 
+      p Show all instructors in
+        a(href="/instructors/course/" + course.uuid)  map
+        
+
     .row
       h3 Videos
       each uservideos in course.videos
@@ -21,7 +25,8 @@ append content
           .span3
             a(href=video.url, target='_blank')
               img(src=video.thumbnail, title=video.title)
-            p #{video.title} by #{video.user.name}
+            p #{video.title} by 
+            a(href='/instructors/' + video.user.id) #{video.user.name}
     
     .row 
       h3 Upcoming

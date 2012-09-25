@@ -6,12 +6,18 @@ var models = require('../db/models')
 * Listado de todos los instructores
 */
 exports.list =  function (req, res) {
-    models.Users
-    .find({
+    var courseUUID = req.params.uuid;
+    var query = {
       deleted: false,
       admin: false,
       name : { $exists: true}
-    })
+    };
+    if (courseUUID){
+      query.courses = courseUUID;
+    }
+
+    models.Users
+    .find(query)
     .sort('name','ascending')
     .select('name id geopoint address oauth')
     .exec( 

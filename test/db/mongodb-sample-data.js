@@ -42,7 +42,7 @@ db.users.save({
     name: 'Ernesto',
     oauth: '116308562574216710328',
     admin: true,
-    deleted: false,/
+    deleted: false,
     courses: []
 })
 
@@ -54,27 +54,55 @@ db.users.save({
     admin: false,
     deleted: false,
     courses: ['core-spring','spring-web','eis'],
-    videos: [ { id: 'IXXZEhjA5IY',
-                url: 'http://www.youtube.com/watch?v=IXXZEhjA5IY',
-                title: "Cloud Foundry's Auto-Reconfiguration Feature for Node.js Apps",
-                thumbnail: 'http://i.ytimg.com/vi/IXXZEhjA5IY/hqdefault.jpg',
-                locale: 'en'
+    videos: [ { id: 'RY6dNUL8k6o',
+                url: 'http://www.youtube.com/watch?v=RY6dNUL8k6o',
+                title: "Practical Tips and Tricks with Spring Integration",
+                thumbnail: 'http://i.ytimg.com/vi/RY6dNUL8k6o/hqdefault.jpg',
+                locale: 'en',
+                courseUUID : 'eis'
               },
-              { id: 'vCjisAATDUM',
-                url: 'http://www.youtube.com/watch?v=vCjisAATDUM',
-                title: "SQL? NoSQL? NewSQL? What's a Java developer to do?",
-                thumbnail: 'http://i.ytimg.com/vi/vCjisAATDUM/hqdefault.jpg',
-                locale: 'en'
-              }]
+              { id: 'TIuI6sjmP7g',
+                url: 'http://www.youtube.com/watch?v=TIuI6sjmP7g',
+                title: "Intertech - Complete Spring Core Training - Part 3",
+                thumbnail: 'http://i.ytimg.com/vi/TIuI6sjmP7g/hqdefault.jpg',
+                locale: 'en',
+                courseUUID : 'core-spring'
+              },
+              { id: 'OwN6UdDzZNA',
+                url: 'http://www.youtube.com/watch?v=OwN6UdDzZNA',
+                title: "Spring Tutorial - Using Spring Web Flow (Part 1 of 2)",
+                thumbnail: 'http://i.ytimg.com/vi/OwN6UdDzZNA/hqdefault.jpg',
+                locale: 'en',
+                courseUUID : 'spring-web'
+              }
+            ],
+    address : "Tenerife, Santa Cruz de Tenerife, Spain",       
+    geopoint : { lat : 28.2915637, lng: -16.629130400000008, zoom : 9 }
+
 })
 
 
-db.users.save({
-    email: 'icoloma@gmail.com',
+db.users.save(
+{    email: 'icoloma@gmail.com',
     name: 'Ignacio Coloma',
     oauth: '112843640399200525430',
     admin: false,
     deleted: false,
-    courses: ['html5-css3'],
-    videos: []
+    courses: ['html5-css3','core-spring'],
+    videos: [{ id: 'mzPxo7Y6JyA',
+                url: 'http://www.youtube.com/watch?v=mzPxo7Y6JyA',
+                title: "What is HTML5?",
+                thumbnail: 'http://i.ytimg.com/vi/mzPxo7Y6JyA/hqdefault.jpg',
+                locale: 'en',
+                courseUUID : 'html5-css3'
+              },
+               { id: 'ZXkwxeeUU7U',
+                url: 'http://www.youtube.com/watch?v=ZXkwxeeUU7U',
+                title: "Spring Source Core Spring Training",
+                thumbnail: 'http://i.ytimg.com/vi/ZXkwxeeUU7U/hqdefault.jpg',
+                locale: 'en',
+                courseUUID : 'core-spring'
+              }],
+    address : "Madrid, Spain",
+    geopoint : { lat : 40.4166909, lng: -3.70034540000006, zoom : 10 }
 })

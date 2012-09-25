@@ -13,7 +13,13 @@ define([ 'core', 'hbs!./videoview' ],
           this.model.collection.remove(this.model);
           this.enableAddBtn();
         },
-      
+        
+        'change select': function(e) {
+          var $ct = $(e.currentTarget);
+          this.model.set($ct.attr('name'), $ct.val());
+        },
+
+
         'change input': function(e) {
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
@@ -28,8 +34,16 @@ define([ 'core', 'hbs!./videoview' ],
       },
 
       render: function() {
-        this.$el.html(template( this.model.toJSON())); 
-        this.$('select').val(this.model.get('locale'));
+        var coursesWithNames = [];
+        this.options.courses.forEach( function(uuid){
+          coursesWithNames.push( {
+            uuid : uuid,
+            name : window.allcourses[uuid]
+          });
+        });
+        this.$el.html(template( _.extend( this.model.toJSON(), {courses: coursesWithNames}))); 
+        this.$('select.locale').val(this.model.get('locale'));
+        this.$('select.courseUUID').val(this.model.get('courseUUID'));
         return this;
       },
 

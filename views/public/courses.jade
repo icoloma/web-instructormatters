@@ -1,17 +1,35 @@
 extends ../layout
-
 append content
-
-    h2 Our courses
-
-    p Chanante ipsum dolor sit amet, incididunt ea mangurrián quis ad ut, saepe nisi gambitero. Artista ullamco, ojete moreno monetes eiusmod aliqua sed, droja one more time ojete calor cascoporro. Veniam et horcate quis tempor ojete calor veniam tempor ea incididunt adipisicing ex.
     
-    ul.list1
-      -courses.forEach(function (course) {
-        li
-          a(href="/courses/" + course.uuid ) #{course.name}
-              
-      -})
+    p Chanante ipsum dolor sit amet, incididunt ea mangurrián quis ad ut, saepe nisi gambitero. Artista ullamco, ojete moreno monetes eiusmod aliqua sed, droja  more time ojete calor cascoporro. Veniam et horcate quis tempor ojete calor veniam tempor ea incididunt adipisicing ex.
+    
+      .span8
+        -courses.forEach(function (course) {
+          .row
+            a(href="/courses/" + course.uuid ) 
+              h2= course.name
+            each uservideos in course.videos
+              each video in uservideos
+                .video.span3
+                  a(href=video.url, target='_blank')
+                    img(src=video.thumbnail, title=video.title)
+                  p #{video.title}
+                  a(href="/instructors/" + video.user.id) #{video.user.name}
+          .row
+            a.btn(href="/courses/" + course.uuid) more
+
+        -})
+      .span3.soon
+        h3 Upcoming
+        ul.list2
+          -editions.forEach( function (edition) {
+            li
+              h4 #{edition.course.name}
+              p #{edition.date} - #{edition.venue}
+              //-p #{edition.course.description}
+              a.btn.btn-large( href='/courses/' + edition.courseUUID + '/editions/' + edition.id)
+                  &nbsp; Go!!
+          -})
 
     if (locals.currentUser && locals.currentUser.admin) 
       a(href="/courses/new").btn.btn-primary New Course

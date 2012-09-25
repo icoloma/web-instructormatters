@@ -25,7 +25,8 @@ define([ 'core', 'hbs!videos/videosview' ,'videos/videotrview' ],
 
       addRow: function(model) {
         var trView = new VideoTrView({ 
-          model : model
+          model : model,
+          courses : this.options.courses
         });
         this.$tbody = this.$('tbody');
         this.$tbody.append(trView.render().$el);

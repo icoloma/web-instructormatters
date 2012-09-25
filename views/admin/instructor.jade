@@ -14,6 +14,7 @@ append scripts
 
         var instructorView = new InstructorView({
           model: new InstructorModel( !{ JSON.stringify(instructor) } ),
+          courses: !{JSON.stringify(courses)},
           el: $('.main')
         }).render();
 

@@ -43,6 +43,9 @@ exports.list =  function (req, res) {
 *Información pública del instructor
 */
 exports.show =  function (req, res) {
+  async.parallel([function(cb){
+    getCoursesMap(cb);
+  }, function(cb){
     models.Users
     .find({
       _id: req.params.id,
@@ -50,27 +53,31 @@ exports.show =  function (req, res) {
       admin: false,
     })
     .select("id name address videos email oauth geopoint")
-    .exec( 
-      function (err, items) {
-        if(err) {
-          console.log(err);
-          res.send(500, err.message);
-        } else {
-          res.format({
-            html: function(){
-              res.render('public/instructor', {
-                title: 'instructor',
-                instructor: items[0],
-                geolocation: items[0].geopoint.lat + ',' +  items[0].geopoint.lng + '&z=' + items[0].geopoint.zoom
-              });
-            },
-            json: function(){
-              res.json(items);
-            }
+    .exec(cb)
+  }], function (err, items) {
+      if(err) {
+        console.log(err);
+        res.send(500, err.message);
+        return;
+      } 
+      var coursesMap = items[0];
+      var instructor = items[1][0];
+      _.forEach(instructor.get('videos'), function(video){
+         video.course = coursesMap[video.courseUUID]; 
+      });
+      res.format({
+        html: function(){
+          res.render('public/instructor', {
+            title: 'instructor',
+            instructor: instructor,
+            geolocation: instructor.geopoint.lat + ',' +  instructor.geopoint.lng + '&z=' + instructor.geopoint.zoom,
           });
-        };
-      }
-    )
+        },
+        json: function(){
+          res.json(items);
+        }
+      });
+    })
   };
 
 
@@ -78,37 +85,61 @@ exports.show =  function (req, res) {
 * Información para editar el instructor
 */
 exports.view =  function (req, res) {
-    models.Users
+  async.parallel([function(cb){
+    getCoursesMap(cb);
+  }, function(cb){
+   models.Users
     .find({
       _id: req.params.id,
       deleted: false,
       admin: false,
-    })
-    .select("id name address email oauth videos geopoint")
-    .exec( 
-      function (err, items) {
-        if(err) {
-          console.log(err);
-          res.send(500, err.message);
-        } else {
-         
-          var instructor = items[0];
-         
-          res.format({
-            html: function(){
-              res.render('admin/instructor', {
-                title: 'instructor',
-                instructor: instructor.toJSON()
-              });
-            },
-            json: function(){
-              res.json(instructor);
-            }
-          });
-        };
+    }).exec(cb)
+  }], function(err,items){
+    if(err) {
+      console.log(err);
+      res.send(500, err.message);
+    }
+    var coursesMap = items[0];
+    var instructor = items[1][0];
+    res.format({
+      html: function(){
+        res.render('admin/instructor', {
+          title: 'instructor',
+          instructor: instructor.toJSON(),
+          courses: coursesMap
+        });
+      },
+      json: function(){
+        res.json(instructor);
       }
-    )
-  };
+    });
+  });
+};
+
+
+/*
+  Mapa con los cursos 
+   clave : uuid
+   valor : name
+*/
+var getCoursesMap = function(callback){
+  async.series([function(cb){
+    models.Courses
+      .find({deleted:false})
+      .sort('name','ascending')
+      .select('uuid name')
+      .exec(cb);
+  }], function(err, items){
+   if (err){
+      callback(err);
+   }
+   var coursesMap = {}
+      items[0].forEach(function(course) {
+        coursesMap[course.uuid] = course.name;
+      });
+      callback(null,coursesMap);
+  });
+}
 
 
 /**
@@ -132,36 +163,5 @@ exports.view =  function (req, res) {
   };
  
 
- /* Top videos */
- exports.videos= function( req, res) {
-
-   models.Users
-    .find({
-      deleted: false,
-      admin: false,
-      videos: { $exists : true }
-    })
-    .select("id name videos oauth")
-    .exec( function( err, items){
-      if(err) {
-        console.log(err);
-        res.send(500, err.message);
-        return;
-      } 
-      var instructors = _.compact(_.map( items, function(instructor){
-          var video = instructor.get('videos')[0];
-          if (video){
-            instructor.firstVideo = video;
-            return instructor;
-          }
-      }));
-
-      res.render('public/videos', 
-        { title: 'videos',
-          instructors: instructors
-        });
-    });
-
-}
 
 

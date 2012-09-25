@@ -1,19 +1,23 @@
-extends ../layout
+extends ../bare-layout
 
 include ../includes/admin-mixins
 
-append content
-  h2 People behind this awesome project
-  .span9
+append main_content
+  .header_wrapper
+    .container
+      .page-heading
+        h1= title
+
+  .span2.instructors
     -instructors.forEach(function (instructor) {
-      .span3
-        a(href="/instructors/" + instructor._id ) 
+        a.instructor( id ='#{instructor.id}')
           img(src='https://profiles.google.com/s2/photos/profile/' +instructor.oauth, alt=instructor.name)
           h5 #{instructor.name}
+          p #{instructor.address}
            
     -})
 
-  .map#map_canvas.span9
+  .map#map_canvas(style="height:100%")
 
 
 
@@ -28,10 +32,11 @@ append scripts
         Gmaps.loadMapsAPI(this.renderMap, this);
       }
     );
-
+    
+    this.infowindows = {}; 
         
     var renderMap = function () {
-      
+       
        var instructors = !{json};
        var mapOptions = {
           zoom: 5,
@@ -64,12 +69,24 @@ append scripts
             var infowindow = new google.maps.InfoWindow({
                 content: contentString
             });
+            infowindows[instructor.id]={ infowindow:infowindow, marker:marker};
+
             google.maps.event.addListener(marker, 'click', function() {
               infowindow.open(map,marker);
             });
           });
-        map.fitBounds(bounds);       
-    }
+        map.fitBounds(bounds); 
+
+        // Abrir el InfoWindows cuando se hace click sobre el instructor en el panel izq
+        $('.instructor').each( function( idx) {
+            $(this).click(function(){
+                var id = $(this).prop('id');
+                var infowindow = infowindows[id].infowindow;
+                var marker = infowindows[id].marker;
+                infowindow.open(map,marker);
+            })
+        });
+    }  
 
 
 

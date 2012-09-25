@@ -5,26 +5,32 @@ include ../includes/admin-mixins
 append content
  
   .main  
-    p 
-      span Name:
-      | #{course.name}
-    p 
-      span Description:
-      | #{course.description}
-    p 
-      span Duration:
-      | #{course.duration}
 
-    if (locals.isAdmin)  
-      a(href="/courses/" + course.uuid + '/edit').btn.btn-primary Edit
-      
-    ul
-    -editions.forEach(function (edition) {
-      li  
-        a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} - #{edition.venue}
-            
-    -})
+    .row
+      h3 Description
+      p #{course.description}
+      p #{course.duration}
 
-    if (locals.isAllowedInstructor)  
-      a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
+      if (locals.isAdmin)  
+        a(href="/courses/" + course.uuid + '/edit').btn.btn-primary Edit
+
+    .row
+      h3 Videos
+      each uservideos in course.videos
+        each video in uservideos
+          .span3
+            a(href=video.url, target='_blank')
+              img(src=video.thumbnail, title=video.title)
+            p #{video.title} by #{video.user.name}
     
+    .row 
+      h3 Upcoming
+      ul
+      -editions.forEach(function (edition) {
+        li  
+          a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} - #{edition.venue}
+              
+      -})
+
+      if (locals.isAllowedInstructor)  
+        a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition

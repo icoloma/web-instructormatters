@@ -21,14 +21,15 @@ var UserSchema = new mongoose.Schema({
   oauth: String,
   admin: {type: Boolean, default: false},
   deleted: {type: Boolean, default: false},
-  address: String,
   videos: [{ 
     id: String,
     url: String,
     thumbnail: String,
     title: String,
-    locale: String
+    locale: String,
+    courseUUID: String
    }],
+  address: String,
   geopoint : { 
     lat: Number,
     lng: Number,

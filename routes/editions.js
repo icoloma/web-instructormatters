@@ -264,38 +264,6 @@ exports.add = function(req,res){
       });
 };
 
-/**
-  Listado de las próximas ediciones
-*/
-exports.following = function( req, res) {
-    var now =  /(.+)T.+/.exec(new Date().toISOString());
-    var editions =  getEditionsWithCourseInfo( {
-        deleted:false, 
-        "date" : { 
-          "$gte" : now[1] 
-        } 
-      }
-      , function( err, editions){
-          if(err) {
-            console.log(err);
-            res.send(500, err.message);
-            return;
-          }
-          res.format({
-            html: function(){
-              res.render('public/following', {
-                title: 'Following editions',
-                editions: editions
-              });
-            },
-            json: function(){
-              res.json(editions);
-            }
-        });
-      });
-}
-
-
 /*
   Buscamos los instructores
   Si el usuario es admin, se mostrarán todos los instructores asociados al curso de la edición
@@ -317,45 +285,6 @@ var getInstructors = function(req , callback){
   }
 }
 
-/*
-  Retornamos las ediciones junto con el nombre del curso
-*/
-var getEditionsWithCourseInfo = function( query, callback ){
-  async.parallel([
-      function(cb){
-
-        models.Editions
-         .find( query )
-         .sort('date','descending')
-         .exec(cb);
-      },
-      function(cb){
-        models.Courses
-          .find( {deleted:false })
-          .select( "name description uuid")
-          .exec(cb)    
-      }], function(err, items){
-        if(err) {
-          console.log(err);
-          callback(err,items)
-          return;
-        }
-
-        var editions = items[0]
-          , courses = items[1]
-          , coursesMap = {}
-
-        courses.forEach(function(course) {
-          coursesMap[course.uuid] = {name: course.name, description: course.description};
-        })
-
-        _.each( editions, function(edition){ 
-          edition.course = coursesMap[edition.courseUUID]; 
-        });
-        callback( null, editions);
-      });
-
-  };
 
 exports.sendMail = function(req, res) {
   console.log('Sending contact mail ' + JSON.stringify(req.body));

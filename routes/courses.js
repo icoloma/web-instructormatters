@@ -2,6 +2,7 @@
 var models = require('../db/models');
 
 
+
 /*
   Mostrar un curso (edicion)
 */
@@ -41,11 +42,13 @@ exports.showDetails = function (req, res) {
             }],
            function( err, results){
               var editions = results[0];
-              res.render('public/course', {
-                title: course.name,
-                course: course,
-                editions: editions
-              });
+              addCourseVideos(course, function(err,items){
+                res.render('public/course', {
+                  title: course.name,
+                  course: course,
+                  editions: editions
+                });
+              },100,3);
             }
           );
         },
@@ -78,33 +81,71 @@ function findCourseByUUID(uuid, res, callback ){
 
 /*
   Listado de todos los cursos
+  Mostramos una lista de vídeos por cada curso así como las siguientes ediciones
 */
 exports.list =  function (req, res) {
-  models.Courses
-    .find({deleted:false})
-    .sort('name','ascending')
-    .exec(function (err, items) {
-      if(err) {
-        console.log(err);
-        res.send(500, err.message)
-        return;
-      }
 
-      res.format({
-        html: function(){
-          res.render('public/courses', {
-            title: 'Courses',
-            courses: items
-          });
-        },
-        json: function(){
-          res.json(items);
-        }
-     });
+  var now =  /(.+)T.+/.exec(new Date().toISOString());
+  getEditionsWithCourseInfo( {
+    deleted:false, 
+    "date" : { "$gte" : now[1] }
+  },function( err, editions){
+    models.Courses
+      .find({deleted:false})
+      .sort('name','ascending')
+      .exec(function (err, courses) {
+        async.map(courses,
+          function(course, cb){
+            // Añadimos los vídeos de cada curso
+            addCourseVideos(course,cb,3,1);
+          },
+          function(err,results){
 
-  });
+            // Mostramos como máximo 3 vídeos de diferentes instructores
+
+            res.render('public/courses', {
+              title: 'Courses',
+              courses: results,
+              editions: editions
+            });
+
+          }
+        );
+      });
+  })
 };
 
+var filterVideoCourses = function( courses ){
+
+}
+
+var addCourseVideos = function( course, callback, numUsers, numVideos){
+  // Buscamos usuarios con videos del curso
+  models.Users
+    .find({
+      deleted:false,
+      "videos.courseUUID":course.uuid
+      })
+    .exec( function (error, users){
+      users = _.first(users,numUsers);
+      // extraemos solo los videos del curso
+      course.videos = _.map(users, 
+          function(user){
+            return _.first(_.compact(_.map(user.videos, 
+              function(video){ 
+                if (course.uuid === video.courseUUID){
+                  video.user ={};
+                  video.user.name=user.name;
+                  video.user.id=user.id
+                  return video;
+                }
+              }
+            )),numVideos);      
+          });
+      callback(null,course);
+    });
+
+}
 
 /*
   Añadir curso - ventana 
@@ -175,4 +216,45 @@ exports.add = function(req,res){
       res.send(204);  // OK, no content
       
     }});
+  };
+
+
+/*
+  Retornamos las ediciones junto con el nombre del curso
+*/
+var getEditionsWithCourseInfo = function( query, callback ){
+  async.parallel([
+      function(cb){
+
+        models.Editions
+         .find( query )
+         .sort('date','ascending')
+         .exec(cb);
+      },
+      function(cb){
+        models.Courses
+          .find( {deleted:false })
+          .select( "name description uuid")
+          .exec(cb)    
+      }], function(err, items){
+        if(err) {
+          console.log(err);
+          callback(err,items)
+          return;
+        }
+
+        var editions = items[0]
+          , courses = items[1]
+          , coursesMap = {}
+
+        courses.forEach(function(course) {
+          coursesMap[course.uuid] = {name: course.name, description: course.description};
+        })
+
+        _.each( editions, function(edition){ 
+          edition.course = coursesMap[edition.courseUUID]; 
+        });
+        callback( null, editions);
+      });
+
   };

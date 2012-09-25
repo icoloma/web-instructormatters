@@ -3,8 +3,16 @@
   placeholder="http[s]://www.youtube.com/watch?v={videoid}"  
   pattern="http(s)?://www.youtube.com/watch\?v=.+">
 <td>
-  <select name="locale">
+  <select name="locale" class="locale">
     <option value="es">Spanish</option>
     <option value="en">English</option>
   </select>
+<td>
+  <select name="courseUUID" class="courseUUID" required>
+      <option value="">--</option>
+    {{#courses}}
+      <option value="{{uuid}}">{{name}}</option>
+    {{/courses}}
+   </select>
+</td>  
 <td><a class="btn btn-danger delete"><i class="icon-trash icon-white"></i> Delete </a>

@@ -12,7 +12,7 @@ append content
       p #{instructor.email}
       p #{instructor.address} 
 
-        a(href='https://maps.google.es/maps?q=' + geolocation )
+        a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation )
           &nbsp; (show in google maps)
 
       -if(locals.currentUser && locals.currentUser.email == instructor.email){
@@ -28,11 +28,10 @@ append content
       -instructor.videos.forEach( function(video){
         .span4
           a(href=video.url, target='_blank')
+            h4 #{video.course} (#{video.locale})
             img(src=video.thumbnail, title=video.title)
-            p #{video.locale}
-            p #{video.title}
-            p #{video.duration} secs.
-            
+            p #{video.title} (#{video.duration} secs.)
+             
       -})
   -}
  

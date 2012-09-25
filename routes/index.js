@@ -18,7 +18,6 @@ module.exports = function (server) {
   server.get('/', statics.home);
   server.get('/pricing', statics.pricing);
 
-  server.get('/following', editions.following);
   
   //ContactForm
   server.get('/contactUs',  statics.contactUsForm);
@@ -62,7 +61,6 @@ module.exports = function (server) {
 
   // Instructors
   server.get( '/instructors', instructors.list);
-  server.get( '/instructors/videos', instructors.videos);
   server.get( '/instructors/:id', security.exposeCurrentUser, instructors.show);
   server.get( '/instructors/:id/edit', security.exposeCurrentUser, instructors.view);
   server.put( '/instructors/:id', instructors.update);

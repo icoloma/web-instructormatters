@@ -1,49 +1,33 @@
+
 .home-header_wrapper {     
-  padding-top: 5px;
-  padding-bottom: 5px;
-  height: auto;
   border: none;
   overflow: hidden;
-  background: url('img/noise.png') #A00;
+  background: url(../img/pattern1.jpg) repeat #ebebeb;
+  background-attachment: fixed;
+}
+
+.home-image-slider {
+  height: 210px;
+  background: @acqua url(/img/home.png) no-repeat 100% 50%;
+  .box-shadow(0 0 5px @abisso);
 }
 
 .home-image-slider h2 {
-  margin-top: 120px; /*specify 'margin-top' as per your your choice*/
-  font-family: 'Lato', sans-serif;
+  margin-top: 50px; /*specify 'margin-top' as per your your choice*/
   font-size: 42px;
-  font-weight: 300;
   color: #ffffff;
-  text-shadow: 0px 1px 1px #d4d4d4;
   text-transform: uppercase;
-  word-spacing: 10px;
-  z-index: 10;
 }
 
 .home-image-slider p {
-  /*font-family: 'Lato', sans-serif;*/
   font-size: 16px;
-  font-weight: 300;
   color: #aff;
   text-align: left;
   word-spacing: 3px;
 }
 
-.home-intro {
-  background:url('../img/bg-footer.png'); 
-  padding-top:10px;
-  color:#fff;
-  text-align:center;
-}
-
-.home-intro h1{text-transform: uppercase;}
-.home-intro .container{
-  border-bottom: 1px solid #DDD;
-  padding: 10px;
-}
-
 
 .home-features {
-  background: url(../img/pattern1.jpg) repeat #ebebeb;
   height: auto;
   padding-top: 10px;
 }
@@ -56,4 +40,9 @@
   word-spacing: 1px;
   text-align: center;
   font-size: 32px;
+}
+.feature-img {
+//  height: 220px;
+  display: block;
+  margin: 10px auto 0;
 }

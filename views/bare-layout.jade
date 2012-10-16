@@ -18,7 +18,7 @@ html( lang="en")
             span.icon-bar
             span.icon-bar
           
-          a.brand(href="/") InstructorMatters
+          a.brand(href="/") Instructor<span class="matters">Matters</span>
           
           .nav-collapse
             
@@ -59,6 +59,17 @@ html( lang="en")
                     &nbsp;Login
 
     block main_content
+
+
+    footer
+      .container
+        a.brand(href="/") Instructor<span class="matters">Matters</span>
+        .pull-left
+          a.footer-a(href="#") on GItHub 
+          | |  
+          a.footer-a(href="#") on Twitter 
+          | |  
+          a.footer-a(href="#") Licensed under CC BY 3.0.
 
     script(src='/js/app.js')
     script(src='/js/lib/require.js')

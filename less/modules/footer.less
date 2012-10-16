@@ -1,22 +1,22 @@
+footer {
+  margin-top: 10px;
+  .box-shadow(0 0 5px @abisso);
+  background-color: @acqua;
+  .background-size(20px 20px);
+  #gradient > .striped(darken(@acqua, 10%), -45deg);
+  /*
+background-image: -webkit-repeating-linear-gradient(-45deg, transparent, 
+  transparent 10px, 
+  opacity(@acquaprofonda, .5) 10px, 
+  rgba(255, 255, 255, .5) 20px);
 
-.footer {  
-  border-top: 1px solid #fff;
-  background: url('img/noise.png') #a00;
+*/
+  color:#fff;
 }
 
-.footer .inner { 
-  color: #fff;
-  border-top: 1px solid #000;
-  font-family: 'Vollkorn', serif;
-  font-weight: 400;
-  line-height: 1.3em;
-  font-style: normal;
-  word-spacing: 1px;
-}
-
-.footer h3 { 
-  font-weight: 400;
-  border-bottom: 1px solid #fff;
-  background: url('../img/bg-footer.png');
-  padding: 5px;
+.footer-a {
+  color: @terraterra;
+  &:hover {
+    color: @terra;
+  }
 }

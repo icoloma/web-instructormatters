@@ -34,12 +34,17 @@
 .flex-control-nav li {margin: 0 0 0 5px; display: inline-block; zoom: 1; *display: inline;}
 .flex-control-nav li:first-child {margin: 0;}
 .flex-control-nav li a {
-    width: 20px; 
-    height: 20px; 
+    width: 10px; 
+    height: 10px; 
     display: block; 
-    background: url(../img/pager.png) no-repeat 0 0; 
+    background: #fff; 
+    border: 5px solid #fff;
+    border-radius: 50%;
     cursor: pointer; 
     text-indent: -9999px;
 }
 .flex-control-nav li a:hover {background-position: 0 0;}
-.flex-control-nav li a.flex-active {background-position: 0 -20px; cursor: default;}
+.flex-control-nav li a.flex-active {
+  background: #a00000; 
+  cursor: default;
+}

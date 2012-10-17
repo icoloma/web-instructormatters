@@ -1,90 +1,52 @@
 extends ../layout
 
 append content
-
-  .clearfix
-    h2 Pricing tables
-    hr
+  p There are different options to get advantage of these courses.
+  .row
     .span4
-      .pricing
-        table
-          thead
-            tr
-              th STARTER
-          tfoot
-            tr 
-              td
-                a.btn.btn-primary.btn-large Sign up
-          tbody
-            tr
-              td.focus $10.00
-                span  per month
-            tr
-              td
-                h6 Domains
-                p 500
+      section.pricing
+        h3 STARTER
+        .price FREE
+        ul.checklist
+          li Free access to slides, labs and interactive examples
+          li Permission to use, edit and mix the course contents
+          li Assimilate the contents at your own rythm
     .span4
-      .pricing 
-        table
-          thead
-            tr
-              th BEST CHOICE
-          tfoot
-            tr 
-              td
-                a.btn.btn-primary.btn-large Sign up
-          tbody
-            tr
-              td.focus $10.00
-                span  per month
-            tr
-              td
-                h6 Domains
-                p 500
-    .span3
-      .pricing
-        table
-          thead
-            tr
-              th FREE
-          tfoot
-            tr 
-              td
-                a.btn.btn-primary.btn-large Sign up
-          tbody
-            tr
-              td.focus $10.00
-                span  per month
-            tr
-              td
-                h6 Domains
-                p 500
-    
-    .row
-      .span10
-        h2 foo 
-        hr
-      .span4
-        ul.list1
-          li a
-          li b
-          li c
-      .span4
-        ul.list2
-          li 1
-          li 2
-          li 3
-      .span3
-        ul.list3
-          li I
-          li II
-          li III
-    p Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.
+      section.pricing.certified
+        h3 CERTIFIED INSTRUCTOR
+        .price <span class="currency">&euro;</span>2500
+        ul.checklist
+          li Assistance to one of our train-the-instructor courses.
+          li InstructorMatters.com account valid for three years.
+          li Contact details and up to three videos on the InstructorMatters.com website.
+          li Get your courses included on the course listings.
+          li Generate certificates for your own courses (20 EUR each)
+        p.center
+          button.btn.btn-danger Sign up
+  .row
+    .span6
+      h3 Set Your Price
+      p Certified or not, you are free to resell this course at your own price. You don't have to pay anything for that.
+      p You can even fork the repository and start selling your own courses, modifying the contents as needed. We only require that you keep the reference to InstructorMatters on any derivative works.
+      h3 Attendees certificates
+      p Certified instructors can purchase online PDF certificates for their courses (at a cost of 20 EUR each). Each attendee will receive a link that can be printed at home. Check out an example.
+    .span6
+      h3 Confused about anything?
+      p Tell us your doubts and we will do our best to address them.
+      .contactform
 
+append scripts
+  script
+    define('contactView',
+      ['editions/contactrequestview', 'editions/contactrequestmodel', 'jquery'],
 
+      function(ContactRequestView, ContactRequestModel) {
+        var view = new ContactRequestView({
+          model: new ContactRequestModel(),
+          adressee: { name: 'foo', email: 'bar' },
+          el: $('.contactform')
+        });
 
-
-
-
-
+        view.render();
+      });
 

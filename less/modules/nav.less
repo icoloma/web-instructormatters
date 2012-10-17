@@ -1,4 +1,7 @@
-
+body {
+  // el espacio del navbar
+  padding-top: @navbarHeight + 16px;
+}
 .navbar .brand, 
 footer .brand {
   display: block;
@@ -14,12 +17,7 @@ footer .brand {
   font-weight: bold;
   color: @acquaprofonda;
 }
-footer .brand {
-  color: @terraterra;
-  &:hover {
-    text-decoration: none;
-  }
-}
+
 .matters {
   color: darken(@terra, 10%);
 }
@@ -45,8 +43,9 @@ footer .brand {
 .navbar-inner {
   min-height: 40px;
 }
-
+/*
 .navbar-fixed-top { 
   border-bottom: 1px solid #000;
   position: static;
 }
+*/

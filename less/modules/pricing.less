@@ -1,4 +1,49 @@
+.pricing {
+  .border-radius(5px);
+  border: 3px solid @gray;
+  background-color: @warningBackground;
+  color: @gray;
+  padding: 10px 20px;
 
+  &> h3 {
+    background: @gray;
+    margin: 0 -20px 10px;
+    color: white;
+    padding: 0 20px;
+  }
+  &.certified {
+    border-color: @acqua;
+    color: @acquaprofonda;
+    &> h3 {
+      background-color: @acqua;
+    }
+  }
+}
+
+.checklist {
+  margin-left: 0;
+  clear: both;
+}
+.checklist > li{
+  list-style: none;
+  &:before {
+    content: "✔ \0020";
+    font-family: Fico;
+    display: inline;
+    color: @green;
+  }
+}
+.price {
+  font-size: 30px;
+  font-weight: bold;
+  float: right;
+  margin-bottom: 10px;
+}
+.currency {
+  opacity: .5;
+}
+
+/*
 .pricing {
   margin-bottom: 40px;
   border: 1px solid #d4d4d4;
@@ -104,3 +149,4 @@ tfoot td{text-align: center;}
   text-align: right;
   float: left;
 }
+*/

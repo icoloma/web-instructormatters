@@ -1,5 +1,5 @@
 footer {
-  margin-top: 10px;
+  margin-top: 20px;
   .box-shadow(0 0 5px @abisso);
   background-color: @acqua;
   .background-size(20px 20px);
@@ -13,8 +13,37 @@ background-image: -webkit-repeating-linear-gradient(-45deg, transparent,
 */
   color:#fff;
 }
-
-.footer-a {
+footer .brand {
+  color: @terraterra;
+  display: inline-block;
+  &:hover {
+    text-decoration: none;
+  }
+}
+.social-link {
+  font-family: social;
+  font-size: 27px;
+  background-color: @terraterra;
+  color: @abisso;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-block;
+  line-height: 30px;
+  text-align: center;
+  margin: 9px 8px 0 0;
+  vertical-align: top;
+  .transition(width 1s 1s easeout);
+  &:hover {
+    text-decoration: none;
+    background-color: @abisso;
+    color: @terraterra;
+    // width: auto;
+  }
+}
+.license {
+  line-height: 50px;
+  float: right;
   color: @terraterra;
   &:hover {
     color: @terra;

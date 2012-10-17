@@ -1,4 +1,6 @@
 var nodemailer = require('nodemailer');
+var MAIL_TO = "ehdez@extrema-sistemas.com";
+var MAIL_SUBJECT = "InstructorMatters contact";
 
 var transport = nodemailer.createTransport("SMTP",{
     host: "smtp.gmail.com"
@@ -10,8 +12,12 @@ var transport = nodemailer.createTransport("SMTP",{
     }
 });
 
+
+
 exports.sendMail = function(req, res) {
   var contactRequest = req.body;
+  contactRequest['to'] =  MAIL_TO;
+  contactRequest['subject'] = MAIL_SUBJECT;
   console.log('Sending contact mail ' + JSON.stringify(contactRequest));
   contactRequest.replyTo = contactRequest.senderName + " <" + contactRequest.from + ">";
   transport.sendMail(contactRequest, function(error, responseStatus) {

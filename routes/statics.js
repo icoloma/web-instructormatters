@@ -19,7 +19,7 @@ exports.pricing = function (req, res) {
 exports.contactUsForm = function(req, res) {
   res.render('public/contactUs', {
     title: 'Contact Us',
-    adressee: {name : 'Instructor Matters', email:'info@extrema-sistemas.com'}
+    adressee: {name : 'Instructor Matters'}
   });
 }
 

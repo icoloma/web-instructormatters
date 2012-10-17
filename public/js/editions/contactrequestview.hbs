@@ -3,18 +3,8 @@
   <input type="hidden" name="courseUUID" value="{{course.uuid}}"/>   
   <input type="hidden" name="editionId" value="{{edition.id}}/>" 
 
-  <label>to</label>
-  <input name="adresse" type="text" value="{{adressee.name}}" readonly>
-  <input name="to" type="hidden" value="{{adressee.email}}" readonly>
-
-  <label>Your name</label>
-  <input name="senderName" type="text">
-
   <label> Your email</label>
   <input name="from" type="email" value="{{contactrequest.from}}">
-
-  <label>subject</label>
-  <input name="subject" type="text" value="{{contactrequest.subject}}">
 
   <label>Your message</label>
   <textarea name="text" value="{{contactrequest.body}}"/>

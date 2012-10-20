@@ -4,6 +4,7 @@
   background-color: @warningBackground;
   color: @gray;
   padding: 10px 20px;
+  margin-bottom: 10px;
 
   &> h3 {
     background: @gray;
@@ -16,6 +17,16 @@
     color: @acquaprofonda;
     &> h3 {
       background-color: @acqua;
+    }
+  }
+  &.yours {
+    border-color: darken(@terra, 30%);
+    .price {
+      color: darken(@terra, 30%);
+    }
+    color: @acquaprofonda;
+    &> h3 {
+      background-color: darken(@terra, 30%);
     }
   }
 }
@@ -38,9 +49,14 @@
   font-weight: bold;
   float: right;
   margin-bottom: 10px;
+  line-height: 1.2;
 }
 .currency {
   opacity: .5;
+}
+.contact-message {
+  width: 95%;
+
 }
 
 /*

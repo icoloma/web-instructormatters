@@ -17,8 +17,8 @@ exports.pricing = function (req, res) {
 }
 
 exports.contactUsForm = function(req, res) {
-  res.render('public/contactUs', {
-    title: 'Contact Us',
+  res.render('public/contact', {
+    title: 'Contact',
     adressee: {name : 'Instructor Matters'}
   });
 }

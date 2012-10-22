@@ -23,26 +23,23 @@ module.exports = function (server) {
   server.get('/contact',  statics.contactUsForm);
   server.post('/contact', mailer.sendMail);
  
-  // Courses
-  server.get( '/courses',             courses.list);                                              // listado de todos los cursos
-  server.get( '/courses/new',         security.isAdmin,                     courses.add);         // muestra formulario para crear curso 
-  server.get( '/courses/:uuid',       security.exposeIsAllowedInstructor,   courses.showDetails); // muestra un curso - readOnly
-  server.get( '/courses/:uuid/edit',  security.isAdmin,                     courses.view);        // muestra un curso - edición
-  server.put( '/courses/:uuid',       security.isAdmin,                     courses.save);        // crear / actualizar curso
-  server.del( '/courses/:uuid',       security.isAdmin,                     courses.del);         // eliminar curso
-  //server.post('/courses',             courses.create);  // not used
+   // -- Courses --
+  server.get( '/courses/:uuid', security.exposeIsAllowedInstructor, courses.showDetails); 
+  server.get( '/courses/:uuid/edit', security.isAdmin, courses.view); 
+  server.get( '/courses', courses.list);
+  server.get( '/courses/new', security.isAdmin, courses.add);
+  server.put( '/courses/:uuid', security.isAdmin, courses.save);        
+  server.del( '/courses/:uuid', security.isAdmin, courses.del);
 
-  // Editions
-  server.post('/courses/:uuid/editions',          security.isAllowedInstructor,         editions.create);
-  server.get( '/courses/:uuid/editions/new',      security.isAllowedInstructor,         editions.add);
-  server.get( '/courses/:uuid/editions/:id',      security.exposeIsAllowedInstructor,   editions.showDetails);
-  server.put( '/courses/:uuid/editions/:id',      security.isAllowedInstructor,         editions.update);
-  server.del( '/courses/:uuid/editions/:id',      security.isAllowedInstructor,         editions.del); 
+  // -- Editions --
+  server.post('/courses/:uuid/editions', security.isAllowedInstructor, editions.create);
+  server.get( '/courses/:uuid/editions/new', security.isAllowedInstructor, editions.add);
+  server.get( '/courses/:uuid/editions/:id', security.exposeIsAllowedInstructor, editions.showDetails);
+  server.put( '/courses/:uuid/editions/:id', security.isAllowedInstructor, editions.update);
+  server.del( '/courses/:uuid/editions/:id', security.isAllowedInstructor, editions.del); 
   server.get( '/courses/:uuid/editions/:id/edit', security.isAllowedInstructor,         editions.view);
   server.get( '/myeditions', editions.list); 
-  
   server.post('/courses/:uuid/editions/:id/contact', mailer.sendMail);
-
   
   // Certificates
   server.get( '/certificates/:uuid',                                  certificates.checkAvailability, certificates.view);
@@ -66,12 +63,8 @@ module.exports = function (server) {
   server.get( '/instructors/:id/edit', security.exposeCurrentUser, instructors.view);
   server.put( '/instructors/:id', instructors.update);
 
+  // -- Security --
   
-  /* 
-    Security
-  */
-  
-  // login (via google oauth )
   server.get('/login', 
       passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
                                               'https://www.googleapis.com/auth/userinfo.email'] }), 
@@ -80,21 +73,15 @@ module.exports = function (server) {
       function(req, res){}
       );
 
-  // Logout
+  // Google Oauth callback
+  server.get('/auth/google/callback', 
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    passport.checkUser
+    );
+
   server.get('/logout', function(req, res){
     req.logOut();
     res.redirect('/');
   });
 
-  // Google Oauth callback
-  server.get('/auth/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    passport.checkUser
-  );
-  
-
-
-
-
 }
-

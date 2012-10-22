@@ -1,0 +1,51 @@
+extends ../layout
+
+append content
+  .row
+    p.span12 To contact us, just fill in the following form and click send.
+    .span4
+      .contactform
+
+    .span4(itemscope, itemtype="http://schema.org/Organization")
+      p
+        b(itemprop="name") InstructorMatters 
+        | is a registered trademark of Extrema Sistemas S.L.
+      p 
+        span(itemprop="address", itemscope, itemtype="http://schema.org/PostalAddress")
+          span(itemprop="streetAddress") Casas de Miravete 24A
+          br
+          | <span itemprop="postalCode">28031</span> <span itemprop="addressLocality">Madrid</span> <span itemprop="addressCountry">Spain</span> 
+          br
+          | <a href="http://goo.gl/maps/3nDy" target"_blank">&raquo; see in Google Maps</a>
+          meta(name="addressRegion", content="Madrid")
+        br
+        b Phone:
+        span(itemprop="telephone") +34 91 172 7081
+append scripts
+  script
+    define('contactView',
+      ['editions/contactrequestview', 'editions/contactrequestmodel', 'jquery'],
+
+      function(ContactRequestView, ContactRequestModel) {
+        var view = new ContactRequestView({
+          model: new ContactRequestModel(),
+          adressee: {},
+          el: $('.contactform')
+        });
+
+        view.render();
+      });
+
+
+
+      
+  
+  
+
+
+
+
+
+
+
+

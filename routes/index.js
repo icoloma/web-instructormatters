@@ -20,8 +20,8 @@ module.exports = function (server) {
 
   
   //ContactForm
-  server.get('/contactUs',  statics.contactUsForm);
-  server.post('/contactUs', mailer.sendMail);
+  server.get('/contact',  statics.contactUsForm);
+  server.post('/contact', mailer.sendMail);
  
   // Courses
   server.get( '/courses',             courses.list);                                              // listado de todos los cursos

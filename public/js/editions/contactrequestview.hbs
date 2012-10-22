@@ -1,14 +1,15 @@
 <form class="well">
 
-  <input type="hidden" name="courseUUID" value="{{course.uuid}}"/>   
-  <input type="hidden" name="editionId" value="{{edition.id}}/>" 
+  <input type="hidden" name="courseUUID" value="{{course.uuid}}">   
+  <input type="hidden" name="editionId" value="{{edition.id}}"> 
 
   <label> Your email</label>
   <input name="from" type="email" value="{{contactrequest.from}}">
 
   <label>Your message</label>
-  <textarea name="text" value="{{contactrequest.body}}"/>
+  <textarea name="text" class="contact-message">{{contactrequest.body}}</textarea>
 
-  <input type="submit" class="btn btn-primary" value="Send"/>
+  <p>
+    <input type="submit" class="btn btn-primary" value="Send"/>
 
 </form>

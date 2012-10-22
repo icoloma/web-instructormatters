@@ -884,7 +884,7 @@ h4,
 h5,
 h6 {
   margin: 10px 0;
-  font-family: myriad, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
   line-height: 1;
   color: inherit;
@@ -910,7 +910,7 @@ h2 {
 }
 h3 {
   font-size: 24px;
-  line-height: 40px;
+  line-height: 30px;
 }
 h4 {
   font-size: 18px;
@@ -7477,8 +7477,8 @@ footer .brand {
   line-height: 40px;
   color: #333;
   background: url(../img/logo.png) no-repeat 0 0;
-  font-family: 'myriad_cond', sans-serif;
-  font-size: 34px;
+  font-family: Oswald, sans-serif;
+  font-size: 30px;
   font-weight: bold;
   color: #033649;
 }
@@ -7720,76 +7720,6 @@ tfoot td{text-align: center;}
   float: left;
 }
 */@font-face {
-  font-family: 'myriad';
-  src: url('fonts/myriad/mpr.eot');
-  src: url('fonts/myriad/mpr.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/mpr.woff') format('woff'), url('fonts/myriad/mpr.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'myriad';
-  src: url('fonts/myriad/myriadpro-bold.eot');
-  src: url('fonts/myriad/myriadpro-bold.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/myriadpro-bold.woff') format('woff'), url('fonts/myriad/myriadpro-bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'myriad';
-  src: url('fonts/myriad/myriadpro-it.eot');
-  src: url('fonts/myriad/myriadpro-it.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/myriadpro-it.woff') format('woff'), url('fonts/myriad/myriadpro-it.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-}
-@font-face {
-  font-family: 'myriad';
-  src: url('fonts/myriad/myriadpro-boldit.eot');
-  src: url('fonts/myriad/myriadpro-boldit.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/myriadpro-boldit.woff') format('woff'), url('fonts/myriad/myriadpro-boldit.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-}
-@font-face {
-  font-family: 'myriad_cond';
-  src: url('fonts/myriad/mpc.eot');
-  src: url('fonts/myriad/mpc.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/mpc.woff') format('woff'), url('fonts/myriad/mpc.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'myriad_cond';
-  src: url('fonts/myriad/myriadpro-condit.eot');
-  src: url('fonts/myriad/myriadpro-condit.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/myriadpro-condit.woff') format('woff'), url('fonts/myriad/myriadpro-condit.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-}
-@font-face {
-  font-family: 'myriad_cond';
-  src: url('fonts/myriad/myriadpro-boldcond.eot');
-  src: url('fonts/myriad/myriadpro-boldcond.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/myriadpro-boldcond.woff') format('woff'), url('fonts/myriad/myriadpro-boldcond.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'myriad_cond';
-  src: url('fonts/myriad/myriadpro-boldcondit.eot');
-  src: url('fonts/myriad/myriadpro-boldcondit.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/myriadpro-boldcondit.woff') format('woff'), url('fonts/myriad/myriadpro-boldcondit.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-}
-@font-face {
-  font-family: 'myriad_semibold';
-  src: url('fonts/myriad/myriadpro-semibold.eot');
-  src: url('fonts/myriad/myriadpro-semibold.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/myriadpro-semibold.woff') format('woff'), url('fonts/myriad/myriadpro-semibold.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'myriad_semibold';
-  src: url('fonts/myriad/myriadpro-semiboldit.eot');
-  src: url('fonts/myriad/myriadpro-semiboldit.eot?#iefix') format('embedded-opentype'), url('fonts/myriad/myriadpro-semiboldit.woff') format('woff'), url('fonts/myriad/myriadpro-semiboldit.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-}
-@font-face {
   font-family: 'social';
   src: url('fonts/social/ksocial-webfont.eot');
   src: url('fonts/social/ksocial-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/social/ksocial-webfont.woff') format('woff'), url('fonts/social/ksocial-webfont.ttf') format('truetype'), url('fonts/social/ksocial-webfont.svg#ksocialregular') format('svg');

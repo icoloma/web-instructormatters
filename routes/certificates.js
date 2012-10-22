@@ -46,7 +46,7 @@ exports.list = function (req, res) {
     .find({edition:req.params.idEdition, deleted:false})
     .exec(function (err, items) {
       if(err) {
-        res.send(500, err.message)
+        codeError(500, err.message)
       } else {
         res.format({
           json: function(){
@@ -94,9 +94,7 @@ exports.list = function (req, res) {
       },
       function(err, num) {
         if (err) {
-          console.log(err);
-          res.send(500, err.message);
-          return;  
+          codeError(500, err.message);
         }
         res.header('location',  '/courses/' + req.params.uuid + '/editions/' + req.params.idEdition );
         res.send(201);
@@ -107,13 +105,11 @@ exports.list = function (req, res) {
   exports.del = function (req, res) {
     models.Certificates.update({_id: req.params.id}, {deleted: true}, function (err, num) {
       if(err) {
-        console.log(err);
-        res.send(500, err.message);
+        codeError(500, err.message);
         return;
       } 
       if(!num) {
-        res.send(404);  // not found
-        return;
+        codeError(404,'Certificate not found');  // not found
       } 
       res.send(204);  // OK, no content
     });
@@ -144,7 +140,7 @@ exports.list = function (req, res) {
           if (!err) {
             res.sendfile(filename);
           } else {
-            res.send(500, err);
+            codeError(500, err);
           }
         });
       });
@@ -156,9 +152,9 @@ exports.list = function (req, res) {
     .findOne({uuid:req.params.uuid, deleted:false})
     .exec(function (err, certificate) {
       if(err) {
-        res.send(500, err.message)
+        codeError(500, err.message)
       } else if(!certificate) {
-        res.send(404);
+        codeError(404,'Certificate not found');
       } else {
         models.Editions.findById(certificate.edition, function(err, edition) {
           if (err || !edition || edition.state != 'PAID') {

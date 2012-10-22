@@ -7,7 +7,7 @@ exports.isAdmin = function( req, res, next){
   if (req.user && req.user.admin){
     next();
   } else {
-    res.send(401);  // forbidden
+    codeError(401, 'User has not Admin permissions');
   }
 }
 
@@ -18,14 +18,13 @@ exports.isAdmin = function( req, res, next){
 exports.isAllowedInstructor = function( req, res, next) {
   
     if (!req.user){
-      res.send(401);
-      return;
+      codeError(401, 'Instructor is not logged');
     }
 
     if (req.user.admin || _.include(req.user.courses, req.params.uuid) ){
       next();
     } else {
-      res.send(401, "You are not a certified instructor for this course");
+      codeError(401, "You are not a certified instructor for this course");
     }
 } 
 

@@ -83,7 +83,7 @@ db.users.save({
 
 
 db.users.save(
-{    email: 'icoloma@gmail.com',
+{   email: 'icoloma@gmail.com',
     name: 'Ignacio Coloma',
     oauth: '112843640399200525430',
     admin: false,

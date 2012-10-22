@@ -8,6 +8,13 @@
   _ = require('./public/js/lib/underscore');
 
 
+  codeError = function( status, message ) {
+    var err = new Error();
+    err.status = status;
+    err.message = message;
+    throw(err);
+  };
+  
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
@@ -35,13 +42,38 @@ var app = express();
   app.use(security.exposeCurrentUser);
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
+  
+  // Error handling
+  app.use(function(err, req, res, next){
+    res.status = err.status || 500;
+
+    var page = 'public/500';
+    if (res.status == 401){
+      page = 'public/401';
+    }
+
+    res.render(page , { title: 'Error', error: err});
+    
+  });
+  
+  // Si ha llegado hasta aquí, es un Not Found 404
+  app.use(function(req, res, next){
+    res.status(404);
+  
+    // respond with html page
+    if (req.accepts('html')) {
+      res.render('public/404', { title: 'Error', url: req.url });
+      return;
+    }
+
+    res.send({ error: 'Not found' });
+  });
+
+
+
+
 });
 
-
-
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
 
 //Conexión a la base de datos
 mongoose.connect('mongodb://localhost/instructormatters');

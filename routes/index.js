@@ -67,10 +67,6 @@ module.exports = function (server) {
   server.put( '/instructors/:id', instructors.update);
 
   
-
-
-
-
   /* 
     Security
   */
@@ -84,7 +80,7 @@ module.exports = function (server) {
       function(req, res){}
       );
 
-// Logout
+  // Logout
   server.get('/logout', function(req, res){
     req.logOut();
     res.redirect('/');
@@ -94,6 +90,11 @@ module.exports = function (server) {
   server.get('/auth/google/callback', 
     passport.authenticate('google', { failureRedirect: '/login' }),
     passport.checkUser
-    );
+  );
+  
+
+
+
 
 }
+

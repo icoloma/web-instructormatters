@@ -27,7 +27,7 @@ exports.sendMail = function(req, res) {
     } else {
       console.log("Error sending contactRequest " + JSON.stringify(contactRequest) 
         + "\n. Error: " + error);
-      res.send(500, error.message);
+      codeError(500, error.message);
     }
     transport.close();
   });

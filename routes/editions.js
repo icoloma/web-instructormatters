@@ -8,14 +8,13 @@ var mailSender = require('../mailer/setup');
 exports.view = function (req, res) {
   models.Editions.findById(req.params.id, function (err, item) {
     if(err) {
-      res.send(500, err.message)
+      codeError(500, err.message)
     } else if(!item || (item && item.deleted)) {
-      res.send(404);
+      codeError(404,'Not found');
     } else {
      
       if (item.state != "NEW") {
-        res.send(500, "It's not allowed to modify this Edition")
-        return;
+       codeError(500, "It's not allowed to modify this Edition");
       }
    
       res.format({
@@ -55,12 +54,10 @@ exports.showDetails = function (req, res) {
   models.Editions.findById(req.params.id, function (err, item) {
     // TODO: mirar como hacer el error handlings con express 
     if(err) {
-      res.send(500, err.message)
-      return;
+      codeError(500, err.message);
     } 
     if(!item || item.deleted) {
-      res.send(404);
-      return;
+      codeError(404,'Not found');
     } 
 
     res.format({
@@ -74,8 +71,7 @@ exports.showDetails = function (req, res) {
             models.Certificates .find({edition:item._id}) .exec(cb)
           }], function (err, results) {
             if(err) {
-              res.send(500, err.message)
-              return;
+              codeError(500, err.message);
             } 
 
             var edition = item.toJSON();
@@ -148,8 +144,7 @@ exports.add = function(req,res){
           // Guardamos
           edition.save(function (err) {
             if(err) {
-              console.log(err);
-              res.send(500, err.message);
+              codeError(500, err.message);
             } else {
               cb(err, this.emitted.complete[0]);
             }
@@ -172,10 +167,9 @@ exports.add = function(req,res){
   exports.del = function (req, res) {
     models.Editions.update({_id: req.params.id}, {deleted: true}, function (err, num) {{
       if(err) {
-        console.log(err);
-        res.send(500, err.message);
+        codeError(500, err.message);
       } else if(!num) {
-        res.send(404);  // not found
+        codeError(404,'Not found');  // not found
       } else {
         res.send(204);  // OK, no content
       }
@@ -188,7 +182,7 @@ exports.add = function(req,res){
 */
   exports.update = function (req, res) {
     if (!req.accepts('application/json')){
-       res.send(406);  //  Not Acceptable
+       res.send(406, 'Not acceptable');  //  Not Acceptable
     }
    
     //Comprobamos que el estado es NEW, si no es así, devolver un código de error
@@ -197,13 +191,10 @@ exports.add = function(req,res){
         models.Editions.findById(req.params.id).exec(cb);
     }], function (err, items){
       if(err) {
-        console.log(err);
-        res.send(500, err.message);
-        return;
+        codeError(500, err.message);
       } 
       if (items[0].state != "NEW") {
-        res.send(500, "It's not allowed to modify this Edition")
-        return;
+        codeError(500, "It's not allowed to modify this Edition")
       }
 
       async.parallel([
@@ -221,10 +212,9 @@ exports.add = function(req,res){
           var course = results[0];
           var num = results[1];
           if(err) {
-            console.log(err);
-            res.send(500, err.message);
+           codeError(500, err.message);
           } else if(!num) {
-            res.send(404);   // not found
+            codeError(404, 'Not found');   // not found
           } else {
             res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.id);
             res.send(204);   // OK, no content
@@ -239,16 +229,14 @@ exports.add = function(req,res){
   */
   exports.list = function(req, res){
     if (!req.user) {
-      res.send(401);
-      return;
+       codeError(401, 'Instructor is not logged');
     }
 
     var editions = getEditionsWithCourseInfo(  {deleted:false, instructor: req.user.id}
       , function( err, editions){
           if(err) {
             console.log(err);
-            res.send(500, err.message);
-            return;
+            throw err;
           }
           res.format({
             html: function(){
@@ -292,7 +280,7 @@ exports.sendMail = function(req, res) {
     if (!error) {
       res.send(201, responseStatus.message);      
     } else {
-      res.send(500, error.message);
+      codeError(500, error.message);
     }
   });
 };  

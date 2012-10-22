@@ -23,8 +23,7 @@ exports.list =  function (req, res) {
     .exec( 
       function (err, items) {
         if(err) {
-          console.log(err);
-          res.send(500, err.message);
+         codeError(500, err.message);
         } else {
           res.format({
             html: function(){
@@ -62,9 +61,7 @@ exports.show =  function (req, res) {
     .exec(cb)
   }], function (err, items) {
       if(err) {
-        console.log(err);
-        res.send(500, err.message);
-        return;
+        codeError(500, err.message);
       } 
       var coursesMap = items[0];
       var instructor = items[1][0];
@@ -102,8 +99,7 @@ exports.view =  function (req, res) {
     }).exec(cb)
   }], function(err,items){
     if(err) {
-      console.log(err);
-      res.send(500, err.message);
+      codeError(500, err.message);
     }
     var coursesMap = items[0];
     var instructor = items[1][0];
@@ -153,15 +149,14 @@ var getCoursesMap = function(callback){
 */
   exports.update = function (req, res) {
     if (!req.accepts('application/json')){
-       res.send(406);  //  Not Acceptable
+       codeError(406,'Not acceptable');  //  Not Acceptable
     }
 
     models.Users.update({_id: req.params.id}, req.body, function (err, num) {
       if(err) {
-        console.log(err);
-        res.send(500, err.message);
+        codeError(500, err.message);
       } else if(!num) {
-        res.send(404);   // not found
+        codeError(404,'Not found');   // not found
       } else {
         res.send(204);   // OK, no content
       }

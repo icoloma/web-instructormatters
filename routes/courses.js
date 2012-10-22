@@ -8,6 +8,7 @@ var editions = require('./editions.js');
   Mostrar un curso (edicion)
 */
 exports.view = function (req, res) {
+
   findCourseByUUID(req.params.uuid, res, function(items){
     var course = items[0];
     res.format({
@@ -69,10 +70,9 @@ function findCourseByUUID(uuid, res, callback ){
   .find({uuid:uuid, deleted:false})
   .exec(function (err, item) {
     if(err) {
-      console.log(err);
-      res.send(500, err.message)
+      codeError(500, err.message)
     } else if(!item || (item && item.deleted)) {
-      res.send(404);
+      codeError(404,'Course not found');
     } else {
       callback(item);
     };
@@ -178,8 +178,7 @@ exports.add = function(req,res){
       var course = new models.Courses(json);
       course.save(function (err) {
         if(err) {
-          console.log(err);
-          res.send(500, err.message.match(/E11000.+/) ? 'Course UUID already exists' : err.message);
+          codeError(500, err.message.match(/E11000.+/) ? 'Course UUID already exists' : err.message);
         } else {
           res.header('location',  '/courses/'+  course.uuid);
           res.send(201);
@@ -189,10 +188,9 @@ exports.add = function(req,res){
       // actualizamos
       models.Courses.update({uuid: req.params.uuid}, json, function (err, num) {
         if(err) {
-          console.log(err);
-          res.send(500, err.message);
+          codeError(500, err.message);
         } else if(!num) {
-          res.send(404);   // not found
+          codeError(404,'Not found');   // not found
         } else {
           res.send(204);   // OK, no content
         }
@@ -206,13 +204,11 @@ exports.add = function(req,res){
   exports.del = function (req, res) {
     models.Courses.update({uuid: req.params.uuid}, {deleted: true}, function (err, num) {{
       if(err) {
-        console.log(err);
-        res.send(500, err.message);
+        codeError(500, err.message);
         return;
       } 
       if(!num) {
-        res.send(404);  // not found
-        return;
+        codeError(404,'Not found');
       } 
       res.send(204);  // OK, no content
       

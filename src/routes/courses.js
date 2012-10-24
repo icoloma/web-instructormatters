@@ -1,8 +1,5 @@
-
 var models = require('../db/models');
 var editions = require('./editions.js');
-
-
 
 /*
   Mostrar un curso (edicion)
@@ -24,8 +21,6 @@ exports.view = function (req, res) {
     });
   });
 }
-
-
 
 /*
   Mostrar un curso (public)

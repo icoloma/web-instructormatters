@@ -34,7 +34,6 @@ db.courses.save({
 })
 
 
-
 /* Users*/ 
 
 db.users.save({
@@ -54,6 +53,7 @@ db.users.save({
     admin: false,
     deleted: false,
     courses: ['core-spring','spring-web','eis'],
+    languages: 'en, es',
     videos: [ { id: 'RY6dNUL8k6o',
                 url: 'http://www.youtube.com/watch?v=RY6dNUL8k6o',
                 title: "Practical Tips and Tricks with Spring Integration",
@@ -76,7 +76,7 @@ db.users.save({
                 courseUUID : 'spring-web'
               }
             ],
-    address : "Tenerife, Santa Cruz de Tenerife, Spain",       
+    address : "Tenerife, Santa Cruz de Tenerife, Spain",
     geopoint : { lat : 28.2915637, lng: -16.629130400000008, zoom : 9 }
 
 })
@@ -89,6 +89,7 @@ db.users.save(
     admin: false,
     deleted: false,
     courses: ['html5-css3','core-spring'],
+    languages: 'en, es',
     videos: [{ id: 'mzPxo7Y6JyA',
                 url: 'http://www.youtube.com/watch?v=mzPxo7Y6JyA',
                 title: "What is HTML5?",

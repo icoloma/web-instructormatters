@@ -13,13 +13,11 @@ var models  = require('../db/models')
   ;
  
 module.exports = function (server) {
-
   
   server.get('/', statics.home);
   server.get('/pricing', statics.pricing);
-
   
-  //ContactForm
+  // -- ContactForm --
   server.get('/contact',  statics.contactUsForm);
   server.post('/contact', mailer.sendMail);
  
@@ -41,14 +39,14 @@ module.exports = function (server) {
   server.get( '/myeditions', editions.list); 
   server.post('/courses/:uuid/editions/:id/contact', mailer.sendMail);
   
-  // Certificates
+  // -- Certificates-- 
   server.get( '/certificates/:uuid',                                  certificates.checkAvailability, certificates.view);
   server.get( '/certificates/:uuid/pdf',                              certificates.checkAvailability, certificates.pdf);
   server.post('/courses/:uuid/editions/:idEdition/certificates',      security.isAllowedInstructor, certificates.save);
   server.get( '/courses/:uuid/editions/:idEdition/certificates',      certificates.list);
   server.del( '/courses/:uuid/editions/:idEdition/certificates/:id',  security.isAllowedInstructor, certificates.del);
 
-  // Users
+  // -- Users-- 
   server.get( '/users',      security.isAdmin,  users.list);
   server.get( '/users/new',  security.isAdmin,  users.add);
   server.post('/users',      security.isAdmin,  users.create);
@@ -56,7 +54,7 @@ module.exports = function (server) {
   server.put( '/users/:id',  security.isAdmin,  users.update);
   server.del( '/users/:id',  security.isAdmin,  users.del);
 
-  // Instructors
+  // -- Instructors-- 
   server.get( '/instructors', instructors.list);
   server.get( '/instructors/course/:uuid', instructors.list);
   server.get( '/instructors/:id', security.exposeCurrentUser, instructors.show);
@@ -64,7 +62,6 @@ module.exports = function (server) {
   server.put( '/instructors/:id', instructors.update);
 
   // -- Security --
-  
   server.get('/login', 
       passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
                                               'https://www.googleapis.com/auth/userinfo.email'] }), 

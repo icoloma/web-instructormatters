@@ -13,7 +13,7 @@ html( lang="en")
       .navbar-inner
         .container 
 
-          //- btn-navbar is used as the toggle for collapsed navbar content 
+          //- toggle button to display the collapsed navbar in small displays
           a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
             span.icon-bar
             span.icon-bar
@@ -24,10 +24,9 @@ html( lang="en")
           .nav-collapse
             
             ul.nav 
-              li
-                a(href="/courses") Courses  
-              //-li
-              //-  a(href="/instructors/videos") Videos  
+              if(locals.isAdmin)
+                li
+                  a(href="/courses") Courses  
               li
                 a(href="/instructors") Instructors
               li 

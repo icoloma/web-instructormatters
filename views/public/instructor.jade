@@ -1,40 +1,43 @@
 extends ../layout
-
 include ../includes/admin-mixins
 
 append content
 
+  .row-fluid
+    p.address #{instructor.address} 
+      | 
+      a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
   .row
-    .span2
-      img(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
-    .span8
-      h3 #{instructor.name} 
-      p #{instructor.email}
-      p #{instructor.address} 
-
-        a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation )
-          &nbsp; (show in google maps)
-
+    .span3
+      p
+        img(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
       -if(locals.currentUser && locals.currentUser.email == instructor.email){
-        a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit')
-          i.icon-user.icon-white
-          &nbsp;Edit
+        p
+          a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit') <i class="icon-user icon-white"></i> Edit
       -}
 
-
-  -if (instructor.videos.length > 0) {
-    h3 Videos:
-    .row 
-      -instructor.videos.forEach( function(video){
-        .span4
-          a(href=video.url, target='_blank')
-            h4 #{video.course} (#{video.locale})
-            img(src=video.thumbnail, title=video.title)
-            p #{video.title} (#{video.duration} secs.)
-             
-      -})
-  -}
- 
+    -instructor.videos.forEach( function(video){
+      .span3.video-container
+        a(href=video.url, target='_blank')
+          img.video-thumbnail(src=video.thumbnail, title=video.title)
+          span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
+        p.video-caption #{video.title} (#{video.duration} secs.)
+    -})
+  .row
+    .span12
+      ul.unstyled
+        li 
+          b Courses:
+          ul.enumeration
+            -instructor.courses.forEach( function(course){
+              li= course
+            -})
+        li
+          b Languages:
+          ul.enumeration
+            -instructor.languages.split(",").forEach( function(course){
+              li= isoLangs.get(course)
+            -})
 
 
   

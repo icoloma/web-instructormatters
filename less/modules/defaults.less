@@ -7,28 +7,18 @@ body {
   line-height: 1.5em;
   height: 100%;
 }
-.page{
-//  background: #FFF; 
-//  border-top:1px solid #000;
-//  padding-top: 10px;
+a {
+  cursor: pointer;
 }
+.enumeration {
+  display: inline;
+  &> li {
+    display: inline;
 
-/*
-.header_wrapper {     
-  color:white;
-  height: auto;
-  border: none;
-  overflow: hidden;
-  background: url('img/noise.png') #A00;
-}
-*/
-
-.map {
-  min-height: 400px;
-}
-
-.map img.profile {
-  max-height: 80px;
+    &:not(:last-child):after {
+      content: ", ";
+    }
+  }
 }
 
 // mensaje de validacion de webkit

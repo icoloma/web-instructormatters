@@ -1,94 +1,28 @@
-extends ../bare-layout
-
+extends ../layout
 include ../includes/admin-mixins
 
-append main_content
-  .header_wrapper
-    .container
-      .page-heading
-        h1= title
+append content
+  .container
+    .row-fluid.map-container
+      .span3.instructors
+        -instructors.forEach(function (instructor) {
+            a.instructor(data-id=instructor.id, href="/instructors/#{instructor.id}")= instructor.name
+            p.address= instructor.address
+        -})
 
-  .span2.instructors
-    -instructors.forEach(function (instructor) {
-        a.instructor( id ='#{instructor.id}')
-          img(src='https://profiles.google.com/s2/photos/profile/' +instructor.oauth, alt=instructor.name)
-          h5 #{instructor.name}
-          p #{instructor.address}
-           
-    -})
-
-  .map#map_canvas(style="height:100%")
-
-
-
+      .span9
+        .map.hidden-phone //- (style="height:100%")
 
 append scripts
   script 
-   
     define('view', 
-      [ 'lib/gmaps' ], 
+      [ 'instructors/instructorcollectionview' ], 
 
-      function(Gmaps) {
-        Gmaps.loadMapsAPI(this.renderMap, this);
+      function(CollectionView) {
+        new CollectionView({
+          el: $('.map-container'),
+          instructors: !{json}
+        }).render();
       }
     );
-    
-    this.infowindows = {}; 
-        
-    var renderMap = function () {
-       
-       var instructors = !{json};
-       var mapOptions = {
-          zoom: 5,
-          center: new google.maps.LatLng(40.416698, -3.700333),
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
-        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-        var bounds = new google.maps.LatLngBounds();
-        var template = _.template(
-          '<a href="/instructors/{{id}}">' +
-            '<div><img src="https://profiles.google.com/s2/photos/profile/{{oauth}}" alt="{{name}}" class="profile"></div>'+
-            '<div>'+
-              '<strong>{{name}}</strong><br/>' +
-              '{{address}}'+
-            '</div>'+
-          '</a>'
-          );
-
-        _.forEach( instructors, function(instructor){
-            var pos = new google.maps.LatLng( instructor.geopoint.lat, instructor.geopoint.lng);
-            bounds.extend(pos);
-            var marker = new google.maps.Marker({
-                        position: pos,
-                        map: map,
-                        title: instructor.name
-                    });
-
-            var contentString = template(instructor);
-            var infowindow = new google.maps.InfoWindow({
-                content: contentString
-            });
-            infowindows[instructor.id]={ infowindow:infowindow, marker:marker};
-
-            google.maps.event.addListener(marker, 'click', function() {
-              infowindow.open(map,marker);
-            });
-          });
-        map.fitBounds(bounds); 
-
-        // Abrir el InfoWindows cuando se hace click sobre el instructor en el panel izq
-        $('.instructor').each( function( idx) {
-            $(this).click(function(){
-                var id = $(this).prop('id');
-                var infowindow = infowindows[id].infowindow;
-                var marker = infowindows[id].marker;
-                infowindow.open(map,marker);
-            })
-        });
-    }  
-
-
-
-   
 

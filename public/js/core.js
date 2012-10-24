@@ -4,6 +4,7 @@ define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message'
   window.B = Backbone;
 
   var core = {
+
     getParamValue: function (paramName) {
       /// <summary>
       ///     Get the value of input parameter from the querystring
@@ -20,6 +21,7 @@ define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message'
       else 
         return decodeURIComponent(matches[1].replace(/\+/g, ' '));
     },
+
     /**
       Render any pending messages
       @param msg.level {String}
@@ -27,8 +29,18 @@ define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message'
       */
     renderMessage : function(msg){
       $('.messages-container').append(messageTmpl(msg));
-    }
+    },
 
+    /** assertions */
+    assert: function(exp, message) {
+      var AssertException = function(message) { this.message = message; }
+      AssertException.prototype.toString = function () {
+        return 'AssertException: ' + this.message;
+      }
+      if (!exp) {
+        throw new AssertException(message || 'assertion failed');
+      }
+    }
     
 };
 

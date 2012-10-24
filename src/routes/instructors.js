@@ -29,7 +29,7 @@ exports.list =  function (req, res) {
             html: function(){
               var json = JSON.stringify(items);
               res.render('public/instructors', {
-                title: 'instructors',
+                title: 'Instructors',
                 instructors: items,
                 json: json
               });
@@ -45,7 +45,7 @@ exports.list =  function (req, res) {
 
 
 /*
-*Información pública del instructor
+  Información pública del instructor
 */
 exports.show =  function (req, res) {
   async.parallel([function(cb){
@@ -57,7 +57,7 @@ exports.show =  function (req, res) {
       deleted: false,
       admin: false,
     })
-    .select("id name address videos email oauth geopoint")
+    .select("id name address videos courses email oauth geopoint")
     .exec(cb)
   }], function (err, items) {
       if(err) {
@@ -65,19 +65,22 @@ exports.show =  function (req, res) {
       } 
       var coursesMap = items[0];
       var instructor = items[1][0];
+      if (!instructor) {
+        codeError(404);
+      }
       _.forEach(instructor.get('videos'), function(video){
          video.course = coursesMap[video.courseUUID]; 
       });
       res.format({
         html: function(){
           res.render('public/instructor', {
-            title: 'instructor',
+            title: instructor.name,
             instructor: instructor,
-            geolocation: instructor.geopoint.lat + ',' +  instructor.geopoint.lng + '&z=' + instructor.geopoint.zoom,
+            geolocation: instructor.geopoint.lat + ',' +  instructor.geopoint.lng + '&z=' + instructor.geopoint.zoom
           });
         },
         json: function(){
-          res.json(items);
+          res.json(items); 
         }
       });
     })

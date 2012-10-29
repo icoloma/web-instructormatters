@@ -4,9 +4,9 @@ var editions = require('./editions.js');
 /*
   Mostrar un curso (edicion)
 */
-exports.view = function (req, res) {
+exports.view = function (req, res, next) {
 
-  findCourseByUUID(req.params.uuid, res, function(items){
+  findCourseByUUID(req.params.uuid, res, next, function(items){
     var course = items[0];
     res.format({
         html: function(){
@@ -25,8 +25,8 @@ exports.view = function (req, res) {
 /*
   Mostrar un curso (public)
 */
-exports.showDetails = function (req, res) {
-  findCourseByUUID(req.params.uuid, res, function(items){
+exports.showDetails = function (req, res, next) {
+  findCourseByUUID(req.params.uuid, res, next, function(items){
     var course = items[0];
     res.format({
         html: function(){
@@ -60,14 +60,14 @@ exports.showDetails = function (req, res) {
   Búsqueda de un curso
   Gestiona el envío de errores 404 y los 500
 */
-function findCourseByUUID(uuid, res, callback ){
+function findCourseByUUID(uuid, res, next, callback){
   models.Courses
   .find({uuid:uuid, deleted:false})
   .exec(function (err, item) {
     if(err) {
-      codeError(500, err.message)
-    } else if(!item || (item && item.deleted)) {
-      codeError(404,'Course not found');
+      codeError(500, err.message, next)
+    } else if(!item || item.length === 0 || (item && item.deleted)) {
+      codeError(404,'Course not found', next);
     } else {
       callback(item);
     };
@@ -160,7 +160,7 @@ exports.add = function(req,res){
   siempre hará un PUT a /courses/:uuid. 
   Hay que distinguir en el lado servidor cuando es inserción y cuando actualización
 */
-  exports.save = function (req, res) {
+  exports.save = function (req, res, next) {
     if (!req.accepts('application/json')){
        res.send(406);  //  Not Acceptable
        return;
@@ -173,7 +173,7 @@ exports.add = function(req,res){
       var course = new models.Courses(json);
       course.save(function (err) {
         if(err) {
-          codeError(500, err.message.match(/E11000.+/) ? 'Course UUID already exists' : err.message);
+          codeError(500, err.message.match(/E11000.+/) ? 'Course UUID already exists' : err.message, next);
         } else {
           res.header('location',  '/courses/'+  course.uuid);
           res.send(201);
@@ -183,9 +183,9 @@ exports.add = function(req,res){
       // actualizamos
       models.Courses.update({uuid: req.params.uuid}, json, function (err, num) {
         if(err) {
-          codeError(500, err.message);
+          codeError(500, err.message, next);
         } else if(!num) {
-          codeError(404,'Not found');   // not found
+          codeError(404,'Not found', next);   // not found
         } else {
           res.send(204);   // OK, no content
         }
@@ -196,14 +196,14 @@ exports.add = function(req,res){
   /**
     Eliminar un curso
   */
-  exports.del = function (req, res) {
+  exports.del = function (req, res, next) {
     models.Courses.update({uuid: req.params.uuid}, {deleted: true}, function (err, num) {{
       if(err) {
-        codeError(500, err.message);
+        codeError(500, err.message, next);
         return;
       } 
       if(!num) {
-        codeError(404,'Not found');
+        codeError(404,'Not found', next);
       } 
       res.send(204);  // OK, no content
       

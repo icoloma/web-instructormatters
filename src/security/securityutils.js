@@ -18,13 +18,13 @@ exports.isAdmin = function( req, res, next){
 exports.isAllowedInstructor = function( req, res, next) {
   
     if (!req.user){
-      codeError(401, 'Instructor is not logged');
+      codeError(401, 'Instructor is not logged', next);
     }
 
     if (req.user.admin || _.include(req.user.courses, req.params.uuid) ){
       next();
     } else {
-      codeError(401, "You are not a certified instructor for this course");
+      codeError(401, "You are not a certified instructor for this course", next);
     }
 } 
 

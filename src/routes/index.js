@@ -22,10 +22,10 @@ module.exports = function (server) {
   server.post('/contact', mailer.sendMail);
  
    // -- Courses --
+  server.get( '/courses', courses.list);
+  server.get( '/courses/new', security.isAdmin, courses.add); // <--- order is important!
   server.get( '/courses/:uuid', security.exposeIsAllowedInstructor, courses.showDetails); 
   server.get( '/courses/:uuid/edit', security.isAdmin, courses.view); 
-  server.get( '/courses', courses.list);
-  server.get( '/courses/new', security.isAdmin, courses.add);
   server.put( '/courses/:uuid', security.isAdmin, courses.save);        
   server.del( '/courses/:uuid', security.isAdmin, courses.del);
 

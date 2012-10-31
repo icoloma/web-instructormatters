@@ -1,24 +1,30 @@
-var models = require('../db/models');
-var editions = require('./editions.js');
+var Courses = require('../db/models').Courses,
+  db = require('../db/models').utils,
+  models = require('../db/models'),
+  editions = require('./editions.js');
 
 /*
   Mostrar un curso (edicion)
 */
 exports.view = function (req, res, next) {
 
-  findCourseByUUID(req.params.uuid, res, next, function(items){
-    var course = items[0];
-    res.format({
-        html: function(){
-          res.render('admin/course', {
-            title: 'Course',
-            course: course
-          });
-        },
-        json: function(){
-          res.json(course);
-        }
-    });
+  Courses.findCourseByUUID(req.params.uuid, function (err, items) {
+    if(err) {
+      next(err);
+    } else {
+      var course = items[0];
+      res.format({
+          html: function(){
+            res.render('admin/course', {
+              title: 'Course',
+              course: course
+            });
+          },
+          json: function(){
+            res.json(course);
+          }
+      });
+    }
   });
 }
 
@@ -26,120 +32,65 @@ exports.view = function (req, res, next) {
   Mostrar un curso (public)
 */
 exports.showDetails = function (req, res, next) {
-  findCourseByUUID(req.params.uuid, res, next, function(items){
+  Courses.findCourseByUUID(req.params.uuid, function (err, items) {
+    if(err) {
+      next(err);
+      return;
+    }
     var course = items[0];
     res.format({
-        html: function(){
-           async.parallel(
-            [function (cb) {
-               models.Editions
-                .find({deleted: false, courseUUID:course.uuid})
-                .sort('date','descending')
-                .exec(cb);
-            }],
-           function( err, results){
-              var editions = results[0];
-              addCourseVideos(course, function(err,items){
+        html: function () {
+          db.findCourseEditions(course.uuid,
+            function (err, editions) {
+              db.addCourseVideos(course, 100, 3, function (err,items) {
                 res.render('public/course', {
                   title: course.name,
                   course: course,
                   editions: editions
                 });
-              },100,3);
-            }
-          );
+              });
+          });
         },
-        json: function(){
+        json: function () {
           res.json(course);
         }
-      });
+    });
   });
 };
-
-/*
-  Búsqueda de un curso
-  Gestiona el envío de errores 404 y los 500
-*/
-function findCourseByUUID(uuid, res, next, callback){
-  models.Courses
-  .find({uuid:uuid, deleted:false})
-  .exec(function (err, item) {
-    if(err) {
-      codeError(500, err.message, next)
-    } else if(!item || item.length === 0 || (item && item.deleted)) {
-      codeError(404,'Course not found', next);
-    } else {
-      callback(item);
-    };
-  });
-}
-
 
 /*
   Listado de todos los cursos
   Mostramos una lista de vídeos por cada curso así como las siguientes ediciones
 */
-exports.list =  function (req, res) {
-
+exports.list =  function (req, res, next) {
   var now =  /(.+)T.+/.exec(new Date().toISOString());
-  editions.getEditionsWithCourseInfo( {
-    deleted:false, 
-    "date" : { "$gte" : now[1] }
-  },function( err, editions){
-    models.Courses
-      .find({deleted:false})
-      .sort('name','ascending')
-      .exec(function (err, courses) {
-        async.map(courses,
-          function(course, cb){
-            // Añadimos los vídeos de cada curso
-            addCourseVideos(course,cb,3,1);
-          },
-          function(err,results){
 
-            // Mostramos como máximo 3 vídeos de diferentes instructores
+  db.getFullCoursesList(now, function (err, editions, courses) {
+    if(err) {
+      next(err);
+      return;
+    }
+    async.map(courses,
+      function (course, cb) {
 
-            res.render('public/courses', {
-              title: 'Courses',
-              courses: results,
-              editions: editions
-            });
+        // Añadimos los vídeos de cada curso
+        db.addCourseVideos(course, 3, 1, cb);
+      },
+      function (err, coursesWithVideos) {
 
-          }
-        );
-      });
-  })
+        // Mostramos como máximo 3 vídeos de diferentes instructores
+        res.render('public/courses', {
+          title: 'Courses',
+          courses: coursesWithVideos,
+          editions: editions
+        });
+
+      }
+    );
+  });
 };
 
-var filterVideoCourses = function( courses ){
-
-}
-
-var addCourseVideos = function( course, callback, numUsers, numVideos){
-  // Buscamos usuarios con videos del curso
-  models.Users
-    .find({
-      deleted:false,
-      "videos.courseUUID":course.uuid
-      })
-    .exec( function (error, users){
-      users = _.first(users,numUsers);
-      // extraemos solo los videos del curso
-      course.videos = _.map(users, 
-          function(user){
-            return _.first(_.compact(_.map(user.videos, 
-              function(video){ 
-                if (course.uuid === video.courseUUID){
-                  video.user ={};
-                  video.user.name=user.name;
-                  video.user.id=user.id
-                  return video;
-                }
-              }
-            )),numVideos);      
-          });
-      callback(null,course);
-    });
+var filterVideoCourses = function (courses) {
 
 }
 
@@ -161,53 +112,46 @@ exports.add = function(req,res){
   Hay que distinguir en el lado servidor cuando es inserción y cuando actualización
 */
   exports.save = function (req, res, next) {
-    if (!req.accepts('application/json')){
-       res.send(406);  //  Not Acceptable
-       return;
+    if (!req.accepts('application/json')) {
+      codeError(406, 'Not acceptable', next);
+       return; //Necesario?
     }
 
-    var json = req.body;
+    var json = req.body,
+      uuid = req.params.uuid;
 
-    if (!json.id) {
-      // Inserción 
-      var course = new models.Courses(json);
-      course.save(function (err) {
-        if(err) {
-          codeError(500, err.message.match(/E11000.+/) ? 'Course UUID already exists' : err.message, next);
-        } else {
-          res.header('location',  '/courses/'+  course.uuid);
-          res.send(201);
-        }
-      });
-    } else {
-      // actualizamos
-      models.Courses.update({uuid: req.params.uuid}, json, function (err, num) {
-        if(err) {
-          codeError(500, err.message, next);
-        } else if(!num) {
-          codeError(404,'Not found', next);   // not found
-        } else {
-          res.send(204);   // OK, no content
-        }
-      });
+    //Check sanitario de la uuid en el json
+    if(json.uuid !== uuid) {
+      codeError(400, 'Bad request', next);
     }
- };
+
+
+    // var course = new Courses(json);
+    Courses.putCourse(json, uuid, function (err, insertion) {
+      if(err) {
+        next(err);
+        return;
+      }
+      if(insertion) {
+        res.header('location',  '/courses/'+ json.uuid );
+        res.send(201);
+      } else {
+        res.send(204);   // OK, no content
+      }
+    });
+  }
 
   /**
     Eliminar un curso
   */
   exports.del = function (req, res, next) {
-    models.Courses.update({uuid: req.params.uuid}, {deleted: true}, function (err, num) {{
+    Courses.del(req.params.uuid, function (err) {
       if(err) {
-        codeError(500, err.message, next);
+        next(err);
         return;
-      } 
-      if(!num) {
-        codeError(404,'Not found', next);
-      } 
+      }
       res.send(204);  // OK, no content
-      
-    }});
+    });
   };
 
 

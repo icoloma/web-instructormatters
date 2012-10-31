@@ -8,11 +8,17 @@
   _ = require('underscore');
 
 
-  codeError = function( status, message, next ) {
+  codeError = function(status, message, next) {
     var err = new Error();
     err.status = status;
     err.message = message;
-    next(err);
+
+    if(next) {
+      next(err);
+      return;
+    } else {
+      return err;
+    }
   };
   
 var express = require('express')

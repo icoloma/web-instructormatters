@@ -2,7 +2,8 @@ var Courses = require('../db/models').Courses,
   Editions = require('../db/models').Editions,
   services = require('../db/models').services,
   models = require('../db/models'),
-  editions = require('./editions.js');
+  editions = require('./editions.js'),
+  codeError = require('./errorHandlers').codeError;
 
 /*
   Mostrar un curso (edicion)
@@ -114,8 +115,8 @@ exports.add = function(req,res){
 */
   exports.save = function (req, res, next) {
     if (!req.accepts('application/json')) {
-      codeError(406, 'Not acceptable', next);
-       return; //Necesario?
+      next(codeError(406, 'Not acceptable'));
+      return; //Necesario?
     }
 
     var json = req.body,
@@ -123,9 +124,9 @@ exports.add = function(req,res){
 
     //Check sanitario de la uuid en el json
     if(json.uuid !== uuid) {
-      codeError(400, 'Bad request', next);
+      next(codeError(400, 'Bad request'));
+      return; 
     }
-
 
     // var course = new Courses(json);
     Courses.putCourse(json, uuid, function (err, insertion) {

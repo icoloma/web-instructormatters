@@ -1,6 +1,7 @@
 
-var models = require('../db/models');
-var mailSender = require('../mailer/setup');
+var models = require('../db/models'),
+  mailSender = require('../mailer/setup'),
+  codeError = require('./errorHandlers').codeError;
 
 /*
 * Mostrar una edicion (admin)

@@ -1,5 +1,5 @@
 
-var wrapResult = require("../../routes/errorHandlers").wrapResult
+var errors = require("../../routes/errorHandlers");
 
 /*
 * Modelo de un curso
@@ -24,11 +24,11 @@ _.extend(CourseSchema.statics, {
   findCourseByUUID: function (uuid, callback) {
     this
     .findOne({uuid:uuid, deleted:false})
-    .exec(wrapResult(callback));
+    .exec(errors.wrapResult(callback));
   },
 
   del: function (uuid, callback) {
-    this.update({uuid: uuid, deleted: false}, {deleted: true}, wrapResult(callback));
+    this.update({uuid: uuid, deleted: false}, {deleted: true}, errors.wrapResult(callback));
   },
 
   putCourse: function (json, uuid, callback) {
@@ -39,13 +39,13 @@ _.extend(CourseSchema.statics, {
       var course = new this(json);
       course.save(function (err) {
         if(err) {
-          err = codeError(500, err.message.match(/E11000.+/) ? 'Course UUID already exists' : err.message);
+          err = errors.codeError(500, err.message.match(/E11000.+/) ? 'Course UUID already exists' : err.message);
         }
         callback(err, insertion);
       });
     } else {
       // actualizamos
-      this.update({uuid: uuid}, json, wrapResult(callback));
+      this.update({uuid: uuid}, json, errors.wrapResult(callback));
     }
   }
 });
@@ -55,7 +55,7 @@ var Courses = mongoose.model('Courses', CourseSchema);
 
 Courses.prototype.toJSON = function(){
   return {
-    id: this._id,
+    id: this._id.toString(),
     uuid: this.uuid,
     name: this.name,
     duration: this.duration,

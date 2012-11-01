@@ -1,4 +1,5 @@
-var models = require('../db/models');
+var models = require('../db/models'),
+  codeError = require('../routes/errorHandlers').codeError;
 
 /*
   Comprueba si hay un usuario logado y es administrador
@@ -15,16 +16,17 @@ exports.isAdmin = function( req, res, next){
 /*
   Comprueba si el usuario tiene asignado el curso al que se intenta acceder
 */
-exports.isAllowedInstructor = function( req, res, next) {
+exports.isAllowedInstructor = function(req, res, next) {
   
     if (!req.user){
-      codeError(401, 'Instructor is not logged', next);
+      next(codeError(401, 'Instructor is not logged'));
+      return;
     }
 
     if (req.user.admin || _.include(req.user.courses, req.params.uuid) ){
       next();
     } else {
-      codeError(401, "You are not a certified instructor for this course", next);
+      next(codeError(401, "You are not a certified instructor for this course"));
     }
 } 
 
@@ -33,7 +35,7 @@ exports.isAllowedInstructor = function( req, res, next) {
 
 // exponemos el usuario logado como locals.currentUser
 exports.exposeCurrentUser = function (req,res,next){
-  res.locals.currentUser = req.user;
+  res.locals.currentUser = req.user && req.user.toJSON();
   res.locals.isAdmin = req.user? req.user.admin : false;
   next();
 }

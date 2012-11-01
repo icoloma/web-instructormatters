@@ -1,6 +1,9 @@
-var nodemailer = require('nodemailer');
-var MAIL_TO = "ehdez@extrema-sistemas.com";
-var MAIL_SUBJECT = "InstructorMatters contact";
+var nodemailer = require('nodemailer'),
+ codeError = require('../routes/errorHandlers.js').codeError;
+
+
+var MAIL_TO = "ehdez@extrema-sistemas.com",
+  MAIL_SUBJECT = "InstructorMatters contact";
 
 var transport = nodemailer.createTransport("SMTP",{
     host: "smtp.gmail.com"

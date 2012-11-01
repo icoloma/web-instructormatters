@@ -6,20 +6,6 @@
   mongoose = require('mongoose');
   async = require('async');
   _ = require('underscore');
-
-
-  codeError = function(status, message, next) {
-    var err = new Error();
-    err.status = status;
-    err.message = message;
-
-    if(next) {
-      next(err);
-      return;
-    } else {
-      return err;
-    }
-  };
   
 var express = require('express')
   , http = require('http')

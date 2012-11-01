@@ -1,4 +1,11 @@
 
+var codeError = function (status, message) {
+  var err = new Error();
+  err.status = status;
+  err.message = message;
+  return err;
+};
+
 module.exports = {
 
   // 401, 500 error handling
@@ -16,7 +23,7 @@ module.exports = {
 
   // 404 handler
   notFound: function(req, res, next) {
-    codeError(404);
+    next(codeError(404));
   },
 
   wrapResult: function (callback) {
@@ -29,5 +36,7 @@ module.exports = {
       }
       callback(err, result);
     }
-  }
+  },
+
+  codeError: codeError
 }

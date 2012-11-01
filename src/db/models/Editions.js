@@ -1,10 +1,10 @@
 
 
-var ObjectId = mongoose.Schema.ObjectId;
+var ObjectId = mongoose.Schema.ObjectId,
+  wrapResult = require('../../routes/errorHandlers').wrapResult;
 
 /*
 Modelo de una edición de un curso
-
 */
 
 
@@ -25,6 +25,8 @@ _.extend(EditionSchema.statics, {
       .sort('date', 'descending')
       .exec(callback);
   },
+
+  // addEdition: function ()
 });
 
 var Editions = mongoose.model('Editions', EditionSchema);
@@ -32,7 +34,7 @@ var Editions = mongoose.model('Editions', EditionSchema);
 
 Editions.prototype.toJSON = function(){
   return {
-    id: this._id,
+    id: this._id.toString(),
     date: this.date,
     venue: this.venue,
     instructor: this.instructor,

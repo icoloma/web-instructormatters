@@ -24,7 +24,6 @@ module.exports = {
       }],
       function (err, items) {
         if(err) {
-          console.log(err);
           callback(err, items)
           return;
         }
@@ -72,4 +71,19 @@ module.exports = {
       });
   },
 
+  getInstructorFullInfo: function (instructorID, callback) {
+    Users.findOne({deleted: false, admin: false, _id: instructorID},
+      wrapResult(function (err, instructor) {
+        if(err) {
+          callback(err, instructor);
+        } else {
+          async.map(instructor.courses,
+            Courses.findCourseByUUID.bind(Courses),
+            function (err) {
+              callback(err, instructor);
+            }
+          );
+        }
+      }));
+  }
 }

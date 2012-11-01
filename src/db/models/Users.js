@@ -1,6 +1,8 @@
 
 
-var ObjectId = mongoose.Schema.ObjectId;
+var ObjectId = mongoose.Schema.ObjectId,
+  wrapResult = require("../../routes/errorHandlers").wrapResult;
+
 /*
 Modelo de un usuario
 
@@ -11,7 +13,6 @@ Token OAuth
 Flag de administrador
 
 */
-
 
 var UserSchema = new mongoose.Schema({
   name: String,
@@ -38,12 +39,38 @@ var UserSchema = new mongoose.Schema({
   
 }, {strict: true});
 
+_.extend(UserSchema.statics, {
+
+  /*
+  * Listado de todos los instructores
+  */
+  findInstructors: function (courseUUID, callback) {
+    var query = {
+      deleted: false,
+      admin: false,
+      name : { $exists: true}
+    };
+    if (courseUUID){
+      query.courses = courseUUID;
+    }
+    this
+      .find(query)
+      .sort('name','ascending')
+      .select('name id geopoint address oauth')
+      .exec(wrapResult(callback))
+  },
+
+  updateInstructor: function (instructorID, params, callback) {
+    //TO DO: ¿admin: false en la busqueda?
+    this.update({_id: instructorID, deleted: false}, params, wrapResult(callback));
+  },
+});
 
 var Users = mongoose.model('Users', UserSchema);
 
 Users.prototype.toJSON = function(){
   return {
-    id: this._id,
+    id: this._id.toString(),
     name: this.name,
     email: this.email,
     oauth: this.oauth,

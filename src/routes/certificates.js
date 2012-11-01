@@ -2,7 +2,8 @@
 var models = require('../db/models')
   , Pdfkit = require('pdfkit')
   , fs = require('fs')
-  , UUID = require('../lib/uuid');
+  , UUID = require('../lib/uuid')
+  , codeError = require('./errorHandlers.js').codeError;
 
 /*
 * Mostrar un certificado 

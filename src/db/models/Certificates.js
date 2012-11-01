@@ -18,7 +18,7 @@ var Certificates = mongoose.model('Certificates', CertificateSchema);
 
 Certificates.prototype.toJSON = function(){
   return {
-    id: this._id,
+    id: this._id.toString(),
     name: this.name,
     email: this.email,
     uuid: this.uuid,

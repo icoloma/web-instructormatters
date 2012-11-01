@@ -17,6 +17,16 @@ var EditionSchema = new mongoose.Schema({
   state: {type:String, default:'NEW'}   // values NEW | PENDING | PAID
 }, {strict: true});
 
+
+_.extend(EditionSchema.statics, {
+  findCourseEditions: function(uuid, callback) {
+    this
+      .find({deleted: false, courseUUID: uuid})
+      .sort('date', 'descending')
+      .exec(callback);
+  },
+});
+
 var Editions = mongoose.model('Editions', EditionSchema);
 
 

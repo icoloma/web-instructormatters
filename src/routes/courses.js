@@ -1,5 +1,6 @@
 var Courses = require('../db/models').Courses,
-  db = require('../db/models').utils,
+  Editions = require('../db/models').Editions,
+  services = require('../db/models').services,
   models = require('../db/models'),
   editions = require('./editions.js');
 
@@ -8,11 +9,11 @@ var Courses = require('../db/models').Courses,
 */
 exports.view = function (req, res, next) {
 
-  Courses.findCourseByUUID(req.params.uuid, function (err, items) {
+  Courses.findCourseByUUID(req.params.uuid, function (err, item) {
     if(err) {
       next(err);
     } else {
-      var course = items[0];
+      var course = item;
       res.format({
           html: function(){
             res.render('admin/course', {
@@ -32,17 +33,17 @@ exports.view = function (req, res, next) {
   Mostrar un curso (public)
 */
 exports.showDetails = function (req, res, next) {
-  Courses.findCourseByUUID(req.params.uuid, function (err, items) {
+  Courses.findCourseByUUID(req.params.uuid, function (err, item) {
     if(err) {
       next(err);
       return;
     }
-    var course = items[0];
+    var course = item;
     res.format({
         html: function () {
-          db.findCourseEditions(course.uuid,
+          Editions.findCourseEditions(course.uuid,
             function (err, editions) {
-              db.addCourseVideos(course, 100, 3, function (err,items) {
+              services.addCourseVideos(course, 100, 3, function (err,items) {
                 res.render('public/course', {
                   title: course.name,
                   course: course,
@@ -65,7 +66,7 @@ exports.showDetails = function (req, res, next) {
 exports.list =  function (req, res, next) {
   var now =  /(.+)T.+/.exec(new Date().toISOString());
 
-  db.getFullCoursesList(now, function (err, editions, courses) {
+  services.getFullCoursesList(now, function (err, editions, courses) {
     if(err) {
       next(err);
       return;
@@ -74,7 +75,7 @@ exports.list =  function (req, res, next) {
       function (course, cb) {
 
         // Añadimos los vídeos de cada curso
-        db.addCourseVideos(course, 3, 1, cb);
+        services.addCourseVideos(course, 3, 1, cb);
       },
       function (err, coursesWithVideos) {
 

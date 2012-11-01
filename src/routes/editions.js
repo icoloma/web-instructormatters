@@ -75,7 +75,7 @@ exports.showDetails = function (req, res) {
               codeError(500, err.message);
             } 
 
-            var edition = item.toJSON();
+            var edition = item;
             res.render('public/edition', {
               title: 'Course Edition',
               edition: edition,

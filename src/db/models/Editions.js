@@ -1,7 +1,7 @@
 
 
 var ObjectId = mongoose.Schema.ObjectId,
-  wrapResult = require('../../routes/errorHandlers').wrapResult;
+  wrapResult = require('./helpers').wrapResult;
 
 /*
 Modelo de una edición de un curso

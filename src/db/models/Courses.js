@@ -1,5 +1,6 @@
 
-var errors = require("../../routes/errorHandlers");
+var errors = require(__apppath + '/src/routes/errorHandlers'),
+  wrapResult = require('./helpers').wrapResult;
 
 /*
 * Modelo de un curso
@@ -24,11 +25,11 @@ _.extend(CourseSchema.statics, {
   findCourseByUUID: function (uuid, callback) {
     this
     .findOne({uuid:uuid, deleted:false})
-    .exec(errors.wrapResult(callback));
+    .exec(wrapResult(callback));
   },
 
   del: function (uuid, callback) {
-    this.update({uuid: uuid, deleted: false}, {deleted: true}, errors.wrapResult(callback));
+    this.update({uuid: uuid, deleted: false}, {deleted: true}, wrapResult(callback));
   },
 
   putCourse: function (json, uuid, callback) {
@@ -45,7 +46,7 @@ _.extend(CourseSchema.statics, {
       });
     } else {
       // actualizamos
-      this.update({uuid: uuid}, json, errors.wrapResult(callback));
+      this.update({uuid: uuid}, json, wrapResult(callback));
     }
   }
 });

@@ -1,7 +1,7 @@
 
 
 var ObjectId = mongoose.Schema.ObjectId,
-  wrapResult = require("../../routes/errorHandlers").wrapResult;
+  wrapResult = require('./helpers').wrapResult;
 
 /*
 Modelo de un usuario
@@ -68,7 +68,7 @@ _.extend(UserSchema.statics, {
 
 var Users = mongoose.model('Users', UserSchema);
 
-Users.prototype.toJSON = function(){
+Users.prototype.toJSON = function() {
   return {
     id: this._id.toString(),
     name: this.name,

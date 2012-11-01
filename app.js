@@ -6,6 +6,8 @@
   mongoose = require('mongoose');
   async = require('async');
   _ = require('underscore');
+
+  __apppath = __dirname;
   
 var express = require('express')
   , http = require('http')
@@ -15,7 +17,7 @@ var express = require('express')
   , security = require('./src/security/securityutils')
   , errorHandlers = require('./src/routes/errorHandlers')
  ;
-  
+
 var app = express();
 app.configure(function() {
 

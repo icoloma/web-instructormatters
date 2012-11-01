@@ -4,7 +4,7 @@ var Courses = require('./Courses'),
   Certificates = require('./Certificates');
 
 
-var wrapResult = require("../../routes/errorHandlers").wrapResult;
+var wrapResult = require('./helpers').wrapResult;
 
 
 module.exports = {

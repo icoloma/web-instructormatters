@@ -26,17 +26,5 @@ module.exports = {
     next(codeError(404));
   },
 
-  wrapResult: function (callback) {
-    return function (err, result) {
-      if(err) {
-        err = codeError(500, err.message);
-      }
-      if(!result || result.length === 0 || result.deleted) {
-        err = codeError(404, 'Not found');
-      }
-      callback(err, result);
-    }
-  },
-
   codeError: codeError
 }

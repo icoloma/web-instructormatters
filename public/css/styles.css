@@ -6128,7 +6128,7 @@ footer {
 }
 footer .brand {
   color: #e8ddcb;
-  display: inline-block;
+  float: left;
 }
 footer .brand:hover {
   text-decoration: none;
@@ -6141,7 +6141,7 @@ footer .brand:hover {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  display: inline-block;
+  float: left;
   line-height: 30px;
   text-align: center;
   margin: 9px 8px 0 0;
@@ -6163,6 +6163,7 @@ footer .brand:hover {
 .license {
   line-height: 50px;
   float: right;
+  text-align: right;
   margin-right: 20px;
   color: #e8ddcb;
 }

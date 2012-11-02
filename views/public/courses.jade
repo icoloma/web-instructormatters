@@ -5,7 +5,7 @@ append content
     
       .span8
         -courses.forEach(function (course) {
-          .row
+          .row-fluid
             a(href="/courses/" + course.uuid ) 
               h2= course.name
             each uservideos in course.videos
@@ -15,7 +15,7 @@ append content
                     img(src=video.thumbnail, title=video.title)
                   p #{video.title}
                   a(href="/instructors/" + video.user.id) #{video.user.name}
-          .row
+          .row-fluid
             a.btn(href="/courses/" + course.uuid) more
 
         -})

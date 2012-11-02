@@ -7,7 +7,7 @@ append content
     p.address #{instructor.address} 
       | 
       a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
-  .row
+  .row-fluid
     .span3
       p
         img(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
@@ -23,7 +23,7 @@ append content
           span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
         p.video-caption #{video.title} (#{video.duration} secs.)
     -})
-  .row
+  .row-fluid
     .span12
       ul.unstyled
         li 

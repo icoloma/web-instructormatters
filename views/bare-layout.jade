@@ -11,7 +11,7 @@ html( lang="en")
   body
     .navbar.navbar-fixed-top 
       .navbar-inner
-        .container 
+        .container-fluid 
 
           //- toggle button to display the collapsed navbar in small displays
           a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
@@ -61,8 +61,7 @@ html( lang="en")
     block main_content
 
 
-    footer
-      .container
+    footer.container-fluid
         a.brand(href="/") Instructor<span class="matters">Matters</span>
         a.social-link(href="https://github.com/instructormatters", title="on GitHub") h
         a.social-link(href="https://twitter.com/instmatters", title="on Twitter") t

@@ -5,7 +5,7 @@ include ../includes/admin-mixins
 append content
 
     -instructors.forEach(function (instructor) {
-        .row
+        .row-fluid
           a(href="/instructors/" + instructor._id ) 
               h5 #{instructor.name}
 

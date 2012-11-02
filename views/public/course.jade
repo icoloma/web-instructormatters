@@ -6,7 +6,7 @@ append content
  
   .main  
 
-    .row
+    .row-fluid
       h3 Description
       p #{course.description}
       p #{course.duration}
@@ -18,7 +18,7 @@ append content
         a(href="/instructors/course/" + course.uuid)  map
         
 
-    .row
+    .row-fluid
       h3 Videos
       each uservideos in course.videos
         each video in uservideos
@@ -28,7 +28,7 @@ append content
             p #{video.title} by 
             a(href='/instructors/' + video.user.id) #{video.user.name}
     
-    .row 
+    .row-fluid 
       h3 Upcoming
       ul
       -editions.forEach(function (edition) {

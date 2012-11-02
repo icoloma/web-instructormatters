@@ -6,13 +6,10 @@ var Users = require('../db/models').Users
 /*
 * Listado de todos los instructores
 */
-exports.list =  function (req, res) {
+exports.list =  function (req, res, next) {
   Users.findInstructors(req.params.uuid,
       function (err, items) {
-        if(err) {
-          next(err);
-          return;
-        }
+        if(err) return next(err);
         res.format({
           html: function () {
             var json = JSON.stringify(items);
@@ -36,10 +33,7 @@ exports.list =  function (req, res) {
 */
 exports.show =  function (req, res, next) {
   services.getInstructorFullInfo(req.params.id, function (err, instructor) {
-    if(err) {
-      next(err);
-      return;
-    }
+    if(err) return next(err);
     instructor = _.omit(instructor, ['admin', 'expires'])
     res.format({
       html: function(){
@@ -60,12 +54,9 @@ exports.show =  function (req, res, next) {
 /*
 * Información para editar el instructor
 */
-exports.view =  function (req, res) {
+exports.view =  function (req, res, next) {
   services.getInstructorFullInfo(req.params.id, function (err, instructor) {
-    if(err) {
-      next(err);
-      return;
-    }
+    if(err) return next(err);
     if(res.locals.isAdmin || res.locals.currentUser.id === req.params.id) {
       res.format({
         html: function(){
@@ -94,10 +85,7 @@ exports.view =  function (req, res) {
 
     Users.updateInstructor(req.params.id, req.body, 
       function (err, num) {
-        if(err) {
-          next(err);
-          return;
-        }
+        if(err) return next(err);
         res.send(204);   // OK, no content
       }
     );

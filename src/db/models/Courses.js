@@ -18,6 +18,13 @@ var CourseSchema = new mongoose.Schema({
 
 _.extend(CourseSchema.statics, {
 
+  findAllCourses: function (callback) {
+    this
+      .find({deleted: false})
+      .sort('name', 'ascending')
+      .exec(wrapResult(callback));
+  },
+
   /*
     Búsqueda de un curso
     Gestiona el envío de errores 404 y los 500
@@ -29,7 +36,7 @@ _.extend(CourseSchema.statics, {
   },
 
   del: function (uuid, callback) {
-    this.update({uuid: uuid, deleted: false}, {deleted: true}, wrapResult(callback));
+    this.update({uuid: uuid, deleted: false}, { $set: { deleted: true } }, wrapResult(callback));
   },
 
   putCourse: function (json, uuid, callback) {

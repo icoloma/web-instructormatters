@@ -1,4 +1,4 @@
-var codeError = require('../../routes/errorHandlers.js');
+var codeError = require('../../routes/errorHandlers.js').codeError;
 
 
 module.exports = {

@@ -11,22 +11,20 @@ var Courses = require('../db/models').Courses,
 exports.view = function (req, res, next) {
 
   Courses.findCourseByUUID(req.params.uuid, function (err, item) {
-    if(err) {
-      next(err);
-    } else {
-      var course = item;
-      res.format({
-          html: function(){
-            res.render('admin/course', {
-              title: 'Course',
-              course: course
-            });
-          },
-          json: function(){
-            res.json(course);
-          }
-      });
-    }
+    if(err) return next(err);
+
+    var course = item;
+    res.format({
+        html: function(){
+          res.render('admin/course', {
+            title: 'Course',
+            course: course
+          });
+        },
+        json: function(){
+          res.json(course);
+        }
+    });
   });
 }
 
@@ -35,10 +33,7 @@ exports.view = function (req, res, next) {
 */
 exports.showDetails = function (req, res, next) {
   Courses.findCourseByUUID(req.params.uuid, function (err, item) {
-    if(err) {
-      next(err);
-      return;
-    }
+    if(err) return next(err);
     var course = item;
     res.format({
         html: function () {
@@ -68,10 +63,7 @@ exports.list =  function (req, res, next) {
   var now =  /(.+)T.+/.exec(new Date().toISOString());
 
   services.getFullCoursesList(now, function (err, editions, courses) {
-    if(err) {
-      next(err);
-      return;
-    }
+    if(err) return next(err);
     async.map(courses,
       function (course, cb) {
 
@@ -130,10 +122,7 @@ exports.add = function(req,res){
 
     // var course = new Courses(json);
     Courses.putCourse(json, uuid, function (err, insertion) {
-      if(err) {
-        next(err);
-        return;
-      }
+      if(err) return next(err);
       if(insertion) {
         res.header('location',  '/courses/'+ json.uuid );
         res.send(201);
@@ -148,10 +137,7 @@ exports.add = function(req,res){
   */
   exports.del = function (req, res, next) {
     Courses.del(req.params.uuid, function (err) {
-      if(err) {
-        next(err);
-        return;
-      }
+      if(err) return next(err);
       res.send(204);  // OK, no content
     });
   };

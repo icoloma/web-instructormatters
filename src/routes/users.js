@@ -1,62 +1,41 @@
 
-var models = require('../db/models');
+var Courses = require('../db/models').Courses,
+  Users = require('../db/models').Users;
 
 /*
 * Listado de todos los usuarios
 */
-exports.list =  function (req, res) {
-    models.Users
-    .find({deleted: false})
-    .sort('name','ascending')
-    .exec( 
-      function (err, items) {
-        if(err) {
-          console.log(err);
-          res.send(500, err.message);
-        } else {
-          res.format({
-            html: function(){
-              res.render('admin/users', {
-                title: 'Users',
-                users: items
-              });
-            },
-            json: function(){
-              res.json(items);
-            }
-          });
-        };
+exports.list =  function (req, res, next) {
+  Users.findAllUsers(function (err, users) {
+    if(err) return next(err);
+
+    res.format({
+      html: function () {
+        res.render('admin/users', {
+          title: 'Users',
+          users: users
+        });
+      },
+      json: function () {
+        res.json(users);
       }
-    )
-  };
+    });
 
-
+  });
+};
 
 /**
 * Añadir usuario
 */
-exports.add = function(req,res){
-  async.parallel([
-    function(cb){
-      models.Courses
-        .find({deleted:false})
-        .sort('name','ascending')
-        .select('uuid, name')
-        .exec(cb);
-
-    }], function(err,results){
-      if (err){
-        res.send(500,err.message);
-        return;
-      }
-
-      res.render('admin/user', {
-          title: 'New User',
-          user: { admin:false , courses: []},
-          courses: results[0]
-        });
-      
+exports.add = function(req, res, next) {
+  Courses.findAllCourses(function (err, courses) {
+    if(err) return next(err);
+    res.render('admin/user', {
+      title: 'New User',
+      user: { admin:false , courses: []},
+      courses: courses
     });
+  });
 }
 
 
@@ -64,93 +43,71 @@ exports.add = function(req,res){
 /**
   Crear usuario
 */
-  exports.create =  function (req, res) {
-    if (!req.accepts('application/json')){
-      res.send(406);  //  Not Acceptable
-    }
-    var user = new models.Users(req.body);
-    user.save(function (err) {
-      if(err) {
-        console.log(err);
-        res.send(500, err.message);
-      } else {
-        res.header('location',  req.url + '/' + this.emitted.complete[0]._id);
-        res.send(201);
+exports.create =  function (req, res, next) {
+  if (!req.accepts('application/json')){
+    res.send(406);  //  Not Acceptable
+  }
 
-      }
-    });
-  };
+  Users.addUser(req.body, function (err, userID) {
+    if(err) return next(err);
+    res.header('location',  req.url + '/' + userID);
+    res.send(201);
+  });
+}
 
 
 /*
 * Mostrar un usuario
 */
-  exports.view = function (req, res) {
-    async.parallel([function(cb){
-       models.Courses
-        .find({deleted:false})
-        .sort('name','ascending')
-        .select('uuid name address')
-        .exec(cb);
+exports.view = function (req, res, next) {
+  async.parallel([
+    Courses.findAllCourses.bind(Courses),
+    function (cb) {
+      Users.findUser(req.params.id, cb)
+    }
+  ],
+  function (err, results) {
+    if(err) return next(err);
 
-    }], function(err,results){
-      models.Users.findById(req.params.id, function (err, item) {
-        if(err) {
-          res.send(500, err.message)
-        } else if(!item || (item && item.deleted)) {
-          res.send(404);
-        } else {
-          res.format({
-            html: function () {
-              res.render('admin/user', {
-                title: 'Edit user',
-                user: item,
-                courses: results[0]
-              });
-            },
-            json : function () {
-              res.send(item);
-            }
-          });        
-        }
-      });
+    var courses = results[0],
+      user = results[1];
 
+    res.format({
+      html: function () {
+        res.render('admin/user', {
+          title: 'Edit user',
+          user: user,
+          courses: courses
+        });
+      },
+      json : function () {
+        res.send(user);
+      }
     });
-
-  };
+  });
+}
 
 /**
   Actualizar un usuario
 */
-  exports.update = function (req, res) {
-    if (!req.accepts('application/json')){
-       res.send(406);  //  Not Acceptable
-    }
-    models.Users.update({_id: req.params.id}, req.body, function (err, num) {
-      if(err) {
-        console.log(err);
-        res.send(500, err.message);
-      } else if(!num) {
-        res.send(404);   // not found
-      } else {
-        res.send(204);   // OK, no content
-      }
-    });
-  };
- 
-  /**
-    Eliminar un ususario
-  */
-  exports.del = function (req, res) {
-    models.Users.update({_id: req.params.id}, {deleted: true}, function (err, num) {{
-      if(err) {
-        console.log(err);
-        res.send(500, err.message);
-      } else if(!num) {
-        res.send(404);  // not found
-      } else {
-        res.send(204);  // OK, no content
-      }
-    }});
-  };
+exports.update = function (req, res, next) {
+  if (!req.accepts('application/json')){
+     res.send(406);  //  Not Acceptable
+  }
+
+  Users.updateUser(req.params.id, req.body, function (err, num) {
+    if(err) return next(err);
+    res.send(204);   // OK, no content
+  });
+};
+
+/**
+  Eliminar un ususario
+*/
+exports.del = function (req, res, next) {
+  Users.deleteUser(req.params.id, function (err, num) {
+    if(err) return next(err);
+    res.send(204);  // OK, no content
+  });
+};
 

@@ -1,7 +1,8 @@
 
 
 var ObjectId = mongoose.Schema.ObjectId,
-  wrapResult = require('./helpers').wrapResult;
+  wrapResult = require('./helpers').wrapResult,
+  errors = require(__apppath + '/src/routes/errorHandlers.js');
 
 /*
 Modelo de un usuario
@@ -40,6 +41,45 @@ var UserSchema = new mongoose.Schema({
 }, {strict: true});
 
 _.extend(UserSchema.statics, {
+
+  findAllUsers: function (callback) {
+    this
+      .find({deleted: false})
+      .exec(wrapResult(callback));
+  },
+
+  findUser: function (userID, callback) {
+    this.findById(userID, wrapResult(callback));
+  },
+
+  addUser: function (body, callback) {
+    var self = this;
+    this.findOne({email: body.email, deleted: false}, function (err, item) {
+      if(err) {
+        err = codeError(500, 'Internal server error');
+        return callback(err, item);
+      } else if(item) {
+        err = codeError(500, 'A user with this email already exists')
+        return callback(err, item);
+      } else {
+        var user = new self(body);
+        user.save(function(err) {
+          if(err) {
+            err = errors.codeError(500, err.message);
+          }
+          callback(err, user._id.toString());
+        });
+      }
+    });
+  },
+
+  updateUser: function (id, params, callback) {
+    this.update({_id: id}, params, wrapResult(callback));
+  },
+
+  deleteUser: function (id, callback) {
+    this.update({_id: id, deleted: false}, { $set: { deleted: true } }, wrapResult(callback));
+  },
 
   /*
   * Listado de todos los instructores

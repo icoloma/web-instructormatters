@@ -84,15 +84,9 @@ _.extend(UserSchema.statics, {
   /*
   * Listado de todos los instructores
   */
-  findInstructors: function (courseUUID, callback) {
-    var query = {
-      deleted: false,
-      admin: false,
-      name : { $exists: true}
-    };
-    if (courseUUID){
-      query.courses = courseUUID;
-    }
+  findInstructors: function (queryOptions, callback) {
+    // Los admins pueden ser instructores
+    var query = _.extend({deleted: false, name: {$exists: true}}, queryOptions);
     this
       .find(query)
       .sort('name','ascending')

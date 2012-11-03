@@ -1,7 +1,8 @@
 
 
 var ObjectId = mongoose.Schema.ObjectId,
-  wrapResult = require('./helpers').wrapResult;
+  wrapResult = require('./helpers').wrapResult,
+  codeError = require(__apppath + '/src/routes/errorHandlers.js').codeError;
 
 /*
 Modelo de una edición de un curso
@@ -19,14 +20,31 @@ var EditionSchema = new mongoose.Schema({
 
 
 _.extend(EditionSchema.statics, {
-  findCourseEditions: function(uuid, callback) {
+
+  findEdition: function (editionID, callback) {
+    this.findById(editionID, wrapResult(callback));
+  },
+
+  findCourseEditions: function (uuid, callback) {
     this
       .find({deleted: false, courseUUID: uuid})
       .sort('date', 'descending')
-      .exec(callback);
+      .exec(wrapResult(callback));
   },
 
-  // addEdition: function ()
+  saveEdition: function (body, callback) {
+    var edition = new this(body);
+    edition.save(function (err) {
+      if(err) {
+        err = codeError(500, 'Internal server error');
+      }
+      callback(err, edition._id);
+    });
+  },
+
+  del: function (editionID, callback) {
+    this.update({deleted: false, _id: editionID}, {$set: {deleted: true}}, wrapResult(callback));
+  },
 });
 
 var Editions = mongoose.model('Editions', EditionSchema);

@@ -7,7 +7,7 @@ var Users = require('../db/models').Users
 * Listado de todos los instructores
 */
 exports.list =  function (req, res, next) {
-  Users.findInstructors(req.params.uuid,
+  Users.findInstructors({courses: req.params.uuid},
       function (err, items) {
         if(err) return next(err);
         res.format({

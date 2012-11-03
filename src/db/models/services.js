@@ -72,7 +72,7 @@ module.exports = {
   },
 
   getInstructorFullInfo: function (instructorID, callback) {
-    Users.findOne({deleted: false, admin: false, _id: instructorID},
+    Users.findOne({deleted: false, _id: instructorID},
       wrapResult(function (err, instructor) {
         if(err) {
           callback(err, instructor);
@@ -85,5 +85,50 @@ module.exports = {
           );
         }
       }));
-  }
+  },
+
+  /*
+    Retornamos las ediciones junto con el nombre del curso
+  */
+  getEditionsFullInfo: function (queryOptions, callback) {
+    var query = _.extend({deleted: false}, queryOptions);
+
+    async.parallel([
+      function(cb){
+        Editions
+         .find( query )
+         .sort('date','ascending')
+         .exec(cb);
+      },
+      function(cb){
+        Courses
+          .find( {deleted:false })
+          .select( "name description uuid")
+          .exec(cb)    
+      }
+      ],
+      function (err, items) {
+        if(err) {
+          err = codeError(500, err.message || 'Internal server error');
+          return callback(err, items);
+        }
+
+        var editions = items[0]
+          , courses = items[1]
+          , coursesMap = {}
+
+        courses.forEach(function (course) {
+          coursesMap[course.uuid] = {
+            name: course.name,
+            description: course.description
+          };
+        });
+
+        _.each( editions, function (edition) { 
+          edition.course = coursesMap[edition.courseUUID]; 
+        });
+        callback(null, editions);
+      }
+    );
+  },
 }

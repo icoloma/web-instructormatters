@@ -35,10 +35,10 @@ define([ 'core', 'hbs!./videoview' ],
 
       render: function() {
         var coursesWithNames = [];
-        this.options.courses.forEach( function(uuid){
+        this.options.courses.forEach( function(course){
           coursesWithNames.push( {
-            uuid : uuid,
-            name : window.allcourses[uuid]
+            uuid : course.uuid,
+            name : course.name
           });
         });
         this.$el.html(template( _.extend( this.model.toJSON(), {courses: coursesWithNames}))); 

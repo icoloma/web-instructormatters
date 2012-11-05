@@ -67,7 +67,7 @@ exports.view =  function (req, res, next) {
           res.render('admin/instructor', {
             title: 'instructor',
             instructor: instructor,
-            courses: instructor.courses
+            courses: instructor.coursesWithInfo
           });
         },
         json: function(){

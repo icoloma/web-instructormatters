@@ -14,12 +14,12 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
 
       render: function() {
         this.$el.html( template( { instructor: this.model.toJSON() }));
-        window.allcourses = this.options.courses;
+    
 
         this.videosView = new VideosView({
           collection: this.model.videos,
           el: $('.videos'),
-          courses : this.model.get('courses')
+          courses :this.options.courses
         }).render();
 
         // Carga la librería GoogleMaps

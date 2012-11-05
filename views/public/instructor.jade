@@ -29,16 +29,11 @@ append content
         li 
           b Courses:
           ul.enumeration
-            -instructor.courses.forEach( function(course){
-              li= course
+            -instructor.coursesWithInfo.forEach( function(course){
+              li
+                a(href='/courses/' + course.uuid) #{course.name}
             -})
-        //- li
-        //-   b Languages:
-        //-   ul.enumeration
-        //-     -console.log(instructor)
-        //-     -instructor.languages.split(",").forEach( function(course){
-        //-       li= isoLangs.get(course)
-        //-     -})
+
 
 
   

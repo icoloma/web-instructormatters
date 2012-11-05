@@ -79,7 +79,8 @@ module.exports = {
         } else {
           async.map(instructor.courses,
             Courses.findCourseByUUID.bind(Courses),
-            function (err) {
+            function (err, results) {
+              instructor.coursesWithInfo = results;
               callback(err, instructor);
             }
           );

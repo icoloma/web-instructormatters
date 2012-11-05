@@ -42,7 +42,10 @@ db.users.save({
     oauth: '116308562574216710328',
     admin: true,
     deleted: false,
-    courses: []
+    languages: 'en, es',
+    courses: [],
+    address : "Madrid, Spain",
+    geopoint : { lat : 40.4166909, lng: -3.70034540000006, zoom : 10 }
 })
 
 

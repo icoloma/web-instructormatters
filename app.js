@@ -35,8 +35,8 @@ app.configure(function() {
   app.use(security.exposeCurrentUser);
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use(errorHandlers.err);
   app.use(errorHandlers.notFound);
+  app.use(errorHandlers.err);
 
   // jade helpers
   app.locals({

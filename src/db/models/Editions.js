@@ -45,6 +45,11 @@ _.extend(EditionSchema.statics, {
   del: function (editionID, callback) {
     this.update({deleted: false, _id: editionID}, {$set: {deleted: true}}, wrapResult(callback));
   },
+
+  updateEdition: function (editionID, body, callback) {
+    this.update({_id: editionID, deleted: false}, body, wrapResult(callback));
+  },
+
 });
 
 var Editions = mongoose.model('Editions', EditionSchema);

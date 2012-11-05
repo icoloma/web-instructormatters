@@ -1,5 +1,8 @@
 
-var models = require('../db/models')
+var models = require('../db/models') //TO DO borrar
+
+var Certificates = require('../db/models').Certificates
+  , Editions = require('../db/models').Editions
   , Pdfkit = require('pdfkit')
   , fs = require('fs')
   , UUID = require('../lib/uuid')
@@ -148,29 +151,30 @@ exports.list = function (req, res) {
      
   },
 
-  exports.checkAvailability = function(req, res, next) {
-    models.Certificates
-    .findOne({uuid:req.params.uuid, deleted:false})
-    .exec(function (err, certificate) {
-      if(err) {
-        codeError(500, err.message)
-      } else if(!certificate) {
-        codeError(404,'Certificate not found');
-      } else {
-        models.Editions.findById(certificate.edition, function(err, edition) {
-          if (err || !edition || edition.state != 'PAID') {
-            //if the edition's state is not paid, the certificate should not be available
-            res.send(404);
-          } else {
-            //make available to the next callbacks the certificate & edition through request
-            req.certificate = certificate;
-            req.edition = edition;
-            return next();
-          }
-        });
-      };
-    });
-  }
+exports.checkAvailability = function (req, res, next) {
+  async.waterfall([
+    function (cb) {
+      Certificates.findCertificate(req.params.uuid, cb)
+    },
+    function (certificate, cb) {
+      Editions.findEditions(certificate.edition, function (err, edition) {
+        //if the edition's state is not paid, the certificate should not be available
+        if(!err && edition && edition.state !== 'PAID') {
+          err = codeError(404);
+        }
+        cb(err, certificate, edition);
+      });
+    }
+    ],
+    function (err, certificate, edition) {
+      if(err) return next(err);
+
+      req.certificate = certificate;
+      req.edition = edition;
+      return next();
+    }
+  );
+};
 
   var generatePDF = function (certificate, edition, course, instructor, callback){
     var urlCertificate = 'http://instructormatters.com/certificates/' + certificate.uuid;

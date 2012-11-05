@@ -2,6 +2,7 @@
 var Editions = require('../db/models').Editions,
   Courses = require('../db/models').Courses,
   Users = require('../db/models').Users,
+  Certificates = require('../db/models').Certificates,
   services = require('../db/models').services,
   mailSender = require('../mailer/setup'),
   codeError = require('./errorHandlers').codeError;
@@ -61,7 +62,7 @@ exports.showDetails = function (req, res, next) {
             Users.findUser(edition.instructor, cb);
           },
           function (cb) {
-            models.Certificates.find({edition:edition._id}).exec(cb)
+            Certificates.findEditionCertificates(edition.id, cb);
           }
           ],
           function (err, results) {
@@ -123,7 +124,6 @@ exports.create =  function (req, res, next) {
     res.send(406);  //  Not Acceptable
   }
   var json = req.body;
-  // var edition = new models.Editions(json);
   var course = json.courseUUID;
 
   async.parallel([
@@ -164,47 +164,34 @@ exports.del = function (req, res, next) {
 /**
   Actualizar una edicion
 */
-exports.update = function (req, res) {
+exports.update = function (req, res, next) {
   if (!req.accepts('application/json')){
      res.send(406, 'Not acceptable');  //  Not Acceptable
   }
- 
-  //Comprobamos que el estado es NEW, si no es así, devolver un código de error
-  async.parallel([
-    function(cb){
-      models.Editions.findById(req.params.id).exec(cb);
-  }], function (err, items){
-    if(err) {
-      codeError(500, err.message);
-    } 
-    if (items[0].state != "NEW") {
-      codeError(500, "It's not allowed to modify this Edition")
+
+  Editions.findEdition(req.params.id, function (err, edition) {
+    if(err) return next(err);
+
+    //Comprobamos que el estado es NEW, si no es así, devolver un código de error
+    if(edition.state !== 'NEW') {
+      return next(codeError(500, 'It\'s not allowed to modify this edition'));
     }
-
+ 
     async.parallel([
-      function(cb){
-        models.Courses
-            .findOne({uuid:req.body.courseUUID})
-            .exec(cb);
-      }, function(cb){
-        console.log("updating " + req.body);
-        models.Editions
-          .update({_id: req.params.id}, req.body)
-          .exec(cb);
-
-      }],function(err, results){
+      function (cb) {
+        Courses.findCourseByUUID(req.body.courseUUID, cb);
+      },
+      function (cb) {
+        console.log("Updating " + req.body);
+        Editions.updateEdition(req.params.id, req.body, cb)
+      }
+      ],
+      function (err, results) {
         var course = results[0];
-        var num = results[1];
-        if(err) {
-         codeError(500, err.message);
-        } else if(!num) {
-          codeError(404, 'Not found');   // not found
-        } else {
-          res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.id);
-          res.send(204);   // OK, no content
-        }
-
-      });
+        res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.id);
+        res.send(204);   // OK, no content
+      }
+    );
   });
 };
    
@@ -241,7 +228,7 @@ exports.list = function (req, res, next) {
 
 var getInstructors = function (req, callback) {
   if (req.user.admin) {
-    Users.findInstructors({course: req.params.uuid}, callback);
+    Users.findInstructors({courses: req.params.uuid}, callback);
   } else {
     // Solo le permitimos asignarse a si mismo como instructor
     callback(null, [req.user]);

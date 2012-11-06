@@ -23,6 +23,7 @@ var UserSchema = new mongoose.Schema({
   oauth: String,
   admin: {type: Boolean, default: false},
   deleted: {type: Boolean, default: false},
+  certified: {type: Boolean, default: false},
   videos: [{ 
     id: String,
     url: String,
@@ -62,6 +63,7 @@ _.extend(UserSchema.statics, {
         err = codeError(500, 'A user with this email already exists')
         return callback(err, item);
       } else {
+        self.normalizeBooleans(body);
         var user = new self(body);
         user.save(function(err) {
           if(err) {
@@ -73,7 +75,15 @@ _.extend(UserSchema.statics, {
     });
   },
 
+  // hay que convertir de String a Boolean 
+  normalizeBooleans: function(params){
+    if (params.admin !== true) params.admin = (params.admin === "true");
+    params.certified = (params.certified === "true");
+    
+  },
+
   updateUser: function (id, params, callback) {
+    this.normalizeBooleans(params);
     this.update({_id: id}, params, wrapResult(callback));
   },
 
@@ -89,8 +99,8 @@ _.extend(UserSchema.statics, {
     var query = _.extend({deleted: false, name: {$exists: true}}, queryOptions);
     this
       .find(query)
-      .sort('name','ascending')
-      .select('name id geopoint address oauth')
+      .sort( 'name','ascending')
+      .select('name id geopoint address oauth certified')
       .exec(wrapResult(callback))
   },
 
@@ -106,6 +116,7 @@ Users.prototype.toJSON = function() {
   return {
     id: this._id.toString(),
     name: this.name,
+    certified: this.certified,
     email: this.email,
     oauth: this.oauth,
     expires: this.expires,

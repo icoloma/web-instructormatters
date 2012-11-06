@@ -6,21 +6,36 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
 
       events: {
         'submit form': 'save',
+        'click #delete' : 'delete',
         'change input': function(e) {
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
+        },
+        'change input.checkbox' : function(e){
+          if (e.currentTarget.checked){
+            this.model.attributes.courses.push(e.currentTarget.value);
+          } else  {
+            this.model.attributes.courses = _.without(this.model.attributes.courses, e.currentTarget.value);
+          }
         }
       },
 
       render: function() {
-        this.$el.html( template( { instructor: this.model.toJSON() }));
-    
+        this.$el.html( template( { instructor: this.model.toJSON(), courses: this.options.courses }));
+        if (this.model.attributes.id) {
+          $.map(this.model.attributes.courses, function(item){ 
+            var query = 'input[name=courses_' + item + ']';
+            $(this.$(query)[0]).attr('checked', true);
+            });
+        }
 
-        this.videosView = new VideosView({
-          collection: this.model.videos,
-          el: $('.videos'),
-          courses :this.options.courses
-        }).render();
+        if (this.model.get('certified')){
+          this.videosView = new VideosView({
+            collection: this.model.videos,
+            el: $('.videos'),
+            courses :this.options.courses
+          }).render();
+        }
 
         // Carga la librería GoogleMaps
         GMaps.loadMapsAPI(this.addGMapAutocompleter, this);
@@ -105,6 +120,17 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
         this.onChangeGeo();
 
       },
+
+      delete: function(e){
+        var self=this;
+        this.model.destroy({
+          success: function(resp, status, xhr) {
+            window.location=self.model.urlRoot+ "?code=deleted";;
+          }
+        });
+        e.preventDefault();
+      },
+
 
       onChangeGeo: function(e) {
         var address = this.$('[name="address"]').val()

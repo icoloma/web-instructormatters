@@ -15,10 +15,19 @@
           <input name="name" type="text" value="{{user.name}}" disabled >
         {{/if}}
 
+        <label>Address:</label>
+        <input name="address" type="text" value="{{user.address}}" disabled >
+
         <label>Courses:</label>
         {{#each courses}}
             <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox"> {{this.name}} 
         {{/each}}
+
+        <label>Is Certified:</label>
+        <select name="certified" >
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
 
         <label>Is admin:</label>
         <select name="admin" >

@@ -1,13 +1,16 @@
 
 var Users = require('../db/models').Users
+  , Courses = require('../db/models').Courses
   , services = require('../db/models').services
   , youtube  = require('../videos/youtube')
-  , codeError = require('./errorHandlers').codeError;
+  , codeError = require('./errorHandlers').codeError
+  , wrapResult = require('../db/models/helpers').wrapResult;
+
 /*
 * Listado de todos los instructores
 */
 exports.list =  function (req, res, next) {
-  var query = {};
+  var query = {  address : { $exists : true }, deleted: false };
   if (req.params.uuid){
     query.courses = req.params.uuid;
   }
@@ -55,28 +58,46 @@ exports.show =  function (req, res, next) {
 };
 
 
+
+
 /*
 * Información para editar el instructor
 */
 exports.view =  function (req, res, next) {
-  services.getInstructorFullInfo(req.params.id, function (err, instructor) {
-    if(err) return next(err);
-    if(res.locals.isAdmin || res.locals.currentUser.id === req.params.id) {
-      res.format({
-        html: function(){
-          res.render('admin/instructor', {
-            title: 'instructor',
-            instructor: instructor,
-            courses: instructor.coursesWithInfo
-          });
-        },
-        json: function(){
-          res.json(instructor);
-        }
-      });
+
+  async.parallel([
+    function(callback){
+      Courses.findAllCourses(function (err, courses) {
+        if(err) return next(err);
+        callback(err,courses);
+        });
+      }
+    ,
+    function(callback){
+      Users.findOne({deleted: false, _id: req.params.id},  wrapResult(function (err, instructor) { 
+        callback(err,instructor);
+      }));
+      //services.getInstructorFullInfo(req.params.id, callback);
     }
-  });
+    ], function(error,results){
+      if(error) return next(err);
+      if(res.locals.isAdmin || res.locals.currentUser.id === req.params.id) {
+        res.format({
+          html: function(){
+            res.render('admin/instructor', {
+              title: 'instructor',
+              instructor: results[1],
+              courses: results[0]
+            });
+          },
+          json: function(){
+            res.json(instructor);
+          }
+        });
+      }
+    });
 };
+
 
 /**
   Actualizar un instructor
@@ -87,6 +108,10 @@ exports.view =  function (req, res, next) {
        return;
     }
 
+    // evitamos que nos inyecten estas propiedades
+    delete req.body.admin;
+    delete req.body.certified;
+
     Users.updateInstructor(req.params.id, req.body, 
       function (err, num) {
         if(err) return next(err);
@@ -95,6 +120,24 @@ exports.view =  function (req, res, next) {
     );
   };
  
+
+ exports.del = function (req, res, next) {
+  Users.deleteUser(req.user.id, function (err, num) {
+    if(err) return next(err);
+    req.logOut();
+    res.format({
+          html: function(){
+            res.redirect('/');
+            return;
+          },
+          json: function(){
+            res.send(204);  // OK, no content
+            return;
+          }
+    });
+  });
+}
+
 
 
 

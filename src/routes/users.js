@@ -32,7 +32,7 @@ exports.add = function(req, res, next) {
     if(err) return next(err);
     res.render('admin/user', {
       title: 'New User',
-      user: { admin:false , courses: []},
+      user: { admin:false , certified:false, courses: []},
       courses: courses
     });
   });
@@ -94,7 +94,7 @@ exports.update = function (req, res, next) {
   if (!req.accepts('application/json')){
      res.send(406);  //  Not Acceptable
   }
-
+  
   Users.updateUser(req.params.id, req.body, function (err, num) {
     if(err) return next(err);
     res.send(204);   // OK, no content

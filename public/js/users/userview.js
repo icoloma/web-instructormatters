@@ -34,6 +34,7 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
           })); 
 
         $(this.$("select[name=admin]")[0]).val(JSON.stringify(this.model.attributes.admin));
+        $(this.$("select[name=certified]")[0]).val(JSON.stringify(this.model.attributes.certified));
 
         if (this.model.attributes.id) {
           $.map(this.model.attributes.courses, function(item){ 

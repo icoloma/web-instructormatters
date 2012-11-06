@@ -13,7 +13,9 @@ function(K, template, Gmaps) {
 
     events: {
       'change select[name="country"]': 'onSelectCountry',
-      'hover .instructor': 'onClickInstructor'
+      'hover .instructor': 'onClickInstructor',
+      'click #certifiedButton': 'hideNonCertifiedInstructors',
+      'click #allButton': 'showNonCertifiedInstructors' 
     },
 
     initialize: function() {
@@ -123,6 +125,33 @@ function(K, template, Gmaps) {
         this.currentMarker = this.markers[id];
         this.currentMarker.infoWindow.open(this.map, this.currentMarker.marker);
       }
+    },
+
+    hideNonCertifiedInstructors: function(e){
+      $('#allButton').show();
+      $('#certifiedButton').hide();
+      $('.certified-false').hide();
+      
+      $('.certified-false').each( function(idx,elem) {
+        var elem = $(elem);
+        elem.hide();
+        var id = elem.data('id');
+        var m = window.view.markers[id];
+        m.marker.setMap(null);
+      });
+      
+    },
+
+    showNonCertifiedInstructors: function(e){
+      $('#allButton').hide();
+      $('#certifiedButton').show();
+      $('.certified-false').each( function(idx,elem) {
+        var elem = $(elem);
+        elem.show();
+        var id = elem.data('id');
+        var m = window.view.markers[id];
+        m.marker.setMap(window.view.map);
+      });
     }
 
   })

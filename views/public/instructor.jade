@@ -2,15 +2,23 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
-
+   
+  
+    
   .row-fluid
-    p.address #{instructor.address} 
-      | 
-      a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
+    if (instructor.geolocation)
+      p.address #{instructor.address} 
+        | 
+        a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
+    
   .row-fluid
+  
     .span3
       p
         img(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
+      if instructor.certified
+       span.certified-true
+      
       -if(locals.currentUser && locals.currentUser.email == instructor.email){
         p
           a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit') <i class="icon-user icon-white"></i> Edit

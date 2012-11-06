@@ -6047,6 +6047,13 @@ tfoot td{text-align: center;}
   font-size: 12px;
   margin-top: 5px;
 }
+.certified-true {
+  background: url(img/instructor-badage.png) no-repeat 0 0;
+  display: block;
+  height: 100px;
+  padding: 0 0 0 50px;
+  overflow: hidden;
+}
 .map img {
   max-width: none !important;
 }
@@ -6163,7 +6170,6 @@ footer .brand:hover {
 .license {
   line-height: 50px;
   float: right;
-  text-align: right;
   margin-right: 20px;
   color: #e8ddcb;
 }

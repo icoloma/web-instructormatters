@@ -41,11 +41,10 @@ html( lang="en")
                   a.dropdown-toggle.user(href="#", data-toggle="dropdown") #{locals.currentUser.name} 
                     b.caret  
                   ul.dropdown-menu
-                    if(!locals.isAdmin)
-                      li
-                        a(href='/instructors/' + locals.currentUser.id) My Profile
                     li
-                      if(locals.currentUser && ! locals.isAdmin)
+                      a(href='/instructors/' + locals.currentUser.id) My Profile
+                    li
+                      if(locals.currentUser)
                         a(href="/myeditions") My editions
 
                       if(locals.isAdmin)

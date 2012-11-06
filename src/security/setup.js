@@ -46,48 +46,77 @@ passport.use(new GoogleStrategy({
 ));
 
 
+updateUserData = function (dbUser, req, res) {
 
+  if (dbUser.deleted){
+    // fuerza que se actualicen los datos 
+    dbUser.set({oauth:null});
+  }
+
+  if (dbUser.oauth){
+    res.redirect('/instructors/' + dbUser.id);
+    return;
+  } 
+    
+  // actualizamos el token y el displayName
+  async.parallel([
+    function(cb){
+      var query = {oauth:req.user.id, name:req.user.displayName, deleted:false};
+      if (dbUser.deleted){
+        query.admin=false;
+        query.certified=false;
+        query.address=null;
+        query.geopoint=null;
+        query.courses=[];
+        query.videos=[];
+      }
+      models.Users
+      .update({_id: dbUser.id}, query )
+      .exec(cb);
+    }], function(err,num){
+      if (err || num === 0){
+        err && console.log(err.message); 
+        res.send(500, 'Error updating oauth token');
+        return; 
+      } 
+      res.redirect('/instructors/' + dbUser.id + '/edit');
+      return;
+  });
+
+}
 
 // Se ha autenticado con Google, pero ¿ está en nuestra bdd ?
 passport.checkUser = function (req,res) {
   async.parallel([
     function(cb) {
-      models.Users.findOne( {email:req.user.emails[0].value, deleted:false}).exec(cb);
+      models.Users.findOne( {email:req.user.emails[0].value}).exec(cb);
     }], function( err, results){
       if (err) {
         console.log(err);
         res.send(500, err.message);
         return;
       }
-     
-      var dbUser = results[0];
-      if (!dbUser){
-        req.logOut();
-        res.send(404);
-        return;
-      }
 
-      // TODO: Comprobar el oauth con el existente en la base de datos
-      if (dbUser.oauth){
-        res.redirect('/');
-        return;
-      } 
-      
-      // actualizamos el token y el displayName
-      async.parallel([
-        function(cb){
-          models.Users
-          .update({_id: dbUser.id}, {oauth:req.user.id, name:req.user.displayName})
-          .exec(cb);
-        }], function(err,num){
-          if (err || num === 0){
-            err && console.log(err.message); 
-            res.send(500, 'Error updating oauth token');
-            return; 
-          } 
-           
-          res.redirect('/');
+      var dbUser = results[0];
+
+      if (!dbUser){
+        // creamos un usuario nuevo
+        dbUser = { admin:false , certified:false,  deleted:false, courses: [], email:req.user.emails[0].value};
+        models.Users.addUser(dbUser, function (err, userID) {
+          if(err)  {
+            console.log(err);
+            res.send(500, err.message);
+           return;
+          }
+          dbUser.id = userID;
+          this.updateUserData(dbUser,req,res);
+        
         });
+        
+      } else {
+        this.updateUserData(dbUser,req,res);
+        
+      }
     });
 }
 

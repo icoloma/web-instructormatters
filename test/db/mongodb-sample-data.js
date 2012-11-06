@@ -52,6 +52,7 @@ db.users.save({
 db.users.save({
     email: 'ehdez@extrema-sistemas.com',
     name: 'Ernesto (extrema)',
+    certified: true,
     oauth: '109792900130705825881',
     admin: false,
     deleted: false,
@@ -88,6 +89,7 @@ db.users.save({
 db.users.save(
 {   email: 'icoloma@gmail.com',
     name: 'Ignacio Coloma',
+    certified: false,
     oauth: '112843640399200525430',
     admin: false,
     deleted: false,

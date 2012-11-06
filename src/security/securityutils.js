@@ -23,7 +23,7 @@ exports.isAllowedInstructor = function(req, res, next) {
       return;
     }
 
-    if (req.user.admin || _.include(req.user.courses, req.params.uuid) ){
+    if (req.user.admin || ( _.include(req.user.courses, req.params.uuid) && req.user.certified)){
       next();
     } else {
       next(codeError(401, "You are not a certified instructor for this course"));

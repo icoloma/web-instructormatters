@@ -23,7 +23,7 @@ var UserSchema = new mongoose.Schema({
   oauth: String,
   admin: {type: Boolean, default: false},
   deleted: {type: Boolean, default: false},
-  certified: {type: Boolean, default: false},
+  certificates: [ { uuid: {type: String}}],
   videos: [{ 
     id: String,
     url: String,
@@ -100,7 +100,7 @@ _.extend(UserSchema.statics, {
     this
       .find(query)
       .sort( 'name','ascending')
-      .select('name id geopoint address oauth certified')
+      .select('name id geopoint address oauth certificates')
       .exec(wrapResult(callback))
   },
 
@@ -116,12 +116,12 @@ Users.prototype.toJSON = function() {
   return {
     id: this._id.toString(),
     name: this.name,
-    certified: this.certified,
     email: this.email,
     oauth: this.oauth,
     expires: this.expires,
     admin: this.admin,
     courses:this.courses,
+    certificates:this.certificates,
     videos: this.videos,
     address: this.address,
     geopoint: { 

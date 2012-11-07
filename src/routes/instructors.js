@@ -17,6 +17,21 @@ exports.list =  function (req, res, next) {
   Users.findInstructors(query,
       function (err, items) {
         if(err) return next(err);
+
+        // check if instructor is certified
+        _.map(items, function(instructor){
+
+          if (!instructor.certificates){
+            instructor.certified = false;
+          } else if(!req.params.uuid){
+            // is certified in any course?
+            instructor.certified = instructor.certificates.length > 0;
+          } else {
+            // is certified in the request course?
+            instructor.certified =  instructor.certificates.indexOf(req.params.uuid) != -1; ;
+          }
+        });
+
         res.format({
           html: function () {
             var json = JSON.stringify(items);

@@ -8,11 +8,19 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
         'click #delete' : 'delete',
         'click #list' : 'list',
         'submit form': 'save',
-        'change input.checkbox' : function(e){
+        'change input.courses' : function(e){
           if (e.currentTarget.checked){
             this.model.attributes.courses.push(e.currentTarget.value);
           } else  {
             this.model.attributes.courses = _.without(this.model.attributes.courses, e.currentTarget.value);
+          }
+
+        },
+        'change input.certificates' : function(e){
+          if (e.currentTarget.checked){
+            this.model.attributes.certificates.push(e.currentTarget.value);
+          } else  {
+            this.model.attributes.certificates = _.without(this.model.attributes.certificates, e.currentTarget.value);
           }
 
         },
@@ -34,14 +42,19 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
           })); 
 
         $(this.$("select[name=admin]")[0]).val(JSON.stringify(this.model.attributes.admin));
-        $(this.$("select[name=certified]")[0]).val(JSON.stringify(this.model.attributes.certified));
-
+       
         if (this.model.attributes.id) {
           $.map(this.model.attributes.courses, function(item){ 
             var query = 'input[name=courses_' + item + ']';
             $(this.$(query)[0]).attr('checked', true);
-            });
-          }
+          });
+          $.map(this.model.attributes.certificates, function(item){ 
+            var query = 'input[name=certificates_' + item + ']';
+            $(this.$(query)[0]).attr('checked', true);
+          });
+
+        }
+
       },
 
       

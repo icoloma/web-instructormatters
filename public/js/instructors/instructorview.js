@@ -29,7 +29,7 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
             });
         }
 
-        if (this.model.get('certified')){
+        if (this.model.get('certificates').length > 0){
           this.videosView = new VideosView({
             collection: this.model.videos,
             el: $('.videos'),

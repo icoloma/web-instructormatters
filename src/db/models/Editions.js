@@ -11,8 +11,14 @@ Modelo de una edición de un curso
 
 var EditionSchema = new mongoose.Schema({
   date: {type: String, required: true},
-  venue: {type: String, required: true},
+  address: {type: String, required: true},
+  geopoint : { 
+    lat: Number,
+    lng: Number,
+    zoom: Number
+   },
   instructor: {type: ObjectId, ref: 'Users', required: true},
+  instructorName : String,   // Saved when creating 
   courseUUID: {type: String, required: true},
   deleted: {type: Boolean, default: false},
   state: {type:String, default:'NEW'}   // values NEW | PENDING | PAID
@@ -59,10 +65,14 @@ Editions.prototype.toJSON = function(){
   return {
     id: this._id.toString(),
     date: this.date,
-    venue: this.venue,
     instructor: this.instructor,
     courseUUID: this.courseUUID,
-    state: this.state
+    state: this.state,
+    address: this.address,
+    geopoint: { 
+      lat: this.geopoint.lat, 
+      lng: this.geopoint.lng, 
+      zoom: this.geopoint.zoom }
   }
 };
  

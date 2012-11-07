@@ -62,7 +62,7 @@ exports.showDetails = function (req, res, next) {
 exports.list =  function (req, res, next) {
   var now =  /(.+)T.+/.exec(new Date().toISOString());
 
-  services.getFullCoursesList(now, function (err, editions, courses) {
+  services.getFullCoursesList(now, 4,  function (err, editions, courses) {
     if(err) return next(err);
     async.map(courses,
       function (course, cb) {

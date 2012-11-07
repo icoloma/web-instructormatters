@@ -198,7 +198,7 @@ exports.checkAvailability = function (req, res, next) {
       .moveDown()
       .fontSize(15)
       .text('Instructor: ' + instructor.name)
-      .text('Location: ' + edition.venue)
+      .text('Location: ' + edition.address)
       .text('Date: ' + edition.date)
       .text('Duration: ' + course.duration)
       .text('URL: ' + urlCourse)  

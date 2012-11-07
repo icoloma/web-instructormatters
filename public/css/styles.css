@@ -5864,6 +5864,14 @@ footer .brand {
   display: block;
   margin: 10px auto 0;
 }
+.home-edition {
+  background-color: #036564;
+  color: white;
+  padding: 1px;
+}
+.home-edition-venue {
+  font-weight: bold;
+}
 .pricing {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;

@@ -132,6 +132,7 @@ exports.create =  function (req, res, next) {
         Courses.findCourseByUUID(course, cb);
       },
       function (cb) {
+        json.instructorName = req.user.name;
         Editions.saveEdition(json, cb);
       }
       ],

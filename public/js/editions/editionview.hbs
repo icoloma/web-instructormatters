@@ -5,7 +5,9 @@
   <input type="text" value="{{course.name}}" disabled />
   <input type="hidden" name="courseUUID" value="{{course.uuid}}"/>    
   <label>Venue: </label>
-  <input name="venue" type="text" value="{{edition.venue}}" required>
+  <input name="address" type="text" value="{{edition.address}}" required>
+  <div class="map" id="map_canvas" ></div>
+
 
   <label>Date: </label>
   <input name="date" type="date" value="{{edition.date}}" required autocomplete="off" placeholder="yyyy-mm-dd">

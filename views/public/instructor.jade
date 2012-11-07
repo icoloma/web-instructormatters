@@ -23,14 +23,14 @@ append content
         p
           a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit') <i class="icon-user icon-white"></i> Edit
       -}
-
-    -instructor.videos.forEach( function(video){
-      .span3.video-container
-        a(href=video.url, target='_blank')
-          img.video-thumbnail(src=video.thumbnail, title=video.title)
-          span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
-        p.video-caption #{video.title} (#{video.duration} secs.)
-    -})
+    -if(instructor.certificates.length > 0)  
+      -instructor.videos.forEach( function(video){
+        .span3.video-container
+          a(href=video.url, target='_blank')
+            img.video-thumbnail(src=video.thumbnail, title=video.title)
+            span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
+          p.video-caption #{video.title} (#{video.duration} secs.)
+      -})
   .row-fluid
     .span12
       ul.unstyled

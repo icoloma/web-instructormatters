@@ -1,10 +1,21 @@
+var services = require('../db/models').services;
+
 /*
   Home
 */
 exports.home = function (req, res) {
-	res.render('public/home', {
-	 title: 'Instructor Matters'
-	});
+
+  var now =  /(.+)T.+/.exec(new Date().toISOString());
+
+  services.getFullCoursesList(now, 3, function (err, editions, courses) {
+    if(err) return next(err);
+    res.render('public/home', {
+      title: 'Instructor Matters',
+      courses: courses,
+      editions: editions
+    });
+  });
+
 }
 
 /*

@@ -8,12 +8,13 @@ var wrapResult = require('./helpers').wrapResult;
 
 
 module.exports = {
-  getFullCoursesList: function (date, callback) {
+  getFullCoursesList: function (date, limit, callback) {
     async.parallel([
       function (cb) {
         Editions
          .find( { deleted:false, "date" : { "$gte" : date } } )
          .sort('date','ascending')
+         .limit(limit)
          .exec(cb);
       },
       function (cb) {
@@ -33,7 +34,7 @@ module.exports = {
           , coursesMap = {}
 
         courses.forEach(function (course) {
-          coursesMap[course.uuid] = {name: course.name, description: course.description};
+          coursesMap[course.uuid] = {name: course.name, description: course.description, uuid: course.uuid};
         })
 
         _.each( editions, function (edition) { 

@@ -24,27 +24,27 @@ module.exports = function (server) {
    // -- Courses --
   server.get( '/courses', courses.list);
   server.get( '/courses/new', security.isAdmin, courses.add); // <--- order is important!
-  server.get( '/courses/:uuid', security.exposeIsAllowedInstructor, courses.showDetails); 
+  server.get( '/courses/:uuid', security.exposeInstructor, courses.showDetails);
   server.get( '/courses/:uuid/edit', security.isAdmin, courses.view); 
   server.put( '/courses/:uuid', security.isAdmin, courses.save);        
   server.del( '/courses/:uuid', security.isAdmin, courses.del);
 
   // -- Editions --
-  server.post('/courses/:uuid/editions', security.isAllowedInstructor, editions.create);
-  server.get( '/courses/:uuid/editions/new', security.isAllowedInstructor, editions.add);
-  server.get( '/courses/:uuid/editions/:id', security.exposeIsAllowedInstructor, editions.showDetails);
-  server.put( '/courses/:uuid/editions/:id', security.isAllowedInstructor, editions.update);
-  server.del( '/courses/:uuid/editions/:id', security.isAllowedInstructor, editions.del); 
-  server.get( '/courses/:uuid/editions/:id/edit', security.isAllowedInstructor,         editions.view);
+  server.post('/courses/:uuid/editions', security.isCertifiedInstructor, editions.create);
+  server.get( '/courses/:uuid/editions/new', security.isCertifiedInstructor, editions.add); // <--- order is important!
+  server.get( '/courses/:uuid/editions/:idEdition', security.exposeInstructor, editions.showDetails);
+  server.put( '/courses/:uuid/editions/:idEdition', security.isEditionOwner, editions.update);
+  server.del( '/courses/:uuid/editions/:idEdition', security.isEditionOwner, editions.del);
+  server.get( '/courses/:uuid/editions/:idEdition/edit', security.isEditionOwner, editions.view);
   server.get( '/myeditions', editions.list); 
   server.post('/courses/:uuid/editions/:id/contact', mailer.sendMail);
   
   // -- Certificates-- 
-  server.get( '/certificates/:uuid',                                  certificates.checkAvailability, certificates.view);
-  server.get( '/certificates/:uuid/pdf',                              certificates.checkAvailability, certificates.pdf);
-  server.post('/courses/:uuid/editions/:idEdition/certificates',      security.isAllowedInstructor, certificates.save);
-  server.get( '/courses/:uuid/editions/:idEdition/certificates',      certificates.list);
-  server.del( '/courses/:uuid/editions/:idEdition/certificates/:id',  security.isAllowedInstructor, certificates.del);
+  server.get( '/certificates/:uuid', certificates.checkAvailability, certificates.view);
+  server.get( '/certificates/:uuid/pdf', certificates.checkAvailability, certificates.pdf);
+  server.post('/courses/:uuid/editions/:idEdition/certificates', security.isEditionOwner, certificates.save);
+  server.get( '/courses/:uuid/editions/:idEdition/certificates', certificates.list);
+  server.del( '/courses/:uuid/editions/:idEdition/certificates/:id', security.isEditionOwner, certificates.del);
 
   // -- Users-- 
   server.get( '/users',      security.isAdmin,  users.list);

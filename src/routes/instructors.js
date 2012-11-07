@@ -28,7 +28,7 @@ exports.list =  function (req, res, next) {
             instructor.certified = instructor.certificates.length > 0;
           } else {
             // is certified in the request course?
-            instructor.certified =  instructor.certificates.indexOf(req.params.uuid) != -1; ;
+            instructor.certified =  _.contains( instructor.certificates, req.params.uuid);
           }
         });
 

@@ -10,7 +10,7 @@ append content
 
       p
         span Course:
-        | #{course.name}
+          a(href='/courses/' + course.uuid)  #{course.name}
 
       p 
         span Date: 
@@ -33,12 +33,12 @@ append content
         | #{edition.state}
 
       p
-        if (locals.isAllowedInstructor && edition.state ==  'NEW')
+        if (locals.isEditionOwner && edition.state ==  'NEW')
           a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn.btn-primary Edit
 
       
     .certificates
-    if (locals.isAllowedInstructor && edition.state != 'NEW') 
+    if (locals.isEditionOwner && edition.state != 'NEW') 
       ul
         - certificates.forEach(function (certificate){
           li 
@@ -46,7 +46,7 @@ append content
         - })
 
 append scripts
-  if (locals.isAllowedInstructor && edition.state == 'NEW')
+  if (locals.isEditionOwner && edition.state == 'NEW')
     //- Edición de certificados
     script 
       define('editview', 

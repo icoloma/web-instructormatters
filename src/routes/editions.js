@@ -11,7 +11,7 @@ var Editions = require('../db/models').Editions,
 * Mostrar una edicion (admin)
 */
 exports.view = function (req, res, next) {
-  Editions.findEdition(req.params.id, function (err, item) {
+  Editions.findEdition(req.params.idEdition, function (err, item) {
     if(err) return next(err);
 
     res.format({
@@ -49,7 +49,7 @@ exports.view = function (req, res, next) {
 * Mostrar una edicion (public)
 */
 exports.showDetails = function (req, res, next) {
-  Editions.findEdition(req.params.id, function (err, edition) {
+  Editions.findEdition(req.params.idEdition, function (err, edition) {
     if(err) return next(err);
 
     res.format({
@@ -67,7 +67,6 @@ exports.showDetails = function (req, res, next) {
           ],
           function (err, results) {
             if(err) return next(err);
-
             res.render('public/edition', {
               title: 'Course Edition',
               edition: edition,
@@ -154,7 +153,7 @@ exports.create =  function (req, res, next) {
   Eliminar una edicion
 */
 exports.del = function (req, res, next) {
-  Editions.del(req.params.id, function (err, num) {
+  Editions.del(req.params.idEdition, function (err, num) {
     if(err) return next(err);
     res.send(204);  // OK, no content
   });
@@ -169,7 +168,7 @@ exports.update = function (req, res, next) {
      res.send(406, 'Not acceptable');  //  Not Acceptable
   }
 
-  Editions.findEdition(req.params.id, function (err, edition) {
+  Editions.findEdition(req.params.idEdition, function (err, edition) {
     if(err) return next(err);
 
     //Comprobamos que el estado es NEW, si no es así, devolver un código de error
@@ -183,12 +182,12 @@ exports.update = function (req, res, next) {
       },
       function (cb) {
         console.log("Updating " + req.body);
-        Editions.updateEdition(req.params.id, req.body, cb)
+        Editions.updateEdition(req.params.idEdition, req.body, cb)
       }
       ],
       function (err, results) {
         var course = results[0];
-        res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.id);
+        res.header('location',  '/courses/' + course.uuid + '/editions/' + req.params.idEdition);
         res.send(204);   // OK, no content
       }
     );

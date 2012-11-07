@@ -81,7 +81,7 @@ module.exports = {
             Courses.findCourseByUUID.bind(Courses),
             function (err, results) {
               instructor.coursesWithInfo = results;
-              _.map(results, function(course){ course.certificated =  instructor.certificates.indexOf(course.uuid) != -1; });
+              _.map(results, function(course){ course.certificated =  _.contains( instructor.certificates, course.uuid)  });
               callback(err, instructor);
             }
           );

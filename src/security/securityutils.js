@@ -8,27 +8,59 @@ exports.isAdmin = function( req, res, next){
   if (req.user && req.user.admin){
     next();
   } else {
-    codeError(401, 'User has not Admin permissions');
+    var username= 'guest';
+    if (req.user){
+      username = req.user.email;  
+    }
+    console.log(username + " tried to perform an Admin operation");
+    next(codeError(401, 'User has not Admin permissions'));
   }
 }
 
 
 /*
-  Comprueba si el usuario tiene asignado el curso al que se intenta acceder
+  Comprueba si el instructor tiene certificación en el curso
 */
-exports.isAllowedInstructor = function(req, res, next) {
+exports.isCertifiedInstructor = function(req, res, next) {
   
     if (!req.user){
       next(codeError(401, 'Instructor is not logged'));
       return;
     }
 
-    if (req.user.admin || ( _.include(req.user.courses, req.params.uuid) && req.user.certified)){
+    if (req.user.admin ||  _.include(req.user.certificates, req.params.uuid)){
       next();
     } else {
+      console.log(req.user.email + " tried to access as Certified instructor for course '" + req.params.uuid + "'");
       next(codeError(401, "You are not a certified instructor for this course"));
     }
-} 
+}  
+
+exports.isEditionOwner = function(req, res, next) {
+  if (!req.user){
+    next(codeError(401, 'Instructor is not logged'));
+    return;
+  }
+
+  if (!req.params.idEdition || req.user.admin ){
+    next();
+    return;
+  }
+
+  models.Editions.findEdition(req.params.idEdition, function(err,edition){
+    if(err) {
+      next(err);
+      return;
+    }
+    var isOwner = req.user.id === edition.instructor.toJSON()
+    if (!isOwner){
+       console.log(req.user.email + " tried to access as owner for edition '" + req.params.idEdition + "'");
+      next(codeError(401, "You are not the owner of this edition"));
+      return;
+    }
+    next();
+  });
+}  
 
 
 // Middleware - incluido desde  app.js
@@ -40,13 +72,46 @@ exports.exposeCurrentUser = function (req,res,next){
   next();
 }
 
-// exponemos como locals.isAllowedInstructor si el usuario tiene asignado un curso ( representado por req.params.uuid)
-exports.exposeIsAllowedInstructor = function (req, res, next){
 
+// exponemos instructor:
+//  locals.isAllowedInstructor si el usuario tiene asignado un curso ( representado por req.params.uuid)
+//  locals.isCertifiedInstructor si está certificado en el.
+exports.exposeInstructor = function (req, res, next){
+
+    // is Assigned 
     if (!req.user || !(req.user.admin || _.include(req.user.courses, req.params.uuid))) {
       res.locals.isAllowedInstructor = false;
     } else {
       res.locals.isAllowedInstructor = true;
     }
-    next();
-}
+
+    // is Certified
+    if (!req.user || !(req.user.admin || _.include(req.user.certificates, req.params.uuid))) {
+      res.locals.isCertifiedInstructor = false;
+    } else {
+      res.locals.isCertifiedInstructor = true;
+    }
+
+
+    // Is the edition Owner ?
+    if (!req.params.idEdition || !req.user){
+      next();
+      return;
+    }
+
+    if (req.user.admin){
+      res.locals.isEditionOwner =true;
+      next();
+      return;
+    }
+
+    models.Editions.findEdition(req.params.idEdition, function(err,edition){
+      if(err) {
+        next(err);
+        return;
+      }
+      res.locals.isEditionOwner = req.user.id === edition.instructor.toJSON();
+      next();
+    });
+  
+ }

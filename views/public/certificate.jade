@@ -16,22 +16,22 @@ append content
       a(href="/courses/" + course.uuid)  http://instructormatters/courses/#{course.uuid}
 
     dl.dl-horizontale
-      dt Instructor
+      dt Instructor:
       dd #{instructor.name}
      
-      dt Date 
+      dt Date:
       dd #{edition.date}
 
-      dt Location
-      dd #{edition.venue}
+      dt Venue:
+      dd #{edition.address}
 
       //-dt URL
       //-dd 
       //-  a(href="/certificates/" + certificate.uuid)  http://instructormatters/certificates/#{certificate.uuid} 
 
-      dt PDF
+      dt PDF:
       dd 
-        a(href="/certificates/" + certificate.uuid + "/pdf")  http://instructormatters/certificates/#{certificate.uuid}/pdf
+        a(href="/certificates/" + certificate.uuid + "/pdf")  http://instructormatters.com/certificates/#{certificate.uuid}/pdf
 
 
       

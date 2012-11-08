@@ -156,13 +156,13 @@ exports.checkAvailability = function (req, res, next) {
     function (cb) {
       Certificates.findCertificate(req.params.uuid, cb)
     },
-    function (certificate, cb) {
-      Editions.findEditions(certificate.edition, function (err, edition) {
+    function (certificates, cb) {
+      Editions.findEdition(certificates[0].edition, function (err, edition) {
         //if the edition's state is not paid, the certificate should not be available
         if(!err && edition && edition.state !== 'PAID') {
           err = codeError(404);
         }
-        cb(err, certificate, edition);
+        cb(err, certificates[0], edition);
       });
     }
     ],
@@ -182,10 +182,10 @@ exports.checkAvailability = function (req, res, next) {
     var doc = new Pdfkit({layout:'landscape'});
 
     //Register a font name for use later
-    doc.registerFont('Palatino', 'fonts/PalatinoBold.ttf');
+   // doc.registerFont('Palatino', 'fonts/PalatinoBold.ttf');
 
     doc
-      .font('Palatino')
+      .font('Courier')
       .fontSize(15)
       .text('This is to certify that', 100, 100)
       .fontSize(25)

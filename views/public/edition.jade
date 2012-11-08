@@ -7,43 +7,42 @@ append content
  
   .main  
    .form-actions
-
-      p
-        span Course:
-          a(href='/courses/' + course.uuid)  #{course.name}
-
-      p 
-        span Date: 
-        | #{edition.date}
-      
-      p
-        span Venue: 
-        | #{edition.address}
-
-      p
-        span Instructor: 
-          a(href='/instructors/' + instructor.id)  #{instructor.name}
-      .contact
-        a( ).btn.contact
-          i.icon-envelope
-          &nbsp;More info
-
-      p
-        span State:
-        | #{edition.state}
-
-      p
-        if (locals.isEditionOwner && edition.state ==  'NEW')
+      if (locals.isEditionOwner && edition.state ==  'NEW')
+        p
+          span State:
+          | #{edition.state}
+        p
           a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn.btn-primary Edit
 
+
+      .row
+        .span2
+            img.profile(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
+            a(href='/instructors/' + instructor.id)  #{instructor.name}
+        .span8 
+          h3 Edition details:
+          ul.unstyled
+            li Course: 
+              a(href='/courses/' + course.uuid)  #{course.name}
+            li Date: #{edition.date} 
+            li Venue: #{edition.address}
+            li
+              .contact
+                a( ).btn.contact.btn-primary
+                  i.icon-envelope.icon-white
+                  &nbsp;More info
+
+
+       
       
+  if (locals.isEditionOwner && edition.state != 'NEW') 
     .certificates
-    if (locals.isEditionOwner && edition.state != 'NEW') 
-      ul
-        - certificates.forEach(function (certificate){
-          li 
-            a( href='/certificates/' + certificate.uuid) #{certificate.name} - #{certificate.email}
-        - })
+    h3 Certificates
+    ul
+      - certificates.forEach(function (certificate){
+        li 
+          a( href='/certificates/' + certificate.uuid) #{certificate.name} - #{certificate.email}
+      - })
 
 append scripts
   if (locals.isEditionOwner && edition.state == 'NEW')

@@ -7,6 +7,10 @@
         <label>instructor name: </label>
         <input name="name" type="text" value="{{instructor.name}}" disabled >
 
+        <label>About me: </label>
+        <input name="aboutMe" type="text" value="{{instructor.aboutMe}}">
+
+
         <label>Courses:</label>
         {{#each courses}}
             <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox"> {{this.name}} 

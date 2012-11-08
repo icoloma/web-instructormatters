@@ -10,6 +10,7 @@ var CourseSchema = new mongoose.Schema({
   uuid: {type: String, required: true, unique: true},
   name: {type: String, required: true},
   duration: String, 
+  link: String, // URL of materials
   deleted: {type: Boolean, default: false},   // private field
   description: String,
 }, {strict: true});
@@ -66,6 +67,7 @@ Courses.prototype.toJSON = function(){
     id: this._id.toString(),
     uuid: this.uuid,
     name: this.name,
+    link: this.link,
     duration: this.duration,
     description: this.description
   }

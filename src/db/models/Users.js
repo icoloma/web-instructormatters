@@ -24,6 +24,7 @@ var UserSchema = new mongoose.Schema({
   admin: {type: Boolean, default: false},
   deleted: {type: Boolean, default: false},
   certificates: [ { uuid: {type: String}}],
+  aboutMe : String,
   videos: [{ 
     id: String,
     url: String,
@@ -116,6 +117,7 @@ Users.prototype.toJSON = function() {
   return {
     id: this._id.toString(),
     name: this.name,
+    aboutMe: this.aboutMe,
     email: this.email,
     oauth: this.oauth,
     expires: this.expires,

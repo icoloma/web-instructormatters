@@ -58,9 +58,9 @@ module.exports = function (server) {
   server.get( '/instructors', instructors.list);
   server.get( '/instructors/course/:uuid', instructors.list);
   server.get( '/instructors/:id', instructors.show);
-  server.get( '/instructors/:id/edit', instructors.view);
-  server.put( '/instructors/:id', instructors.update);
-  server.del( '/instructors/:id',  instructors.del);
+  server.get( '/instructors/:id/edit', security.isHimself, instructors.view);
+  server.put( '/instructors/:id', security.isHimself, instructors.update);
+  server.del( '/instructors/:id', security.isHimself, instructors.del);
 
   // -- Security --
   server.get('/login', 

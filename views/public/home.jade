@@ -9,7 +9,7 @@ append main_content
           .span12
             h2 HTML5 &amp; CSS3
             p 600+ slides, 30+ labs and 90+ embedded interactive examples. That's a lot of work.
-            a.btn.btn-danger(href='http://html5.instructormatters.com') Get it now
+            a.btn.btn-danger(href='http://html5.instructormatters.com') See the contents
 
     .home-features
       .container-fluid
@@ -38,7 +38,7 @@ append main_content
                 p Instructor:  
                   a(href='/instructors/' + edition.instructor) #{edition.instructorName}
                 //-p #{edition.course.description}
-                a.btn.btn( href='/courses/' + edition.courseUUID + '/editions/' + edition.id) Check it!!
+                a.btn.btn-danger( href='/courses/' + edition.courseUUID + '/editions/' + edition.id) Get it now !
               -})
           .span3
             h3 Instructor matters

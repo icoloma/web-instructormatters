@@ -5779,6 +5779,17 @@ a {
 .enumeration > li:not(:last-child):after {
   content: ", ";
 }
+.header_wrapper {
+  color: white;
+  background-color: #036564;
+  margin-bottom: 10px;
+}
+.header_wrapper h2 {
+  margin-top: 10px;
+  font-size: 30px;
+  color: white;
+  text-transform: uppercase;
+}
 ::-webkit-validation-bubble-message {
   font: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
@@ -5868,6 +5879,13 @@ footer .brand {
   background-color: #036564;
   color: white;
   padding: 1px;
+  word-spacing: 3px;
+  -webkit-box-shadow: 0 0 1px #031634;
+  -moz-box-shadow: 0 0 1px #031634;
+  box-shadow: 0 0 1px #031634;
+  -webkit-box-shadow: 0 0 1px #031634;
+  -moz-box-shadow: 0 0 1px #031634;
+  box-shadow: 0 0 1px #031634;
 }
 .home-edition-venue {
   font-weight: bold;
@@ -6056,7 +6074,7 @@ tfoot td{text-align: center;}
   margin-top: 5px;
 }
 .certified-true {
-  background: url(img/instructor-badage.png) no-repeat 0 0;
+  background: url(img/instructor-badge.png) no-repeat 0 0;
   display: block;
   height: 100px;
   padding: 0 0 0 50px;

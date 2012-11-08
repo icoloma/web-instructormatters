@@ -15,24 +15,29 @@
           <input name="name" type="text" value="{{user.name}}" disabled >
         {{/if}}
 
+        <label>About me: </label>
+        <input name="aboutMe" type="text" value="{{user.aboutMe}}" disabled >
+
         <label>Address:</label>
         <input name="address" type="text" value="{{user.address}}" disabled >
-
-        <label>Courses:</label>
-        {{#each courses}}
-            <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox courses"> {{this.name}} 
-        {{/each}}
-
-        <label>Certificates:</label>
-        {{#each courses}}
-            <p><input type="checkbox" name="certificates_{{this.uuid}}" value="{{this.uuid}}" class="checkbox certificates"> {{this.name}} 
-        {{/each}}
 
         <label>Is admin:</label>
         <select name="admin" >
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
+
+        <h3>Courses:</h3>
+        {{#each courses}}
+            <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox courses"> {{this.name}} 
+        {{/each}}
+
+        <h3>Certificates:</h3>
+        {{#each courses}}
+            <p><input type="checkbox" name="certificates_{{this.uuid}}" value="{{this.uuid}}" class="checkbox certificates"> {{this.name}} 
+        {{/each}}
+
+      
 
         <p>
           <input type="submit" class="btn btn-primary" value="Save" />

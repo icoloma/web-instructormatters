@@ -9,6 +9,8 @@ append content
     .row-fluid
       h3 Description
       p #{course.description}
+
+      h3 Duration
       p #{course.duration}
 
       if (locals.isAdmin)  
@@ -19,23 +21,32 @@ append content
         
 
     .row-fluid
-      h3 Videos
-      each uservideos in course.videos
-        each video in uservideos
-          .span3
-            a(href=video.url, target='_blank')
-              img(src=video.thumbnail, title=video.title)
-            p #{video.title} by 
-            a(href='/instructors/' + video.user.id) #{video.user.name}
+      if(course.link)
+        p See the 
+          a(href=course.link) materials
+        
+      if(course.videos.length >0)
+        h3 Videos
+        each uservideos in course.videos
+          each video in uservideos
+            .span3
+              a(href=video.url, target='_blank')
+                img(src=video.thumbnail, title=video.title)
+              p #{video.title} by 
+              a(href='/instructors/' + video.user.id) #{video.user.name}
     
     .row-fluid 
       h3 Upcoming
-      ul
-      -editions.forEach(function (edition) {
-        li  
-          a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} - #{edition.address}
-              
-      -})
+      -if(editions.length > 0) {
+        ul
+        -editions.forEach(function (edition) {
+          li  
+            a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} - #{edition.address}
+                
+        -})
 
-      if (locals.isCertifiedInstructor)  
-        a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
+        if (locals.isCertifiedInstructor)  
+          a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
+      -} else {
+        p No upcoming courses found
+      -}

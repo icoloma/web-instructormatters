@@ -2,46 +2,50 @@ extends ../layout
 include ../includes/admin-mixins
 
 append content
-   
-  
-    
+
+ 
   .row-fluid
-    if (instructor.geolocation)
-      p.address #{instructor.address} 
-        | 
-        a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
-    
-  .row-fluid
-  
     .span3
       p
         img(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
-      if instructor.certified
-       span.certified-true
-      
+      if (geolocation)
+      .row-fluid
+        p.address #{instructor.address} 
+          a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
+    .span8
+      if (instructor.aboutMe)
+        h3 About me:
+        p  #{instructor.aboutMe}  
+     
+    
+      h3 Courses:
+      ul.enumeration
+      -instructor.coursesWithInfo.forEach( function(course){
+        li
+          span(class="certified-" + course.certificated) 
+            a(href='/courses/' + course.uuid) #{course.name}
+      -})
+
       -if(locals.currentUser && locals.currentUser.email == instructor.email){
         p
           a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit') <i class="icon-user icon-white"></i> Edit
       -}
-    -if(instructor.certificates.length > 0)  
-      -instructor.videos.forEach( function(video){
-        .span3.video-container
-          a(href=video.url, target='_blank')
-            img.video-thumbnail(src=video.thumbnail, title=video.title)
-            span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
-          p.video-caption #{video.title} (#{video.duration} secs.)
-      -})
+
+    
   .row-fluid
     .span12
-      ul.unstyled
-        li 
-          b Courses:
-          ul.enumeration
-            -instructor.coursesWithInfo.forEach( function(course){
-              li
-                span(class="certified-" + course.certificated) 
-                  a(href='/courses/' + course.uuid) #{course.name}
-            -})
+
+  -if(instructor.certificates.length > 0)  
+    .row-fluid
+      .span12
+        h3 Videos:
+        -instructor.videos.forEach( function(video){
+          .span3.video-container
+            a(href=video.url, target='_blank')
+              img.video-thumbnail(src=video.thumbnail, title=video.title)
+              span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
+            p.video-caption #{video.title} (#{video.duration} secs.)
+        -})
 
 
 

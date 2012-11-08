@@ -19,6 +19,25 @@ exports.isAdmin = function( req, res, next){
 
 
 /*
+  Comprueba si tienes acceso al perfil
+*/
+exports.isHimself = function(req, res, next) {
+  
+    if (!req.user){
+      next(codeError(401, 'Instructor is not logged'));
+      return;
+    }
+
+    if (req.user.admin ||  (req.user.id === req.params.id)){
+      next();
+    } else {
+      console.log(req.user.email + " tried to access another instructor '" + req.params.id + "'");
+      next(codeError(401, "You are not allowed to modify other instructor's profile"));
+    }
+}  
+
+
+/*
   Comprueba si el instructor tiene certificación en el curso
 */
 exports.isCertifiedInstructor = function(req, res, next) {

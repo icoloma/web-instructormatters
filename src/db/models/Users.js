@@ -31,7 +31,12 @@ var UserSchema = new mongoose.Schema({
     thumbnail: String,
     title: String,
     locale: String,
-    courseUUID: String
+    courseUUID: String,
+    ranking : {
+      value : Number,
+      numLikes : Number,
+      numDislikes : Number,
+    }
    }],
   address: String,
   geopoint : { 
@@ -129,7 +134,7 @@ Users.prototype.toJSON = function() {
     geopoint: { 
       lat: this.geopoint.lat, 
       lng: this.geopoint.lng, 
-      zoom: this.geopoint.zoom }
+      zoom: this.geopoint.zoom },
   }
 };
 

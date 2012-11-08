@@ -4,10 +4,14 @@ include ../includes/admin-mixins
 append content
 
  
+  -if(locals.currentUser && locals.currentUser.email == instructor.email){
+    p
+      a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit') <i class="icon-user icon-white"></i> Edit
+  -}
   .row-fluid
     .span3
       p
-        img(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
+        img.profile(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
       if (geolocation)
       .row-fluid
         p.address #{instructor.address} 
@@ -26,16 +30,12 @@ append content
             a(href='/courses/' + course.uuid) #{course.name}
       -})
 
-      -if(locals.currentUser && locals.currentUser.email == instructor.email){
-        p
-          a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit') <i class="icon-user icon-white"></i> Edit
-      -}
 
     
   .row-fluid
     .span12
 
-  -if(instructor.certificates.length > 0)  
+  -if(instructor.videos.length > 0)  
     .row-fluid
       .span12
         h3 Videos:
@@ -44,7 +44,12 @@ append content
             a(href=video.url, target='_blank')
               img.video-thumbnail(src=video.thumbnail, title=video.title)
               span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
-            p.video-caption #{video.title} (#{video.duration} secs.)
+            .video-data  
+              .video-caption 
+                span.video-title #{video.title}
+                span.video-length #{video.duration} secs. 
+                span.video-likes #{video.ranking.numLikes} likes, 
+                span.video-dislikes #{video.ranking.numDislikes} dislikes
         -})
 
 

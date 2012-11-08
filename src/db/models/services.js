@@ -52,6 +52,7 @@ module.exports = {
         deleted:false,
         "videos.courseUUID": course.uuid
         })
+      .sort( 'videos.ranking.value','descending')
       .exec(function (error, users){
         users = _.first(users,numUsers);
         // extraemos solo los videos del curso

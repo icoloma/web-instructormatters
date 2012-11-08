@@ -6,17 +6,17 @@ append content
       .span8
         -courses.forEach(function (course) {
           .row-fluid
-            a(href="/courses/" + course.uuid ) 
-              h2= course.name
+            h3= course.name
+            p #{course.description} 
             each uservideos in course.videos
               each video in uservideos
                 .video.span3
                   a(href=video.url, target='_blank')
-                    img(src=video.thumbnail, title=video.title)
+                    img.video-thumbnail(src=video.thumbnail, title=video.title)
                   p #{video.title}
                   a(href="/instructors/" + video.user.id) #{video.user.name}
           .row-fluid
-            a.btn(href="/courses/" + course.uuid) more
+            a.btn.btn-danger(href="/courses/" + course.uuid) more info
 
         -})
       .span3.soon

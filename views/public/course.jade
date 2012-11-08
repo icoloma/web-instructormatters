@@ -5,48 +5,55 @@ include ../includes/admin-mixins
 append content
  
   .main  
+    if (locals.isAdmin)  
+      a(href="/courses/" + course.uuid + '/edit').btn.btn-primary Edit
 
     .row-fluid
       h3 Description
       p #{course.description}
 
-      h3 Duration
-      p #{course.duration}
+      h3 Details
+      ul
+        li #{course.duration} legth
 
-      if (locals.isAdmin)  
-        a(href="/courses/" + course.uuid + '/edit').btn.btn-primary Edit
-
-      p Show all instructors in
-        a(href="/instructors/course/" + course.uuid)  map
+        if(course.link)
+          li Check out the 
+            a(href=course.link) materials
+        li Show all instructors in
+          a(href="/instructors/course/" + course.uuid)  google map
         
 
     .row-fluid
-      if(course.link)
-        p See the 
-          a(href=course.link) materials
         
       if(course.videos.length >0)
-        h3 Videos
+        h3 Most valuated instructor videos
         each uservideos in course.videos
           each video in uservideos
             .span3
               a(href=video.url, target='_blank')
-                img(src=video.thumbnail, title=video.title)
-              p #{video.title} by 
-              a(href='/instructors/' + video.user.id) #{video.user.name}
-    
+                img.video-thumbnail(src=video.thumbnail, title=video.title)
+              .video-data  
+                .video-caption 
+                  span.video-title #{video.title} 
+                  span.video-instructor by 
+                    a(href='/instructors/' + video.user.id) #{video.user.name} 
+                  span.video-length #{video.duration} secs. 
+                  span.video-likes #{video.ranking.numLikes} likes, 
+                  span.video-dislikes #{video.ranking.numDislikes} dislikes
     .row-fluid 
       h3 Upcoming
       -if(editions.length > 0) {
         ul
         -editions.forEach(function (edition) {
           li  
-            a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} - #{edition.address}
+            a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} 
+            &nbsp; - #{edition.address} (by #{edition.instructorName})
                 
         -})
+      -}
 
-        if (locals.isCertifiedInstructor)  
-          a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
+      -if(locals.isCertifiedInstructor) {
+        a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
       -} else {
-        p No upcoming courses found
+        p No upcoming courses found 
       -}

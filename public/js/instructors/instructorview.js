@@ -29,13 +29,13 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
             });
         }
 
-        if (this.model.get('certificates').length > 0){
+       // if (this.model.get('certificates').length > 0){   // solo los certificados muestran videos
           this.videosView = new VideosView({
             collection: this.model.videos,
             el: $('.videos'),
             courses :this.options.courses
           }).render();
-        }
+       // }
 
         // Carga la librería GoogleMaps
         GMaps.loadMapsAPI(this.addGMapAutocompleter, this);
@@ -66,9 +66,19 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
                   id: id,
                   title: data.entry.title.$t,
                   thumbnail: data.entry.media$group.media$thumbnail[1].url,
-                  duration: data.entry.media$group.yt$duration.seconds
+                  duration: data.entry.media$group.yt$duration.seconds,
+                  ranking : {
+                    numLikes : data.entry.yt$rating.numLikes,
+                    numDislikes: data.entry.yt$rating.numDislikes,
+                    value: data.entry.yt$rating.numLikes - data.entry.yt$rating.numDislikes
+                  }
                 });
-                this.model.videos.all(function(v) { return v.get('title') }) && this.doSave();
+
+                if (videoModel.get('duration') <= 180 ) {
+                  this.model.videos.all(function(v) { return v.get('title') }) && this.doSave();
+                } else {
+                   Core.renderMessage({ level :'danger',  message :'The video "' + videoModel.get('title') +  '"" is over 3 min. and will not be saved'});
+                }
               } 
             });
           }, this);

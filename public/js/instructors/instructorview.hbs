@@ -1,7 +1,12 @@
 
 <form>
    
-   <div class="row">
+  <p>
+    <input type="submit" class="btn btn-primary" value="Save" />
+    <a id="delete" class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
+    <a href="/instructors/{{instructor.id}}" class="btn">Cancel</a>
+  </p>
+  <div class="row">
       <div class="span8">
 
         <label>instructor name: </label>
@@ -21,15 +26,10 @@
         <div class="map" id="map_canvas" ></div>
 
       
-        <p>
-          <input type="submit" class="btn btn-primary" value="Save" />
-          <a id="delete" class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
-          <a href="/instructors/{{instructor.id}}" class="btn">Cancel</a>
-        </p>
       </div>
 
       <div class="span2">
-        <img src='https://profiles.google.com/s2/photos/profile/{{instructor.oauth}}'/>
+        <img src='https://profiles.google.com/s2/photos/profile/{{instructor.oauth}}' class="profile"/>
       </div>
     </div>
   </div>

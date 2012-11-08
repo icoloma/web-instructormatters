@@ -6060,6 +6060,7 @@ tfoot td{text-align: center;}
 }
 */.video-thumbnail {
   width: 100%;
+  box-shadow: 0 0 5px #031634;
 }
 .video-container {
   position: relative;
@@ -6069,16 +6070,38 @@ tfoot td{text-align: center;}
   top: 5px;
   right: 5px;
 }
-.video-caption {
-  font-size: 12px;
-  margin-top: 5px;
-}
 .certified-true {
   background: url(img/instructor-badge.png) no-repeat 0 0;
   display: block;
   height: 100px;
   padding: 0 0 0 50px;
   overflow: hidden;
+}
+.video-caption {
+  font-size: 12px;
+  margin-top: 5px;
+}
+.video-title {
+  display: block;
+  font-weight: bold;
+}
+.video-snapshot {
+  box-shadow: 0 0 5px #031634;
+}
+.video-instructor {
+  display: block;
+}
+.video-length {
+  color: gray;
+}
+.video-likes {
+  color: green;
+}
+.video-dislikes {
+  color: red;
+}
+img.profile {
+  box-shadow: 0 0 5px #031634;
 }
 .map img {
   max-width: none !important;
@@ -6096,6 +6119,7 @@ tfoot td{text-align: center;}
 .infoWindow-img {
   max-height: 40px;
   float: left;
+  box-shadow: 0 0 5px #031634;
 }
 .infoWindow-description {
   margin-left: 50px;

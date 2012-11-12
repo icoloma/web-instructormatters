@@ -130,9 +130,9 @@ function(K, template, Gmaps) {
     hideNonCertifiedInstructors: function(e){
       $('#allButton').show();
       $('#certifiedButton').hide();
-      $('.certified-false').hide();
+      $('[data-certified="false"]').hide();
       
-      $('.certified-false').each( function(idx,elem) {
+      $('[data-certified="false"]').each( function(idx,elem) {
         var elem = $(elem);
         elem.hide();
         var id = elem.data('id');
@@ -145,7 +145,7 @@ function(K, template, Gmaps) {
     showNonCertifiedInstructors: function(e){
       $('#allButton').hide();
       $('#certifiedButton').show();
-      $('.certified-false').each( function(idx,elem) {
+      $('[data-certified="false"]').each( function(idx,elem) {
         var elem = $(elem);
         elem.show();
         var id = elem.data('id');

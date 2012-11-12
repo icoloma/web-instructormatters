@@ -26,8 +26,9 @@ append content
       ul.enumeration
       -instructor.coursesWithInfo.forEach( function(course){
         li
-          span(class="certified-" + course.certificated) 
-            a(href='/courses/' + course.uuid) #{course.name}
+          a(href='/courses/' + course.uuid) #{course.name}
+            -if(course.certificated)
+              span.certified-badge
       -})
 
 

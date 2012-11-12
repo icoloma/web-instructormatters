@@ -6070,12 +6070,17 @@ tfoot td{text-align: center;}
   top: 5px;
   right: 5px;
 }
-.certified-true {
-  background: url(img/instructor-badge.png) no-repeat 0 0;
-  display: block;
-  height: 100px;
-  padding: 0 0 0 50px;
-  overflow: hidden;
+.certified-badge {
+  display: inline-block;
+  margin-left: 5px;
+  width: 1.4em;
+  height: 1.4em;
+  background: url(img/instructor-badge2.png) no-repeat center bottom;
+  background-size: 1.4em;
+  margin-top: 1px;
+}
+p.certified {
+  font-weight: bold;
 }
 .video-caption {
   font-size: 12px;
@@ -8000,6 +8005,12 @@ footer .brand:hover {
   }
 }
 @media (max-width: 767px) {
+  body {
+    padding: 0;
+  }
+  .container-fluid {
+    padding: 0 20px;
+  }
   .home-image-slider,
   footer {
     margin-left: -20px;

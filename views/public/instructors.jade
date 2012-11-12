@@ -11,8 +11,10 @@ append content
           a.btn(id='allButton', style="display:none") Show all
         
         -instructors.forEach(function (instructor) {
-          span( class='certified-' + instructor.certified, data-id=instructor.id)
+          span(data-certified=instructor.certified.toString(), data-id=instructor.id)
             a.instructor(data-id=instructor.id, href="/instructors/#{instructor.id}")= instructor.name
+            -if(instructor.certified)
+              span.certified-badge
             p.address= instructor.address
         -})
 

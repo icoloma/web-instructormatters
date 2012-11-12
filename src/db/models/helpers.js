@@ -10,7 +10,7 @@ module.exports = {
         err = codeError(404, 'Not found');
       } else {
         if(result.map) {
-          result.map(function (item) {
+          result = result.map(function (item) {
             return item.toJSON();
           });
         } else {

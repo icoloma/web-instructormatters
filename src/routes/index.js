@@ -59,7 +59,7 @@ module.exports = function (server) {
   server.get( '/instructors/course/:uuid', instructors.list);
   server.get( '/instructors/:id', instructors.show);
   server.get( '/instructors/:id/edit', security.isHimself, instructors.view);
-  server.put( '/instructors/:id', security.isHimself, security.exposeCurrentUser, instructors.update);
+  server.put( '/instructors/:id', security.isHimself, instructors.update);
   server.del( '/instructors/:id', security.isHimself, instructors.del);
 
   // -- Security --

@@ -7,7 +7,10 @@ append content
  
   .main  
    .form-actions
-      if (locals.isEditionOwner && edition.state ==  'NEW')
+      if (locals.isEditionOwner)
+        p State: 
+          span( class="edition-#{edition.state}") #{edition.state}
+      if (locals.isEditionOwner && edition.state ==  'NEW' || locals.isAdmin)
         p
           a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn.btn-primary Edit
 
@@ -29,18 +32,18 @@ append content
                   &nbsp;More info
 
 
-  if (locals.isEditionOwner)
-    p State: 
-      span( class="edition-#{edition.state}") #{edition.state}
       
-  if (locals.isEditionOwner && edition.state != 'NEW') 
-    .certificates
-    h3 Certificates
-    ul
-      - certificates.forEach(function (certificate){
-        li 
-          a( href='/certificates/' + certificate.uuid) #{certificate.name} - #{certificate.email}
-      - })
+  .certificates
+    if (locals.isEditionOwner && edition.state != 'NEW') 
+      h3 Certificates
+      ul
+        - certificates.forEach(function (certificate){
+          li 
+            if (edition.state == 'PAID' || locals.isAdmin)
+              a( href='/certificates/' + certificate.uuid) #{certificate.name} - #{certificate.email}
+            else
+              &nbsp; #{certificate.name} - #{certificate.email}
+        - })
 
 append scripts
   if (locals.isEditionOwner && edition.state == 'NEW')

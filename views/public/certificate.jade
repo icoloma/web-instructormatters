@@ -6,6 +6,11 @@ append content
  
   .main  
    
+   if(locals.isAdmin)
+    h3(class='edition-' + edition.state) State:
+      | #{edition.state}
+   
+
 
     p This is to certify that
     p 

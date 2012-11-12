@@ -104,7 +104,7 @@ exports.add = function (req, res, next) {
       if(err) return next(err);
 
       var defaultCourse = results[0];
-      var defaultInstructor = results[1][0] ? results[1][0] : req.user;
+      var defaultInstructor = req.user;
 
       res.render('admin/edition', {
         title: 'Edition',
@@ -174,7 +174,7 @@ exports.update = function (req, res, next) {
     if(err) return next(err);
 
     //Comprobamos que el estado es NEW, si no es así, devolver un código de error
-    if(edition.state !== 'NEW') {
+    if(!res.locals.isAdmin && edition.state !== 'NEW') {
       return next(codeError(500, 'It\'s not allowed to modify this edition'));
     }
  
@@ -233,6 +233,7 @@ exports.list = function (req, res, next) {
 
 var getInstructors = function (req, callback) {
   if (req.user.admin) {
+    // TODO: Ojo, esto no es óptimo si el número de instructores es muy grande
     Users.findInstructors({courses: req.params.uuid}, callback);
   } else {
     // Solo le permitimos asignarse a si mismo como instructor

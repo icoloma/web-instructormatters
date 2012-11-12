@@ -129,7 +129,9 @@ exports.view =  function (req, res, next) {
       delete req.body.certificates;
     }
 
-    Users.updateInstructor(req.params.id, req.body, 
+    var instructor = updateRanking(req.body);
+
+    Users.updateInstructor(req.params.id, instructor, 
       function (err, num) {
         if(err) return next(err);
         res.send(204);   // OK, no content
@@ -137,6 +139,19 @@ exports.view =  function (req, res, next) {
     );
   };
  
+
+ var updateRanking = function( instructor) {
+    console.log(instructor);
+    if (instructor.videos && instructor.videos.length > 0) {
+      var sum = _.reduce( instructor.videos, function(memo, video){ return memo + video.ranking.value;}, 0);
+      instructor.ranking = sum / instructor.videos.length;
+    } else {
+      instructor.ranking = 0;
+    }
+
+
+    return instructor;
+ }
 
  exports.del = function (req, res, next) {
   Users.deleteUser(req.user.id, function (err, num) {

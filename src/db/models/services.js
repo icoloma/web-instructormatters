@@ -12,7 +12,9 @@ module.exports = {
     async.parallel([
       function (cb) {
         Editions
-         .find( { deleted:false, "date" : { "$gte" : date } } )
+         .find( { deleted:false, 
+                //  "state": "NEW",
+                 "date" : { "$gte" : date } } )
          .sort('date','ascending')
          .limit(limit)
          .exec(cb);

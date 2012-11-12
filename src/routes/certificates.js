@@ -159,7 +159,7 @@ exports.checkAvailability = function (req, res, next) {
     function (certificates, cb) {
       Editions.findEdition(certificates[0].edition, function (err, edition) {
         //if the edition's state is not paid, the certificate should not be available
-        if(!err && edition && edition.state !== 'PAID') {
+        if(err ||  ( !res.locals.isAdmin && edition && edition.state !== 'PAID')) {
           err = codeError(404);
         }
         cb(err, certificates[0], edition);

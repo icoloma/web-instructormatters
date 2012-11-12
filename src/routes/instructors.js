@@ -124,8 +124,10 @@ exports.view =  function (req, res, next) {
     }
 
     // evitamos que nos inyecten estas propiedades
-    delete req.body.admin;
-    delete req.body.certificates;
+    if (!res.locals.isAdmin) {
+      delete req.body.admin;
+      delete req.body.certificates;
+    }
 
     Users.updateInstructor(req.params.id, req.body, 
       function (err, num) {

@@ -34,7 +34,8 @@ exports.view = function (req, res, next) {
               title: 'Edition',
               edition: item,
               instructors: results[1],
-              course: results[0]
+              course: results[0],
+              isAdmin: res.locals.isAdmin
             });
         });
       },
@@ -182,6 +183,10 @@ exports.update = function (req, res, next) {
         Courses.findCourseByUUID(req.body.courseUUID, cb);
       },
       function (cb) {
+        if (!res.locals.isAdmin){
+          // evitamos que nos inyecten esta propiedad
+          delete req.body.state;
+        }
         console.log("Updating " + req.body);
         Editions.updateEdition(req.params.idEdition, req.body, cb)
       }

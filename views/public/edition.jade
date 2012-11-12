@@ -9,11 +9,7 @@ append content
    .form-actions
       if (locals.isEditionOwner && edition.state ==  'NEW')
         p
-          span State:
-          | #{edition.state}
-        p
           a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn.btn-primary Edit
-
 
       .row
         .span2
@@ -33,7 +29,9 @@ append content
                   &nbsp;More info
 
 
-       
+  if (locals.isEditionOwner)
+    p State: 
+      span( class="edition-#{edition.state}") #{edition.state}
       
   if (locals.isEditionOwner && edition.state != 'NEW') 
     .certificates

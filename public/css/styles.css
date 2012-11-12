@@ -6226,6 +6226,15 @@ footer .brand:hover {
 .license:hover {
   color: #cdb380;
 }
+.edition-PAID {
+  color: green;
+}
+.edition-NEW {
+  color: red;
+}
+.edition-PENDING {
+  color: orange;
+}
 /*!
  * Bootstrap Responsive v2.1.0
  *

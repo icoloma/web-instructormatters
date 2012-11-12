@@ -14,7 +14,8 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
           edition: this.model.toJSON(),
           instructors : this.options.instructors,
           course : this.options.course,
-          certificates : this.options.certificates
+          certificates : this.options.certificates,
+          isAdmin: this.options.isAdmin
         })); 
         this.$("select[name=instructor]").val(this.model.attributes.instructor);
         this.$("select[name=state]").val(this.model.attributes.status);

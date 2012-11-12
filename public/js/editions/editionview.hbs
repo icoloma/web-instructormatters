@@ -26,14 +26,14 @@
     {{/instructors}}
   </select> 
 
-
-  <label>State:</label>
-  <select name="state" required>
-      <option value="NEW">New</option>
-      <option value="PENDING">Pending</option>
-      <option value="PAID">Paid</option>
-  </select>
-
+  {{#if isAdmin}}
+    <label>State:</label>
+    <select name="state" required>
+        <option value="NEW">New</option>
+        <option value="PENDING">Pending</option>
+        <option value="PAID">Paid</option>
+    </select>
+  {{/if}} 
 
   
 </form>

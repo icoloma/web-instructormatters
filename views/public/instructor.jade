@@ -23,15 +23,13 @@ append content
      
     
       h3 Courses:
-      ul.enumeration
-      -instructor.coursesWithInfo.forEach( function(course){
-        li
-          a(href='/courses/' + course.uuid) #{course.name}
-            -if(course.certified)
-              span.certified-badge
-      -})
-
-
+      ul
+        -instructor.coursesWithInfo.forEach( function(course){
+          li
+            a(href='/courses/' + course.uuid) #{course.name}
+              -if(course.certified)
+                span.certified-badge(title="Certified instructor")
+        -})
     
   .row-fluid
     .span12
@@ -43,12 +41,11 @@ append content
         -instructor.videos.forEach( function(video){
           .span3.video-container
             a(href=video.url, target='_blank')
-              img.video-thumbnail(src=video.thumbnail, title=video.title)
+              img.video-thumbnail(src=video.thumbnail, title="#{video.title}  (#{video.duration} secs)")
               span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
             .video-data  
               .video-caption 
-                span.video-title #{video.title}
-                span.video-length #{video.duration} secs. 
+                a.video-title(href=video.url, target='_blank') #{video.title}
                 span.video-likes #{video.ranking.numLikes} likes, 
                 span.video-dislikes #{video.ranking.numDislikes} dislikes
         -})

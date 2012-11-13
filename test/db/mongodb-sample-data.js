@@ -1,21 +1,18 @@
-/*
- Admin user data
-*/
+// Admin user 
 var admin = {
-    email : "ehdez73@gmail.com",
-    name : "Ernesto"
+    email : "icoloma@gmail.com",
+    name : "Nacho"
   };
 
-use instructormatters;
-
-
+// use instructormatters;
+var db = connect('localhost/instructormatters');
 db.certificates.drop();
 db.editions.drop();
 db.videos.drop();
 db.users.drop();
 db.courses.drop();
 
-/* Courses*/
+// Courses
 
 db.courses.save({
   uuid: 'html5-css3',
@@ -49,9 +46,7 @@ db.courses.save({
   description: 'Learn all about Enterprise Integration with Spring framework'
 });
 
-
-/* Users*/ 
-
+// Users
 
 db.users.save({
     email: admin.email,
@@ -68,6 +63,8 @@ db.users.save({
 });
 
 var adminUser = db.users.findOne({email:admin.email});
+
+// Videos 
 
 db.videos.save(
   { youtubeId: 'RY6dNUL8k6o',

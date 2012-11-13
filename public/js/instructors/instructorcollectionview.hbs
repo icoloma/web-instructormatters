@@ -5,11 +5,10 @@
   <div class="infoWindow-description">
     <a href="/instructors/{{id}}">
       <b>{{name}}</b>
+      {{#if certified}}
+        <span class="certified-badge" title="Certified Instructor"></span>
+      {{/if}}
     </a>
     <p class="address">{{address}}</p>
-    {{#if certified}}
-      <p class="certified"> Certified Instructor<span class="certified-badge"/></p>
-    {{/if}}
-
   </div>
 </div>

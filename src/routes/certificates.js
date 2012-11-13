@@ -3,6 +3,8 @@ var models = require('../db/models') //TO DO borrar
 
 var Certificates = require('../db/models').Certificates
   , Editions = require('../db/models').Editions
+  , Courses = require('../db/models').Courses
+  , Users = require('../db/models').Users
   , Pdfkit = require('pdfkit')
   , fs = require('fs')
   , UUID = require('../lib/uuid')
@@ -12,144 +14,118 @@ var Certificates = require('../db/models').Certificates
 * Mostrar un certificado 
 */
 exports.view = function (req, res) {
-
   res.format({
     html: function () {
-
-       async.parallel([
+      async.parallel([
         function (cb) {
-          // find Course
-          models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
-        }, function (cb) {
-          // find instructor
-          models.Users.findById(req.edition.instructor, cb);
-        }], function (err, results) {
-          // TODO: error handling
+          Courses.findCourseByUUID(req.edition.courseUUID, cb);
+        },
+        function (cb) {
+          Users.findUser(req.edition.instructor, cb)
+        }
+        ],
+        function (err, results) {
+          if(err) return next(err);
+
+          var  course = results[0],
+            instructor = results[1];
+
           res.render('public/certificate', {
             title: 'Certificate of training',
             certificate: req.certificate,
             edition: req.edition,
-            course: results[0],
-            instructor: results[1]
+            course: course,
+            instructor: instructor
           });
-        });
-
+      });
     },
-    json: function(){
-      res.json(certificate);
+    json: function () {
+      res.send(req.certificate)
     }
   });
 };
 
-
 /*
 * Certificados de una edición en concreto
 */
-exports.list = function (req, res) {
-  models.Certificates
-    .find({edition:req.params.idEdition, deleted:false})
-    .exec(function (err, items) {
-      if(err) {
-        codeError(500, err.message)
-      } else {
-        res.format({
-          json: function(){
-            res.json(items);
-          }
-        });
-      };
-    });
+exports.list = function (req, res, next) {
+  Certificates.findEditionCertificates(req.params.idEdition, function (err, certificates) {
+    if(err) return next(err);
+    res.json(certificates);
+  });
 };
 
 /**
   Crear/Actualizar Certificado
 */
-  exports.save =  function (req, res) {
+exports.save =  function (req, res, next) {
 
-    req.setEncoding('utf8');
+  req.setEncoding('utf8');
 
-    if (!req.accepts('application/json')){
-      res.send(406);  //  Not Acceptable
-    }
-
-     //TODO: Comprobar que el estado es NEW, si no es así, devolver un código de error
-
-       
-    var certificates = req.body;
-
-    async.forEachSeries( certificates, 
-      function(certificate, callback){
-        if (certificate.id){
-          // update
-          models.Certificates
-          .update({_id: certificate.id}, certificate)
-          .exec(callback);
-        } else {
-          // create
-          var certificate = new models.Certificates(certificate);
-          certificate.edition =  req.params.idEdition;
-          certificate.uuid =  UUID.genV4();
-          certificate.save(function (err) {
-            callback(err);
-          });
-
-        }
-
-      },
-      function(err, num) {
-        if (err) {
-          codeError(500, err.message);
-        }
-        res.header('location',  '/courses/' + req.params.uuid + '/editions/' + req.params.idEdition );
-        res.send(201);
-       
-    });
-  };
-
-  exports.del = function (req, res) {
-    models.Certificates.update({_id: req.params.id}, {deleted: true}, function (err, num) {
-      if(err) {
-        codeError(500, err.message);
-        return;
-      } 
-      if(!num) {
-        codeError(404,'Certificate not found');  // not found
-      } 
-      res.send(204);  // OK, no content
-    });
-      
+  if (!req.accepts('application/json')){
+    res.send(406);  //  Not Acceptable
   }
 
-  exports.pdf = function( req, res ){
-     
-    var filename = 'certificates/' + req.params.uuid + '.pdf';
-    
-    if (fileExists(filename)){
-        res.sendfile(filename);
-        return;
-    }
+  //TODO: Comprobar que el estado es NEW, si no es así, devolver un código de error
 
-    async.parallel([
-      function (cb) {
-        // find Course
-        models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
-      }, function (cb) {
-        // find instructor
-        models.Users.findById(req.edition.instructor, cb);
-      }], function (err, results) {
-        // TODO: error handling
-        var course = results[0];
-        var instructor = results[1];
-        generatePDF( req.certificate, req.edition, course, instructor, function(err) {
-          if (!err) {
-            res.sendfile(filename);
-          } else {
-            codeError(500, err);
-          }
-        });
+  var certificates = req.body;
+
+  async.forEachSeries(certificates, 
+    function (certificate, callback) {
+      if (certificate.id) {
+        // update
+        Certificates.updateCertificate(certificate.id, certificate, callback);
+      } else {
+        // create
+        certificate.edition = req.params.idEdition;
+        Certificates.addCertificate(certificate, callback);
+      }
+    },
+    function (err) {
+      if (err) return next(err);
+      res.header('location',  '/courses/' + req.params.uuid + '/editions/' + req.params.idEdition );
+      res.send(201);
+  });
+};
+
+exports.del = function (req, res) {
+  Certificates.deleteCertificate(req.params.id, function (err, num) {
+    if(err) return next(err);
+    res.send(204);  // OK, no content
+  });
+}
+
+exports.pdf = function( req, res ){
+   
+  var filename = 'certificates/' + req.params.uuid + '.pdf';
+  
+  if (fileExists(filename)){
+      res.sendfile(filename);
+      return;
+  }
+
+  async.parallel([
+    function (cb) {
+      // find Course
+      models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
+    }, function (cb) {
+      // find instructor
+      models.Users.findById(req.edition.instructor, cb);
+    }
+    ], 
+    function (err, results) {
+      // TODO: error handling
+      var course = results[0];
+      var instructor = results[1];
+      generatePDF( req.certificate, req.edition, course, instructor, function(err) {
+        if (!err) {
+          res.sendfile(filename);
+        } else {
+          codeError(500, err);
+        }
       });
-     
-  },
+  });
+},
 
 exports.checkAvailability = function (req, res, next) {
   async.waterfall([
@@ -176,69 +152,69 @@ exports.checkAvailability = function (req, res, next) {
   );
 };
 
-  var generatePDF = function (certificate, edition, course, instructor, callback){
-    var urlCertificate = 'http://instructormatters.com/certificates/' + certificate.uuid;
-    var urlCourse = 'http://instructormatters.com/courses/' + course.uuid;
-    var doc = new Pdfkit({layout:'landscape'});
+var generatePDF = function (certificate, edition, course, instructor, callback){
+  var urlCertificate = 'http://instructormatters.com/certificates/' + certificate.uuid;
+  var urlCourse = 'http://instructormatters.com/courses/' + course.uuid;
+  var doc = new Pdfkit({layout:'landscape'});
 
-    //Register a font name for use later
-   // doc.registerFont('Palatino', 'fonts/PalatinoBold.ttf');
+  //Register a font name for use later
+ // doc.registerFont('Palatino', 'fonts/PalatinoBold.ttf');
 
-    doc
-      .font('Courier')
-      .rect(0,0,800,80)
-      .fillAndStroke("#0E8DDCB", "#000")
-      .image('public/img/logo.png', 50, 20)
-      .fontSize(30)
-      .fill("#BF9D5B")
-      .text('InstructorMatters', 95,30 )
-      .rect(0,590,800,80)
-      .fillAndStroke("#036564", "#333")
-      .fillColor("#333")
-      .fontSize(15)
-      .text('This is to certify that', 100, 100)
-      .moveDown()
-      .fontSize(25)
-      .text(certificate.name,{align: 'center'})
-      .moveDown()
-      .fontSize(15)
-      .text('is hereby recongized for having succesfully completed ')
-      .moveDown()
-      .fontSize(25)
-      .text(course.name,{align: 'center'})
-      .fontSize(10)
-      .text( '(' + urlCourse + ')', {align: 'center'})
-      .fontSize(15)
-      .moveDown()
-      .moveDown()
-      .text('Instructor: ' + instructor.name)
-      .text('Location: ' + edition.address)
-      .text('Date: ' + edition.date)
-      .text('Duration: ' + course.duration)
-      .moveDown()
-      .moveDown()
-      .fontSize(10)
-      .text(urlCertificate)
-      .image('public/img/dog.png', 590, 340)
-      .fillColor('white')
-      .text('IstructorMatters.com (c)', 600,600 );
+  doc
+    .font('Courier')
+    .rect(0,0,800,80)
+    .fillAndStroke("#0E8DDCB", "#000")
+    .image('public/img/logo.png', 50, 20)
+    .fontSize(30)
+    .fill("#BF9D5B")
+    .text('InstructorMatters', 95,30 )
+    .rect(0,590,800,80)
+    .fillAndStroke("#036564", "#333")
+    .fillColor("#333")
+    .fontSize(15)
+    .text('This is to certify that', 100, 100)
+    .moveDown()
+    .fontSize(25)
+    .text(certificate.name,{align: 'center'})
+    .moveDown()
+    .fontSize(15)
+    .text('is hereby recongized for having succesfully completed ')
+    .moveDown()
+    .fontSize(25)
+    .text(course.name,{align: 'center'})
+    .fontSize(10)
+    .text( '(' + urlCourse + ')', {align: 'center'})
+    .fontSize(15)
+    .moveDown()
+    .moveDown()
+    .text('Instructor: ' + instructor.name)
+    .text('Location: ' + edition.address)
+    .text('Date: ' + edition.date)
+    .text('Duration: ' + course.duration)
+    .moveDown()
+    .moveDown()
+    .fontSize(10)
+    .text(urlCertificate)
+    .image('public/img/dog.png', 590, 340)
+    .fillColor('white')
+    .text('IstructorMatters.com (c)', 600,600 );
 
-    async.series([
-      function(cb){
-        doc.write('certificates/' + certificate.uuid + '.pdf', cb);
-      }], function(err, results){
-        callback(err,results);
-      }
-      );
-  }
-
-  var fileExists = function (path) {
-    try { 
-      fs.statSync(d); 
-      return true;
-    } catch (er) { 
-      return false; 
+  async.series([
+    function(cb){
+      doc.write('certificates/' + certificate.uuid + '.pdf', cb);
+    }], function(err, results){
+      callback(err,results);
     }
+  );
+}
+
+var fileExists = function (path) {
+  try { 
+    fs.statSync(d); 
+    return true;
+  } catch (er) { 
+    return false; 
+  }
 }
 
 

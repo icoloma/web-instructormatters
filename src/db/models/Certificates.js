@@ -2,8 +2,10 @@
 var ObjectId = mongoose.Schema.ObjectId;
 
 var wrapResult = require('./helpers').wrapResult,
-  jsonResult = require('./helpers').jsonResult,
-  codeError = require(__apppath + '/src/routes/errorHandlers').codeError;
+  wrapError = require('./helpers').wrapError,
+  wrapJSON = require('./helpers').wrapJSON,
+  codeError = require(__apppath + '/src/routes/errorHandlers').codeError,
+  UUID = require('../../lib/uuid');
 
 /*
 Modelo de un certificado
@@ -25,17 +27,20 @@ _.extend(CertificateSchema.statics, {
   },
 
   findEditionCertificates: function (editionID, callback) {
-    //Este método no lanza 404
-
-    this.find({deleted: false, edition: editionID}, function (err, results) {
-      if(err) {
-        err = codeError(500, err.message);
-      }
-      callback(err, jsonResult(results));
-    });
+    this.find({deleted: false, edition: editionID}, wrapError(callback));
   },
+  deleteCertificate: function (certificateID, callback) {
+    this.update({_id: certificateID}, {$set: {deleted: true}}, wrapResult(callback));
+  },
+  updateCertificate: function (certificateID, data, callback) {
+    this.update({_id: certificateID}, data, wrapResult(callback));
+  },
+  addCertificate: function (data, callback) {
+    data.uuid = UUID.genV4();
 
-
+    var  certificate = new this(data);
+    certificate.save(wrapError(callback));
+  }
 });
 
 var Certificates = mongoose.model('Certificates', CertificateSchema);

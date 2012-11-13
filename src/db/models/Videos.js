@@ -1,7 +1,7 @@
 
 var ObjectId = mongoose.Schema.ObjectId,
-  wrapResult = require('./helpers').wrapResult,
-  jsonResult = require('./helpers').jsonResult,
+  wrapError = require('./helpers').wrapError,
+  wrapJSON = require('./helpers').wrapJSON,
   errors = require(__apppath + '/src/routes/errorHandlers.js');
 
 /*
@@ -31,14 +31,7 @@ _.extend(VideoSchema.statics, {
     this
       .find({instructorId: instructorId})
       .sort('ranking.value', 'descending')
-      .exec(function (err, items) {
-        if(err) {
-          //TO DO error handling 'ligero'
-          err = errors.codeError(500, 'Internal server error');
-        }
-        (jsonResult(callback))(err, items);
-      });
-     
+      .exec(wrapError(callback));
   },
 
   updateInstructorVideos: function(instructorId, body, callback) {
@@ -49,24 +42,22 @@ _.extend(VideoSchema.statics, {
     async.forEachSeries(body, 
       function (video, cb) {
         if (video.id) {
-          console.log("updating existing video");
           // update
           self
             .update({_id: video.id}, video)
             .exec(cb);
         } else {
           // create
-          console.log("creating new video");
           var video = new self(video);
           video.instructorId = instructorId;
+
           video.save(function (err) {
-              cb(err);
+            cb(err);
           });
         }
       },
       callback
     );
-
 
   },
 
@@ -80,7 +71,7 @@ _.extend(VideoSchema.statics, {
           //TO DO error handling 'ligero'
           err = errors.codeError(500, 'Internal server error');
         }
-        (jsonResult(callback))(err, items);
+        (wrapError(callback))(err, items);
       });
   },
 
@@ -90,7 +81,6 @@ _.extend(VideoSchema.statics, {
 });
 
 var Videos = mongoose.model('Videos', VideoSchema);
-
 
 Videos.prototype.toJSON = function () {
   return {
@@ -111,6 +101,5 @@ Videos.prototype.toJSON = function () {
     }
   }
 };
-
 
 module.exports = Videos;

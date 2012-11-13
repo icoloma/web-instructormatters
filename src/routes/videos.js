@@ -1,8 +1,7 @@
 
 var Videos = require('../db/models').Videos
   , services = require('../db/models').services
-  , codeError = require('./errorHandlers').codeError
-  , wrapResult = require('../db/models/helpers').wrapResult;
+  , codeError = require('./errorHandlers').codeError;
 
 
 exports.list = function (req, res, next) {

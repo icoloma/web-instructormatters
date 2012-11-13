@@ -7,7 +7,8 @@ var Courses = require('./Courses'),
 
 
 var wrapResult = require('./helpers').wrapResult,
-  jsonResult = require('./helpers').jsonResult;
+  wrapError = require('./helpers').wrapError;
+  wrapJSON = require('./helpers').wrapJSON;
 
 
 module.exports = {
@@ -20,13 +21,13 @@ module.exports = {
                  "date" : { "$gte" : date } } )
          .sort('date','ascending')
          .limit(limit)
-         .exec(jsonResult(cb));
+         .exec(wrapError(cb));
       },
       function (cb) {
         Courses
           .find( {deleted:false })
           .sort('name', 'ascending')
-          .exec(jsonResult(cb))    
+          .exec(wrapError(cb))    
       }],
       function (err, items) {
         if(err) {
@@ -51,41 +52,16 @@ module.exports = {
   },
 
   addCourseVideos: function (course, numVideos, callback) {
-
     Videos
       .find({courseUUID: course.uuid})
       .sort( 'ranking.value','descending')
       .limit(numVideos)
-      .exec(function (err, videos) {
-        course.videos = videos
-        callback(err);
-      });
-
-    // // Buscamos usuarios con videos del curso
-    // Users
-    //   .find({
-    //     deleted:false,
-    //     "videos.courseUUID": course.uuid
-    //     })
-    //   .sort( 'videos.ranking.value','descending')
-    //   .exec(function (error, users){
-    //     users = _.first(users,numUsers);
-    //     // extraemos solo los videos del curso
-    //     course.videos = _.map(users, 
-    //         function(user){
-    //           return _.first(_.compact(_.map(user.videos, 
-    //             function(video){ 
-    //               if (course.uuid === video.courseUUID){
-    //                 video.user ={};
-    //                 video.user.name=user.name;
-    //                 video.user.id=user.id
-    //                 return video;
-    //               }
-    //             }
-    //           )),numVideos);      
-    //         });
-    //     callback(null,course);
-    //   });
+      .exec(
+          wrapError(function (err, videos) {
+          course.videos = videos
+          callback(err);
+        })
+      );
   },
 
   getInstructorFullInfo: function (instructorID, callback) {
@@ -94,7 +70,7 @@ module.exports = {
         Videos
           .find({instructorId: instructorID})
           .sort('ranking.value', 'descending')
-          .exec(jsonResult(cb));
+          .exec(wrapError(cb));
       },
       function (cb) {
         Users
@@ -104,15 +80,16 @@ module.exports = {
       ],
       function (err, results) {
         if(err) {
-          callback(err, results);
+          return callback(err, results);
         } else {
 
           var instructor = results[1];
           instructor.videos = results[0];
 
           async.map(instructor.courses,
-            Courses.findCourseByUUID.bind(Courses),
-
+            function (uuid, cb) {
+              Courses.findCourseByUUID(uuid, cb)
+            },
             function (err, fullCourses) {
               _.map(fullCourses,
                 function (course) {
@@ -137,18 +114,17 @@ module.exports = {
         Editions
          .find( query )
          .sort('date','ascending')
-         .exec(cb);
+         .exec(wrapError(cb));
       },
       function(cb){
         Courses
           .find( {deleted:false })
           .select( "name description uuid")
-          .exec(cb)    
+          .exec(wrapError(cb))    
       }
       ],
       function (err, items) {
         if(err) {
-          err = codeError(500, err.message || 'Internal server error');
           return callback(err, items);
         }
 

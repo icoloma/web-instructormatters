@@ -119,8 +119,12 @@ Users.prototype.toJSON = function() {
     expires: this.expires,
     admin: this.admin,
     ranking: this.ranking,
-    courses:this.courses,
-    certificates:this.certificates,
+    courses: this.courses && this.courses.map(function (course) {
+      return course;
+    }),
+    certificates: this.certificates && this.certificates.map(function (certificate) {
+      return certificate
+    }),
     address: this.address,
     geopoint: { 
       lat: this.geopoint.lat, 

@@ -1,7 +1,11 @@
-var codeError = require('../../routes/errorHandlers.js').codeError;
+var error = require(__apppath + '/src/routes/errorHandlers.js');
+
+var codeError = error.codeError,
+  internalErrorHandler = error.internalErrorHandler,
+  resultsErrorHandler = error.resultsErrorHandler;
 
 
-var jsonResult = function (result) {
+var wrapJSON = function (result) {
   if(result.map) {
     return result.map(function (item) {
       return item.toJSON();
@@ -11,23 +15,39 @@ var jsonResult = function (result) {
   }
 };
 
+
+//Todos los wrappers convierten a JSON
 module.exports = {
   wrapResult: function (callback) {
+
     return function (err, result) {
       if(err) {
-        err = codeError(500, err.message);
-      } else if(!result || result.length === 0 || result.deleted) {
-        err = codeError(404, 'Not found');
+        err = internalErrorHandler(err);
       } else {
-        result = jsonResult(result);
+        err = resultsErrorHandler(result);
+        if(!err) {
+          result = wrapJSON(result);
+        }
       }
       callback(err, result);
-    }
+    };
   },
 
-  jsonResult: function (callback) {
+  //Solo comprueba errores internos, no la falta de resultados
+  wrapError: function (callback) {
     return function (err, result) {
-      callback(err, jsonResult(result));
+      if(err) {
+        err = internalErrorHandler(err);
+      } else {
+        result = wrapJSON(result);
+      }
+      callback(err, result);
+    };
+  },
+
+  wrapJSON: function (callback) {
+    return function (err, result) {
+      callback(err, wrapJSON(result));
     }
   },
 }

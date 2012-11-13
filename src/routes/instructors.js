@@ -2,8 +2,7 @@
 var Users = require('../db/models').Users
   , Courses = require('../db/models').Courses
   , services = require('../db/models').services
-  , codeError = require('./errorHandlers').codeError
-  , wrapResult = require('../db/models/helpers').wrapResult;
+  , codeError = require('./errorHandlers').codeError;
 
 /*
 * Listado de todos los instructores
@@ -80,20 +79,17 @@ exports.show =  function (req, res, next) {
 exports.view =  function (req, res, next) {
 
   async.parallel([
-    function(callback){
+    function (callback) {
       Courses.findAllCourses(function (err, courses) {
         if(err) return next(err);
         callback(err,courses);
-        });
-      }
-    ,
-    function(callback){
-      Users.findOne({deleted: false, _id: req.params.idInstructor},  wrapResult(function (err, instructor) { 
-        callback(err,instructor);
-      }));
-      //services.getInstructorFullInfo(req.params.idInstructor, callback);
+      });
+    },
+    function (callback) {
+      Users.findUser(req.params.idInstructor, callback);
     }
-    ], function(error,results){
+    ],
+    function (error,results) {
       if(error) return next(err);
       if(res.locals.isAdmin || res.locals.currentUser.id === req.params.idInstructor) {
         res.format({
@@ -109,7 +105,7 @@ exports.view =  function (req, res, next) {
           }
         });
       }
-    });
+  });
 };
 
 

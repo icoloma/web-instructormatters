@@ -27,7 +27,7 @@ append content
       -instructor.coursesWithInfo.forEach( function(course){
         li
           a(href='/courses/' + course.uuid) #{course.name}
-            -if(course.certificated)
+            -if(course.certified)
               span.certified-badge
       -})
 

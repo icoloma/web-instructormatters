@@ -26,19 +26,6 @@ var UserSchema = new mongoose.Schema({
   certificates: [ { uuid: {type: String}}],
   aboutMe : String,
   ranking: { type:Number, default: 0},
-  videos: [{ 
-    id: String,
-    url: String,
-    thumbnail: String,
-    title: String,
-    locale: String,
-    courseUUID: String,
-    ranking : {
-      value : Number,
-      numLikes : Number,
-      numDislikes : Number,
-    }
-   }],
   address: String,
   geopoint : { 
     lat: Number,
@@ -113,6 +100,9 @@ _.extend(UserSchema.statics, {
 
   updateInstructor: function (instructorID, params, callback) {
     //TO DO: ¿admin: false en la busqueda?
+    
+    // TO DO 
+    delete params.videos;
     this.update({_id: instructorID, deleted: false}, params, wrapResult(callback));
   },
 });
@@ -131,7 +121,6 @@ Users.prototype.toJSON = function() {
     ranking: this.ranking,
     courses:this.courses,
     certificates:this.certificates,
-    videos: this.videos,
     address: this.address,
     geopoint: { 
       lat: this.geopoint.lat, 

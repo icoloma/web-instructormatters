@@ -2,7 +2,6 @@
 var Users = require('../db/models').Users
   , Courses = require('../db/models').Courses
   , services = require('../db/models').services
-  , youtube  = require('../videos/youtube')
   , codeError = require('./errorHandlers').codeError
   , wrapResult = require('../db/models/helpers').wrapResult;
 
@@ -54,7 +53,7 @@ exports.list =  function (req, res, next) {
   Información pública del instructor
 */
 exports.show =  function (req, res, next) {
-  services.getInstructorFullInfo(req.params.id, function (err, instructor) {
+  services.getInstructorFullInfo(req.params.idInstructor, function (err, instructor) {
     if(err) return next(err);
     instructor = _.omit(instructor, ['admin', 'expires'])
     res.format({
@@ -89,14 +88,14 @@ exports.view =  function (req, res, next) {
       }
     ,
     function(callback){
-      Users.findOne({deleted: false, _id: req.params.id},  wrapResult(function (err, instructor) { 
+      Users.findOne({deleted: false, _id: req.params.idInstructor},  wrapResult(function (err, instructor) { 
         callback(err,instructor);
       }));
-      //services.getInstructorFullInfo(req.params.id, callback);
+      //services.getInstructorFullInfo(req.params.idInstructor, callback);
     }
     ], function(error,results){
       if(error) return next(err);
-      if(res.locals.isAdmin || res.locals.currentUser.id === req.params.id) {
+      if(res.locals.isAdmin || res.locals.currentUser.id === req.params.idInstructor) {
         res.format({
           html: function(){
             res.render('admin/instructor', {
@@ -131,7 +130,7 @@ exports.view =  function (req, res, next) {
 
     var instructor = updateRanking(req.body);
 
-    Users.updateInstructor(req.params.id, instructor, 
+    Users.updateInstructor(req.params.idInstructor, instructor, 
       function (err, num) {
         if(err) return next(err);
         res.send(204);   // OK, no content

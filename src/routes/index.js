@@ -3,6 +3,7 @@
 var models  = require('../db/models')
   , statics = require('./statics')
   , courses = require('./courses')
+  , videos = require('./videos')
   , certificates = require('./certificates')
   , users = require('./users')
   , instructors = require('./instructors')
@@ -57,11 +58,18 @@ module.exports = function (server) {
   // -- Instructors-- 
   server.get( '/instructors', instructors.list);
   server.get( '/instructors/course/:uuid', instructors.list);
-  server.get( '/instructors/:id', instructors.show);
-  server.get( '/instructors/:id/edit', security.isHimself, instructors.view);
-  server.put( '/instructors/:id', security.isHimself, instructors.update);
-  server.del( '/instructors/:id', security.isHimself, instructors.del);
+  server.get( '/instructors/:idInstructor', instructors.show);
+  server.get( '/instructors/:idInstructor/edit', security.isHimself, instructors.view);
 
+  server.put( '/instructors/:idInstructor', security.isHimself, instructors.update);
+  server.del( '/instructors/:idInstructor', security.isHimself, instructors.del);
+
+
+  // -- Videos-- 
+  server.get( '/instructors/:idInstructor/videos',  videos.list);
+  server.post( '/instructors/:idInstructor/videos', security.isHimself, videos.update);
+  server.del( '/instructors/:idInstructor/videos/:idVideo', security.isHimself, videos.del);
+  
   // -- Security --
   server.get('/login', 
       passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',

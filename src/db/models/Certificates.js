@@ -2,6 +2,7 @@
 var ObjectId = mongoose.Schema.ObjectId;
 
 var wrapResult = require('./helpers').wrapResult,
+  jsonResult = require('./helpers').jsonResult,
   codeError = require(__apppath + '/src/routes/errorHandlers').codeError;
 
 /*
@@ -30,7 +31,7 @@ _.extend(CertificateSchema.statics, {
       if(err) {
         err = codeError(500, err.message);
       }
-      callback(err, results);
+      callback(err, jsonResult(results));
     });
   },
 

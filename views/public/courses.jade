@@ -8,13 +8,13 @@ append content
           .row-fluid
             h3= course.name
             p #{course.description} 
-            each uservideos in course.videos
-              each video in uservideos
-                .video.span3
-                  a(href=video.url, target='_blank')
-                    img.video-thumbnail(src=video.thumbnail, title=video.title)
-                  p #{video.title}
-                  a(href="/instructors/" + video.user.id) #{video.user.name}
+            //- each uservideos in course.videos
+            each video in course.videos
+              .video.span3
+                a(href=video.url, target='_blank')
+                  img.video-thumbnail(src=video.thumbnail, title=video.title)
+                p #{video.title}
+                a(href="/instructors/" + video.instructorId) #{video.instructorName}
           .row-fluid
             a.btn.btn-danger(href="/courses/" + course.uuid) more info
 

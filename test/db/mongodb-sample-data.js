@@ -58,28 +58,6 @@ db.users.save({
     deleted: false,
     courses: ['core-spring','spring-web','eis'],
     languages: 'en, es',
-    videos: [ { id: 'RY6dNUL8k6o',
-                url: 'http://www.youtube.com/watch?v=RY6dNUL8k6o',
-                title: "Practical Tips and Tricks with Spring Integration",
-                thumbnail: 'http://i.ytimg.com/vi/RY6dNUL8k6o/hqdefault.jpg',
-                locale: 'en',
-                courseUUID : 'eis'
-              },
-              { id: 'TIuI6sjmP7g',
-                url: 'http://www.youtube.com/watch?v=TIuI6sjmP7g',
-                title: "Intertech - Complete Spring Core Training - Part 3",
-                thumbnail: 'http://i.ytimg.com/vi/TIuI6sjmP7g/hqdefault.jpg',
-                locale: 'en',
-                courseUUID : 'core-spring'
-              },
-              { id: 'OwN6UdDzZNA',
-                url: 'http://www.youtube.com/watch?v=OwN6UdDzZNA',
-                title: "Spring Tutorial - Using Spring Web Flow (Part 1 of 2)",
-                thumbnail: 'http://i.ytimg.com/vi/OwN6UdDzZNA/hqdefault.jpg',
-                locale: 'en',
-                courseUUID : 'spring-web'
-              }
-            ],
     address : "Tenerife, Santa Cruz de Tenerife, Spain",
     geopoint : { lat : 28.2915637, lng: -16.629130400000008, zoom : 9 }
 
@@ -112,3 +90,51 @@ db.users.save(
     address : "Madrid, Spain",
     geopoint : { lat : 40.4166909, lng: -3.70034540000006, zoom : 10 }
 })
+
+db.videos.save(
+ { youtubeId: 'RY6dNUL8k6o',
+  instructorId: ObjectId('50a2110550e8722c18000001'),
+                url: 'http://www.youtube.com/watch?v=RY6dNUL8k6o',
+                title: "Practical Tips and Tricks with Spring Integration",
+                thumbnail: 'http://i.ytimg.com/vi/RY6dNUL8k6o/hqdefault.jpg',
+                locale: 'en',
+                courseUUID : 'eis',
+                ranking: {
+                  numLikes: 300,
+                  numDislikes: 200,
+                  value: 200
+                }
+              }
+)
+
+db.videos.save(
+              { youtubeId: 'TIuI6sjmP7g',
+                instructorId: ObjectId('50a2110550e8722c18000001'),
+                url: 'http://www.youtube.com/watch?v=TIuI6sjmP7g',
+                title: "Intertech - Complete Spring Core Training - Part 3",
+                thumbnail: 'http://i.ytimg.com/vi/TIuI6sjmP7g/hqdefault.jpg',
+                locale: 'en',
+                courseUUID : 'core-spring',
+                ranking: {
+                  numLikes: 500,
+                  numDislikes: 300,
+                  value: 100
+                }
+              }
+)
+
+db.videos.save(
+              { youtubeId: 'OwN6UdDzZNA',
+                instructorId: ObjectId('50a2110550e8722c18000001'),
+                url: 'http://www.youtube.com/watch?v=OwN6UdDzZNA',
+                title: "Spring Tutorial - Using Spring Web Flow (Part 1 of 2)",
+                thumbnail: 'http://i.ytimg.com/vi/OwN6UdDzZNA/hqdefault.jpg',
+                locale: 'en',
+                courseUUID : 'spring-web',
+                ranking: {
+                  numLikes: 700,
+                  numDislikes: 300,
+                  value: 100
+                }
+              }
+)

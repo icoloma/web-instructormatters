@@ -1,5 +1,6 @@
 var Courses = require('../db/models').Courses,
   Editions = require('../db/models').Editions,
+  Videos = require('../db/models').Videos,
   services = require('../db/models').services,
   models = require('../db/models'),
   editions = require('./editions.js'),
@@ -32,27 +33,62 @@ exports.view = function (req, res, next) {
   Mostrar un curso (public)
 */
 exports.showDetails = function (req, res, next) {
-  Courses.findCourseByUUID(req.params.uuid, function (err, item) {
-    if(err) return next(err);
-    var course = item;
-    res.format({
+  async.parallel([
+    function (cb) {
+      Courses.findCourseByUUID(req.params.uuid, cb);
+    },
+    function (cb) {
+      Editions.findCourseEditions(req.params.uuid, 10, cb);
+    },
+    function (cb) {
+      Videos.findCourseVideos(req.params.uuid, 3, cb);
+    }
+    ]
+    ,
+    function (err, results) {
+      if(err) return next(err);
+
+      var course = results[0],
+        editions = results[1];
+      
+      course.videos = results[2];
+
+      res.format({
         html: function () {
-          Editions.findCourseEditions(course.uuid,
-            function (err, editions) {
-              services.addCourseVideos(course, 100, 3, function (err,items) {
-                res.render('public/course', {
-                  title: course.name,
-                  course: course,
-                  editions: editions
-                });
-              });
+          res.render('public/course', {
+            title: course.name,
+            course: course,
+            editions: editions
           });
         },
+
         json: function () {
           res.json(course);
         }
-    });
-  });
+      });
+    }
+  );
+  // Courses.findCourseByUUID(req.params.uuid, function (err, item) {
+  //   if(err) return next(err);
+  //   var course = item;
+  //   res.format({
+  //       html: function () {
+  //         Editions.findCourseEditions(course.uuid,
+  //           function (err, editions) {
+  //             services.addCourseVideos(course, 3, function (err) {
+  //               res.render('public/course', {
+  //                 title: course.name,
+  //                 course: course,
+  //                 editions: editions
+  //               });
+  //             });
+  //         });
+  //       },
+  //       json: function () {
+  //         res.json(course);
+  //       }
+  //   });
+  // });
 };
 
 /*
@@ -68,7 +104,9 @@ exports.list =  function (req, res, next) {
       function (course, cb) {
 
         // Añadimos los vídeos de cada curso
-        services.addCourseVideos(course, 3, 1, cb);
+        services.addCourseVideos(course, 3, function (err) {
+          cb(err, course);
+        });
       },
       function (err, coursesWithVideos) {
 

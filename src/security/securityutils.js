@@ -28,10 +28,10 @@ exports.isHimself = function(req, res, next) {
       return;
     }
 
-    if (req.user.admin ||  (req.user.id === req.params.id)){
+    if (req.user.admin ||  (req.user.id === req.params.idInstructor)){
       next();
     } else {
-      console.log(req.user.email + " tried to access another instructor '" + req.params.id + "'");
+      console.log(req.user.email + " tried to access another instructor '" + req.params.idInstructor + "'");
       next(codeError(401, "You are not allowed to modify other instructor's profile"));
     }
 }  
@@ -129,7 +129,7 @@ exports.exposeInstructor = function (req, res, next){
         next(err);
         return;
       }
-      res.locals.isEditionOwner = req.user.id === edition.instructor.toJSON();
+      res.locals.isEditionOwner = req.user.id === edition.instructor.toString();
       next();
     });
   

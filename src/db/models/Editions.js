@@ -2,6 +2,7 @@
 
 var ObjectId = mongoose.Schema.ObjectId,
   wrapResult = require('./helpers').wrapResult,
+  jsonResult = require('./helpers').jsonResult,
   codeError = require(__apppath + '/src/routes/errorHandlers.js').codeError;
 
 /*
@@ -31,11 +32,12 @@ _.extend(EditionSchema.statics, {
     this.findById(editionID, wrapResult(callback));
   },
 
-  findCourseEditions: function (uuid, callback) {
+  findCourseEditions: function (uuid, numEditions, callback) {
     this
       .find({deleted: false, courseUUID: uuid})
       .sort('date', 'descending')
-      .exec(wrapResult(callback));
+      .limit(numEditions)
+      .exec(jsonResult(callback));
   },
 
   saveEdition: function (body, callback) {
@@ -65,7 +67,7 @@ Editions.prototype.toJSON = function(){
   return {
     id: this._id.toString(),
     date: this.date,
-    instructor: this.instructor,
+    instructor: this.instructor.toString(),
     courseUUID: this.courseUUID,
     state: this.state,
     address: this.address,

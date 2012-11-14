@@ -8,10 +8,15 @@ define([ 'core', 'hbs!./videoview' ],
 
       events: {
 
-       'click .delete' : function(){
+       'click .delete' : function(e){
+          if ( this.model.collection.length -1 >= MAX_ROWS ){
+            $('.addVideo').hide();
+          } else {
+            $('.addVideo').show();
+          }
+
+          this.model.destroy();
           this.remove();
-          this.model.collection.remove(this.model);
-          this.enableAddBtn();
         },
         
         'change select': function(e) {
@@ -34,23 +39,12 @@ define([ 'core', 'hbs!./videoview' ],
       },
 
       render: function() {
-        var coursesWithNames = [];
-        this.options.courses.forEach( function(course){
-          coursesWithNames.push( {
-            uuid : course.uuid,
-            name : course.name
-          });
-        });
-        this.$el.html(template( _.extend( this.model.toJSON(), {courses: coursesWithNames}))); 
+        this.$el.html(template( _.extend( this.model.toJSON(), {courses: this.options.coursesWithNames}))); 
         this.$('select.locale').val(this.model.get('locale'));
         this.$('select.courseUUID').val(this.model.get('courseUUID'));
         return this;
       },
 
-      enableAddBtn: function() {
-
-        $('.add').prop('disabled', $(this.el).find('tr').length >= MAX_ROWS);
-      }
 
     })
 

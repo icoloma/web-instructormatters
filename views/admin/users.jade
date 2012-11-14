@@ -9,7 +9,7 @@ append content
   ul
     -users.forEach(function (user) {
       li
-        a(href="/users/" + user._id ) 
+        a(href="/users/" + user.id ) 
           if (user.name)
             &nbsp; #{user.name} 
           else

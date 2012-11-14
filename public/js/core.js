@@ -27,8 +27,11 @@ define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message'
       @param msg.level {String}
       @param msg.message {String}
       */
-    renderMessage : function(msg){
-      $('.messages-container').append(messageTmpl(msg));
+    renderMessage : function(msg, container){
+      if (!container){
+        container = '.messages-container';
+      }
+      $(container).append(messageTmpl(msg));
     },
 
     /** assertions */
@@ -54,7 +57,9 @@ _.templateSettings = {
 $(document).ajaxError(function(e, xhr, settings, exception) {
   if ( xhr.status == 201 && settings.on201){
     settings.on201(xhr)
-  } else {
+  } else if ( xhr.status == 0 ) {
+     core.renderMessage({ level:'error', message: 'Connection timeout'});  
+  }  else {
     //alert('error in: ' + settings.url + ' \n'+'error:\n' + xhr.responseText );
     core.renderMessage({ level:'error', message: xhr.responseText});  
   }

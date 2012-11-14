@@ -17,6 +17,7 @@ var VideoSchema = new mongoose.Schema({
   title: String,
   locale: String,
   courseUUID: String,
+  duration: Number,
   ranking : {
     value : Number,
     numLikes : Number,
@@ -30,31 +31,42 @@ _.extend(VideoSchema.statics, {
     this
       .find({instructorId: instructorId})
       .sort('ranking.value', 'descending')
-      .exec(jsonResult(callback));
+      .exec(function (err, items) {
+        if(err) {
+          //TO DO error handling 'ligero'
+          err = errors.codeError(500, 'Internal server error');
+        }
+        (jsonResult(callback))(err, items);
+      });
+     
   },
 
   updateInstructorVideos: function(instructorId, body, callback) {
     // Videos
     //   .remove({instructorId: instructorId});
+
+    var self = this;
     async.forEachSeries(body, 
       function (video, cb) {
         if (video.id) {
+          console.log("updating existing video");
           // update
-          this
+          self
             .update({_id: video.id}, video)
             .exec(cb);
         } else {
           // create
-          var video = new this(video);
+          console.log("creating new video");
+          var video = new self(video);
           video.instructorId = instructorId;
-
           video.save(function (err) {
-            cb(err);
+              cb(err);
           });
         }
       },
       callback
     );
+
 
   },
 
@@ -79,18 +91,26 @@ _.extend(VideoSchema.statics, {
 
 var Videos = mongoose.model('Videos', VideoSchema);
 
+
 Videos.prototype.toJSON = function () {
   return {
     id: this._id.toString(),
     youtubeId: this.youtubeId,
+    url: this.url,
     instructorId: this.instructorId.toString(),
     instructorName: this.instructorName,
     thumbnail: this.thumbnail,
     title: this.title,
     locale: this.locale,
     courseUUID: this.courseUUID,
-    ranking: this.ranking,
+    duration:this.duration,
+    ranking : this.ranking && {
+      value : this.ranking.value && this.ranking.value.toString(),
+      numLikes : this.ranking.numLikes && this.ranking.numLikes.toString(),
+      numDislikes : this.ranking.numDislikes && this.ranking.numDislikes.toString(),
+    }
   }
 };
+
 
 module.exports = Videos;

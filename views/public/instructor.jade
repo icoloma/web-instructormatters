@@ -23,7 +23,7 @@ append content
      
     
       h3 Courses:
-      ul
+      ul.enumeration
         -instructor.coursesWithInfo.forEach( function(course){
           li
             a(href='/courses/' + course.uuid) #{course.name}
@@ -48,8 +48,8 @@ append content
                 a.video-title(href=video.url, target='_blank') #{video.title}
                 span.video-likes #{video.ranking.numLikes} likes, 
                 span.video-dislikes #{video.ranking.numDislikes} dislikes
-        -})
 
+        -})
 
 
   

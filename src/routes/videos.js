@@ -19,7 +19,7 @@ exports.update = function (req, res, next) {
   
   Videos.updateInstructorVideos(req.params.idInstructor, req.body, function (err) {
     if(err) return next(err);
-
+    res.header('location',  '/instructors/' + req.params.idInstructor + '/edit' );
     res.send(201);
   })
 

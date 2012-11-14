@@ -1,7 +1,7 @@
 // Admin user 
 var admin = {
-    email : "icoloma@gmail.com",
-    name : "Nacho"
+    email : "ehdez73@gmail.com",
+    name : "Ernesto"
   };
 
 // use instructormatters;

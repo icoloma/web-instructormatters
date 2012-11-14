@@ -5,6 +5,7 @@ function(K, template) {
   return B.Model.extend({
 
     defaults: {
+      locale: 'en',
       title: '',
       duration: 0,
       url: '',
@@ -15,3 +16,4 @@ function(K, template) {
   });
 
 });
+

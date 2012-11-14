@@ -1,6 +1,6 @@
 
-define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ], 
-  function(Core, VideosView, template, GMaps) {
+define([ 'core', 'hbs!./instructorview', 'lib/gmaps' ], 
+  function(Core, template, GMaps) {
 
     return Backbone.View.extend({
 
@@ -29,14 +29,6 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
             });
         }
 
-       // if (this.model.get('certificates').length > 0){   // solo los certificados muestran videos
-          this.videosView = new VideosView({
-            collection: this.model.videos,
-            el: $('.videos'),
-            courses :this.options.courses
-          }).render();
-       // }
-
         // Carga la librería GoogleMaps
         GMaps.loadMapsAPI(this.addGMapAutocompleter, this);
 
@@ -49,39 +41,8 @@ define([ 'core', 'videos/videosview', 'hbs!./instructorview', 'lib/gmaps' ],
 
         this.model.get('geopoint').zoom = this.map.getZoom();
 
-        if (this.model.videos.length == 0){
-          this.doSave();
-          return;
-        }
-
-        // Obtenemos información de cada video:
-        this.model.videos.forEach( function( videoModel ){
-            var id =  /.+youtube.+watch\?v=([^&]+)/.exec(videoModel.get('url'))[1];
-            $.ajax({
-              url: 'http://gdata.youtube.com/feeds/api/videos/' + id + '?v=2&alt=json-in-script&format=5', 
-              dataType: 'jsonp',
-              context: this,
-              success: function(data) {
-                videoModel.set({ 
-                  id: id,
-                  title: data.entry.title.$t,
-                  thumbnail: data.entry.media$group.media$thumbnail[1].url,
-                  duration: data.entry.media$group.yt$duration.seconds,
-                  ranking : {
-                    numLikes : data.entry.yt$rating.numLikes,
-                    numDislikes: data.entry.yt$rating.numDislikes,
-                    value: data.entry.yt$rating.numLikes - data.entry.yt$rating.numDislikes
-                  }
-                });
-
-                if (videoModel.get('duration') <= 180 ) {
-                  this.model.videos.all(function(v) { return v.get('title') }) && this.doSave();
-                } else {
-                   Core.renderMessage({ level :'danger',  message :'The video "' + videoModel.get('title') +  '"" is over 3 min. and will not be saved'});
-                }
-              } 
-            });
-          }, this);
+        this.doSave();
+        
       },
 
       doSave: function() {

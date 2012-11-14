@@ -5,7 +5,10 @@ append content
  
   .main  
 
+  .videos
+
 append scripts
+
   script 
     define('editview', 
       [ 'instructors/instructorview', 'instructors/instructormodel' ], 
@@ -17,4 +20,30 @@ append scripts
           el: $('.main')
         }).render();
 
+    });
+
+
+  //- Edición de vídeos
+  script 
+    define('editvideosview', 
+      [ 'videos/videomodel', 'videos/videoscollectionview',  'jquery' ], 
+
+        function(VideoModel, VideoCollectionView) {
+    
+          var videos = new Backbone.Collection([], {
+              model: VideoModel,
+            });
+          videos.url = '/instructors/#{instructor.id}/videos';
+          
+          videos.fetch({ 
+            success: function(collection, response){
+                new VideoCollectionView({
+                  collection: collection,
+                  instructorId: '!{instructor.id}',
+                  instructorName: '!{instructor.name}',
+                  courses: !{JSON.stringify(courses)},
+                  el: this.$('.videos')
+                }).render();
+            }
+          });
     });

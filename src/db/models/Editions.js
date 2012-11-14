@@ -40,6 +40,15 @@ _.extend(EditionSchema.statics, {
       .exec(wrapJSON(callback));
   },
 
+  findEditionInstructor: function (editionID, callback) {
+    this
+      .findById(editionID)
+      .where('deleted').equals(false)
+      .select('instructor')
+      .populate('instructor')
+      .exec(wrapResult(callback));
+  },
+
   saveEdition: function (body, callback) {
     var edition = new this(body);
     edition.save(function (err) {

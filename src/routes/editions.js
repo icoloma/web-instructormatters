@@ -242,12 +242,10 @@ var getInstructors = function (req, callback) {
 }
 
 exports.sendMail = function (req, res, next) {
-  console.log('Sending contact mail ' + JSON.stringify(req.body));
-  mailSender.sendMail(req.body, function (err, responseStatus) {
-    if(err) {
-      err = codeError(500, err.message);
-      return next(err);
-    }
-    res.send(201, responseStatus.message);      
+  Edition.findEditionInstructor(req.params.idEdition, function (err, instructor) {
+    if(err) return next(err);
+
+    req.instructorEmail = instructor.email;
+    next();
   });
 };

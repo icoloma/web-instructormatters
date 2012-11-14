@@ -1,14 +1,12 @@
 extends bare-layout
 
 append main_content
-  .header_wrapper
-    .container-fluid
-      h2 #{title}
-     
-
-  .page
-    .container-fluid
-      .messages-container 
-      block content
+  header.header_wrapper
+    .wrapper
+      h1.header-title #{title}
+  section.wrapper.main-content
+    //- .container-fluid
+    .messages-container 
+    block content
 
    

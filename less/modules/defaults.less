@@ -1,11 +1,7 @@
-html {
-  height: 100%;
-}
 body {
   font-size: 14px;
   color: #717576;
   line-height: 1.5em;
-  height: 100%;
 }
 a {
   cursor: pointer;
@@ -28,11 +24,23 @@ a {
   margin-bottom: 10px;
 }
 
-.header_wrapper  h2 {
-  margin-top: 10px;
+.header-title {
+  margin: 0;
   font-size: 30px;
+  line-height: 58px;
   color: white;
   text-transform: uppercase;
+}
+
+.wrapper {
+  width: 95%;
+  max-width: 940px;
+  margin: 0 auto;
+  .clearfix();
+}
+
+.main-content {
+  min-height: 600px;
 }
 
 // mensaje de validacion de webkit

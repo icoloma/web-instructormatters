@@ -1,7 +1,9 @@
-extends ../layout
+extends ../bare-layout
 
-append content
- 
-  .main  
-   
-   p this is an 401 error page #{error}
+append main_content
+  header.header_wrapper
+    .wrapper
+      h1.header-title= title
+  .wrapper
+    p This is an 401 error page 
+    pre #{error}

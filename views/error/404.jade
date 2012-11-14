@@ -1,9 +1,10 @@
 extends ../bare-layout
 
 append main_content
-  .header_wrapper
-    .container-fluid
+  header.header_wrapper
+    .wrapper
       .page-heading
-        h1.center= title
-        p.center Ehm... page not found. 
-        img.center(src="/img/dog_reading.jpg", alt="Sorry. We keep trying, yes?")
+        h1.header-title= title
+  .wrapper
+    p.center Ehm... page not found. 
+    img.center(src="/img/dog_reading.jpg", alt="Sorry. We keep trying, yes?")

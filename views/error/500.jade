@@ -1,11 +1,10 @@
 extends ../bare-layout
 
 append main_content
-  .header_wrapper
-    .container-fluid
-      .page-heading
-        h1.center= title
-        p.center This was not supposed to happen: 
-        pre #{error} 
-        img.center(src="/img/woman_car.jpg", alt="Talk about moving targets...")
-
+  header.header_wrapper
+    .wrapper
+      h1.center= title
+  .wrapper
+    p.center This was not supposed to happen: 
+    pre #{error}
+    img.center(src="/img/woman_car.jpg", alt="Talk about moving targets...")

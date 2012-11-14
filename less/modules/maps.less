@@ -1,7 +1,7 @@
 
 // Prevent max-width from affecting Google Maps
 .map img {
-  max-width: none !important;
+  max-width: none;
 }
 
 .map {
@@ -16,8 +16,9 @@
 .infoWindow {
   overflow: hidden;
 }
-.infoWindow-img {
+img.infoWindow-img {
   max-height: 40px;
+  max-width: 40px;
   float: left;
 }
 .infoWindow-description {

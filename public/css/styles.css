@@ -5758,14 +5758,10 @@ a.badge:hover {
 .affix {
   position: fixed;
 }
-html {
-  height: 100%;
-}
 body {
   font-size: 14px;
   color: #717576;
   line-height: 1.5em;
-  height: 100%;
 }
 a {
   cursor: pointer;
@@ -5784,11 +5780,40 @@ a {
   background-color: #036564;
   margin-bottom: 10px;
 }
-.header_wrapper h2 {
-  margin-top: 10px;
+.header-title {
+  margin: 0;
   font-size: 30px;
+  line-height: 58px;
   color: white;
   text-transform: uppercase;
+}
+.wrapper {
+  width: 95%;
+  max-width: 940px;
+  margin: 0 auto;
+  *zoom: 1;
+  *zoom: 1;
+}
+.wrapper:before,
+.wrapper:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.wrapper:after {
+  clear: both;
+}
+.wrapper:before,
+.wrapper:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.wrapper:after {
+  clear: both;
+}
+.main-content {
+  min-height: 600px;
 }
 ::-webkit-validation-bubble-message {
   font: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -5832,7 +5857,7 @@ footer .brand {
 .navbar-inner {
   min-height: 40px;
 }
-.home-image-slider {
+.header-home {
   height: 210px;
   background: #036564 url(/img/home.png) no-repeat 100% 50%;
   -webkit-box-shadow: 0 0 5px #031634;
@@ -5842,15 +5867,14 @@ footer .brand {
   -moz-box-shadow: 0 0 5px #031634;
   box-shadow: 0 0 5px #031634;
 }
-.home-image-slider h2 {
-  margin-top: 50px;
-  /*specify 'margin-top' as per your your choice*/
-
+.header-home h1 {
+  margin: 0;
   font-size: 42px;
+  line-height: 60px;
   color: #ffffff;
   text-transform: uppercase;
 }
-.home-image-slider p {
+.header-home p {
   font-size: 16px;
   color: #aff;
   text-align: left;
@@ -6109,7 +6133,7 @@ img.profile {
   box-shadow: 0 0 5px #031634;
 }
 .map img {
-  max-width: none !important;
+  max-width: none;
 }
 .map {
   min-height: 400px;
@@ -6121,8 +6145,9 @@ img.profile {
 .infoWindow {
   overflow: hidden;
 }
-.infoWindow-img {
+img.infoWindow-img {
   max-height: 40px;
+  max-width: 40px;
   float: left;
 }
 .infoWindow-description {
@@ -7995,6 +8020,11 @@ footer .brand:hover {
     position: static;
   }
 }
+@media (min-width: 1200px) {
+  .wrapper {
+    max-width: 1170px;
+  }
+}
 @media (max-width: 979px) {
   .navbar-fixed-top {
     margin-bottom: 0;
@@ -8007,7 +8037,8 @@ footer .brand:hover {
   body {
     padding: 0;
   }
-  .container-fluid {
+  .wrapper {
+    width: auto;
     padding: 0 20px;
   }
   .home-image-slider,

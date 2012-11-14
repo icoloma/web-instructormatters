@@ -152,69 +152,98 @@ exports.checkAvailability = function (req, res, next) {
   );
 };
 
-var generatePDF = function (certificate, edition, course, instructor, callback){
-  var urlCertificate = 'http://instructormatters.com/certificates/' + certificate.uuid;
-  var urlCourse = 'http://instructormatters.com/courses/' + course.uuid;
-  var doc = new Pdfkit({layout:'landscape'});
+  var generatePDF = function (certificate, edition, course, instructor, callback){
+    var urlCertificate = 'http://instructormatters.com/certificates/' + certificate.uuid;
+    var urlCourse = 'http://instructormatters.com/courses/' + course.uuid;
+    var doc = new Pdfkit({layout:'landscape', size:[ 572,794]});
 
-  //Register a font name for use later
- // doc.registerFont('Palatino', 'fonts/PalatinoBold.ttf');
+    //Register a font name for use later
 
-  doc
-    .font('Courier')
-    .rect(0,0,800,80)
-    .fillAndStroke("#0E8DDCB", "#000")
-    .image('public/img/logo.png', 50, 20)
-    .fontSize(30)
-    .fill("#BF9D5B")
-    .text('InstructorMatters', 95,30 )
-    .rect(0,590,800,80)
-    .fillAndStroke("#036564", "#333")
-    .fillColor("#333")
-    .fontSize(15)
-    .text('This is to certify that', 100, 100)
-    .moveDown()
-    .fontSize(25)
-    .text(certificate.name,{align: 'center'})
-    .moveDown()
-    .fontSize(15)
-    .text('is hereby recongized for having succesfully completed ')
-    .moveDown()
-    .fontSize(25)
-    .text(course.name,{align: 'center'})
-    .fontSize(10)
-    .text( '(' + urlCourse + ')', {align: 'center'})
-    .fontSize(15)
-    .moveDown()
-    .moveDown()
-    .text('Instructor: ' + instructor.name)
-    .text('Location: ' + edition.address)
-    .text('Date: ' + edition.date)
-    .text('Duration: ' + course.duration)
-    .moveDown()
-    .moveDown()
-    .fontSize(10)
-    .text(urlCertificate)
-    .image('public/img/dog.png', 590, 340)
-    .fillColor('white')
-    .text('IstructorMatters.com (c)', 600,600 );
+    var editionDate = new Date(edition.date);
+    var dateString =  /.+,(.+,.+)/.exec(editionDate.toLocaleDateString())[1];
 
-  async.series([
-    function(cb){
-      doc.write('certificates/' + certificate.uuid + '.pdf', cb);
-    }], function(err, results){
-      callback(err,results);
+    var FONT_BIG = 32;
+    var FONT_NORMAL = 18;
+    var FONT_LITTLE = 14;
+    var FONT_SMALL = 12;
+
+    var nameFontSize = (certificate.name.length > 39) ? FONT_NORMAL: FONT_BIG;
+    var courseFontSize = (course.name.length > 39) ? FONT_NORMAL: FONT_BIG;
+    var addressSize = (edition.address.length > 30) ? FONT_LITTLE: FONT_NORMAL
+   
+    doc.registerFont('MyriadProRegular', 'resources/fonts/mpr.ttf');
+    doc.registerFont('MyriadProCondRegular', 'resources/fonts/mpc.ttf');
+    doc.registerFont('MyriadProBold', 'resources/fonts/MyriadPro-Bold.ttf');
+    doc.registerFont('MyriadProCondBold', 'resources/fonts/MyriadPro-BoldCond.ttf');
+
+    doc
+      // background
+      .image('resources/img/bg.png', 2 ,3,  {width: 790, height: 565})
+
+      // Header
+      .font('MyriadProCondBold').fontSize(FONT_BIG)
+      .text(' ', 0, 80 , {align:'center'})
+      .text('InstructorMatters', {align: 'center'})
+      .font('MyriadProRegular').fontSize(FONT_NORMAL).text('certifies that', {align: 'center'})
+
+      .font('MyriadProBold').fontSize(nameFontSize);
+
+    if (nameFontSize === FONT_NORMAL){
+        doc.moveDown(0.5);
     }
-  );
+
+    doc
+      // Student name
+      .text( certificate.name, {align: 'center'})
+      .font('MyriadProRegular').fontSize(FONT_NORMAL)
+      .text(' ', 0, 200 , {align:'center'})
+
+      // duration
+      .text('has successfully completed the ' + course.duration + ' course', {align: 'center'})
+      .font('MyriadProBold').fontSize(courseFontSize);
+
+    if (courseFontSize === FONT_NORMAL){
+        doc.moveDown(0.5);
+    }
+
+    doc  
+      // course 
+      .text( course.name, {align: 'center'})
+      .font('MyriadProRegular').fontSize(FONT_NORMAL)
+      .moveDown()
+      // instructor
+      .text('delivered by', {align: 'center'})
+      .font('MyriadProBold').text(instructor.name , {align: 'center'})
+      // address
+      .font('MyriadProRegular').fontSize(addressSize).text('in ' + edition.address , {align: 'center'})
+      // date
+      .font('MyriadProRegular').fontSize(FONT_NORMAL)
+      .text('on ' + dateString , {align: 'center'})
+
+      // link
+      .text(' ', 0, 455, {align: 'center'})
+      .font('MyriadProRegular').fontSize(FONT_SMALL)
+      .text(urlCertificate, {align: 'center'})
+   ;
+     
+    async.series([
+      function(cb){
+        doc.write('certificates/' + certificate.uuid + '.pdf', cb);
+      }], function(err, results){
+        callback(err,results);
+      }
+      );
+  }
+
+  var fileExists = function (path) {
+    try { 
+      fs.statSync(path); 
+      return true;
+    } catch (er) { 
+      return false; 
+    }
 }
 
-var fileExists = function (path) {
-  try { 
-    fs.statSync(d); 
-    return true;
-  } catch (er) { 
-    return false; 
-  }
-}
+
 
 

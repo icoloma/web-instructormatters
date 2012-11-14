@@ -6,10 +6,9 @@ append content
  
   .main  
    
-   if(locals.isAdmin)
-    h3(class='edition-' + edition.state) State:
-      | #{edition.state}
-   
+    if(locals.isAdmin)
+      h3(class='edition-' + edition.state) State:
+        | #{edition.state}
 
 
     p This is to certify that
@@ -39,7 +38,7 @@ append content
         a(href="/certificates/" + certificate.uuid + "/pdf")  http://instructormatters.com/certificates/#{certificate.uuid}/pdf
 
 
-      
+        
 
 
 

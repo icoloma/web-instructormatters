@@ -31,9 +31,10 @@ define([ 'core', 'hbs!./videoview' ],
 
           // reset de los campos que pediremos a Youtube
           this.model.set({
-            id: '',
+            youtubeId: '',
             title: '',
-            thumbnail: ''
+            thumbnail: '',
+            ranking : {}
           });
         },
       },

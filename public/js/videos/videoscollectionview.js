@@ -3,6 +3,7 @@ define([ 'core', 'videos/videotrview', 'videos/videomodel', 'hbs!videos/videosco
 
     
     var MAX_ROWS = 3;
+    var numVideosProcessed = 0;
 
     return B.View.extend({
 
@@ -79,6 +80,8 @@ define([ 'core', 'videos/videotrview', 'videos/videomodel', 'hbs!videos/videosco
 
          e.preventDefault();
 
+         numVideosProcessed = 0;
+
         // Obtenemos información de cada video:
         this.collection.forEach( function( videoModel ){
         var youtubeId =  /.+youtube.+watch\?v=([^&]+)/.exec(videoModel.get('url'))[1];
@@ -87,10 +90,13 @@ define([ 'core', 'videos/videotrview', 'videos/videomodel', 'hbs!videos/videosco
           dataType: 'jsonp',
           context: this,
           success: function(data) {
+            numVideosProcessed += 1;
             var numLikes = 0;
             var numDislikes = 0;
-            if ( _.has(data, 'entry.yt$rating.numLikes'))  numLikes = data.entry.yt$rating.numLikes;
-            if ( _.has(data, 'entry.yt$rating.numDislikes')) numDislikes = data.entry.yt$rating.numDislikes;
+            if ( data.entry.yt$rating ){
+             numLikes = data.entry.yt$rating.numLikes;
+              numDislikes = data.entry.yt$rating.numDislikes;
+            }
             var rankingValue = numLikes - numDislikes;
             videoModel.set({ 
               youtubeId: youtubeId,
@@ -104,10 +110,7 @@ define([ 'core', 'videos/videotrview', 'videos/videomodel', 'hbs!videos/videosco
               }
             });
             if (videoModel.get('duration') <= 180 ) {
-              this.collection.all( 
-                function(v) { 
-                  return v.get('title') && v.get('duration') <= 180 
-                }) && this.saveVideos();
+              numVideosProcessed == 3 && this.saveVideos();
             } else {
                Core.renderMessage({ level :'danger',  message :'The video "' + videoModel.get('title') +  '" is over 3 min.'}, '.videos-messages-container');
             }

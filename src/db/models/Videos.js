@@ -35,9 +35,7 @@ _.extend(VideoSchema.statics, {
   },
 
   updateInstructorVideos: function(instructorId, body, callback) {
-    // Videos
-    //   .remove({instructorId: instructorId});
-
+    
     var self = this;
     async.forEachSeries(body, 
       function (video, cb) {

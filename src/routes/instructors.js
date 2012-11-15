@@ -139,7 +139,6 @@ exports.view =  function (req, res, next) {
  
 
  var updateRanking = function( instructor) {
-    console.log(instructor);
     if (instructor.videos && instructor.videos.length > 0) {
       var sum = _.reduce( instructor.videos, function(memo, video){ return memo + video.ranking.value;}, 0);
       instructor.ranking = sum / instructor.videos.length;

@@ -12,10 +12,10 @@ exports.list = function (req, res, next) {
 };
 
 exports.update = function (req, res, next) {
-  if (!req.accepts('application/json')){
+  if (!req.accepts('application/json') || req.body.length > 3 ){
     res.send(406);  //  Not Acceptable
   }
-  
+
   Videos.updateInstructorVideos(req.params.idInstructor, req.body, function (err) {
     if(err) return next(err);
     res.header('location',  '/instructors/' + req.params.idInstructor + '/edit' );

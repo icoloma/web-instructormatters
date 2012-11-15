@@ -46,7 +46,7 @@ _.extend(EditionSchema.statics, {
       .where('deleted').equals(false)
       .select('instructor')
       .populate('instructor')
-      .exec(wrapResult(callback));
+      .exec(callback);
   },
 
   saveEdition: function (body, callback) {

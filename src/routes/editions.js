@@ -68,6 +68,7 @@ exports.showDetails = function (req, res, next) {
           ],
           function (err, results) {
             if(err) return next(err);
+
             res.render('public/edition', {
               title: 'Course Edition',
               edition: edition,
@@ -242,10 +243,10 @@ var getInstructors = function (req, callback) {
 }
 
 exports.sendMail = function (req, res, next) {
-  Edition.findEditionInstructor(req.params.idEdition, function (err, instructor) {
+  Editions.findEditionInstructor(req.params.idEdition, function (err, edition) {
     if(err) return next(err);
-
-    req.instructorEmail = instructor.email;
+    req.instructorEmail = edition.instructor.email;
+    req.editionURL =  'http://instructormatters.com' + /(.+)\/contact/.exec(req.originalUrl)[1];
     next();
   });
 };

@@ -10,11 +10,12 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
       },
 
       render: function() {
-        this.model.attributes.to = this.options.adressee.email;
+        //this.model.attributes.to = this.options.adressee.email;
         this.hiddenContent = this.$el.html();
         this.$el.html(template({
-            adressee : this.options.adressee,
-            course : this.options.course
+            editionDate: this.options.editionDate,
+            editionVenue: this.options.editionVenue,
+            courseName : this.options.courseName
           })
         );
       },
@@ -28,6 +29,7 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
         e.preventDefault();
         var self = this;
         try {
+
           this.model.save({}, {
             success:  function(resp, status, xhr) {
               this.view.remove()

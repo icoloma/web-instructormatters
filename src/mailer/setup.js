@@ -2,7 +2,7 @@ var nodemailer = require('nodemailer'),
  codeError = require('../routes/errorHandlers.js').codeError;
 
 
-var MAIL_TO = "rvidal@extrema-sistemas.com",
+var MAIL_TO = "ehdez@extrema-sistemas.com",
   MAIL_SUBJECT = "InstructorMatters contact";
 
 var transport = nodemailer.createTransport('SMTP', {
@@ -24,6 +24,15 @@ exports.sendMail = function (req, res) {
 
   console.log('Sending contact mail ' + JSON.stringify(contactRequest));
   contactRequest.replyTo = contactRequest.senderName + " <" + contactRequest.from + ">";
+
+  if (req.editionURL){
+    // El contacto es a través de una edición en concreto, añadimos el enlace a dicha edición
+    contactRequest.text = contactRequest.text + '\n--\n' + 
+                          contactRequest.editionDate + '\n' +
+                          contactRequest.courseName + '\n' +
+                          contactRequest.editionVenue + '\n'+
+                          req.editionURL;
+  }
   
   transport.sendMail(contactRequest, function (error, responseStatus) {
     if (!error) {

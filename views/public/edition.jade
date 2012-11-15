@@ -78,9 +78,13 @@ append scripts
 
       function(ContactRequestView, ContactRequestModel) {
         var view = new ContactRequestView({
-          model: new ContactRequestModel(),
-          edition: !{JSON.stringify(edition)},
-          adressee: !{JSON.stringify(instructor)},
+          model: new ContactRequestModel( { 
+            url: '/courses/#{edition.courseUUID}/editions/#{edition.id}/contact',
+            courseName: '#{course.name}',
+            editionDate: '#{edition.date}',
+            editionVenue: '#{edition.address}'
+            }),
+          instructorId: !{JSON.stringify(instructor.id)},
           el: $('.contact')
         });
 

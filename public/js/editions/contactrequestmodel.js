@@ -3,7 +3,7 @@ define(['core'],
     return B.Model.extend({
       
       url: function() {
-        return (this.get('editionId') || '') + '/contact';
+        return this.attributes.url ? this.attributes.url  : '/contact';
       }
 
     });

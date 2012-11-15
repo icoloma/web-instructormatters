@@ -55,14 +55,21 @@ module.exports = {
 
   internalErrorHandler:  function (err) {
     if(err) {
-      //ECMA5 Beware, for human eyes should not behold this
-      ["stack", "type", "arguments", "message"].forEach(function (prop) {
-        Object.defineProperty(err, prop, {enumerable: true});
-      });
 
-      err.internalMessage = err.message;
-      err.message = 'Internal server error';
-      err.status = 500;
+
+      if (err.message === 'Invalid ObjectId') {
+        err.message = 'Not found';
+        err.status = 404;
+      } else {
+        //ECMA5 Beware, for human eyes should not behold this
+        ["stack", "type", "arguments", "message"].forEach(function (prop) {
+          Object.defineProperty(err, prop, {enumerable: true});
+        });
+        err.status = 500;
+        err.internalMessage = err.message;
+        err.message = 'Internal server error';
+      }
+
     }
     return err;
   },

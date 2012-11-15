@@ -182,7 +182,7 @@ exports.checkAvailability = function (req, res, next) {
 
       // Header
       .font('MyriadProCondBold').fontSize(FONT_BIG)
-      .text(' ', 0, 80 , {align:'center'})
+      .text(' ', 0, 88, {align:'center'})
       .text('InstructorMatters', {align: 'center'})
       .font('MyriadProRegular').fontSize(FONT_NORMAL).text('certifies that', {align: 'center'})
 
@@ -212,6 +212,7 @@ exports.checkAvailability = function (req, res, next) {
       .font('MyriadProRegular').fontSize(FONT_NORMAL)
       .moveDown()
       // instructor
+      .text(' ', 0, 290 , {align:'center'})
       .text('delivered by', {align: 'center'})
       .font('MyriadProBold').text(instructor.name , {align: 'center'})
       // address

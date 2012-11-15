@@ -5,43 +5,38 @@ append main_content
   .home-header_wrapper
     header.header-home
       .wrapper
-        h1 HTML5 &amp; CSS3
-        p 600+ slides, 30+ labs and 90+ embedded interactive examples. That's a lot of work.
+        h1.home-h1 HTML5 &amp; CSS3
+        p.header-home-p 600+ slides, 30+ labs and 90+ embedded interactive examples. That's a lot of work.
         a.btn.btn-danger(href='/courses/html5-css3') See the contents
 
-    .home-features.wrapper
+    section.home-features.wrapper
       .row-fluid
         .span3
           img.feature-img.hidden-phone( src="/img/html5.png", alt="HTML5 and CSS3")
         .span9
-          h3 What's this?
+          h1.header-3 What's this?
           p A 24-hour introductory course to HTML5 and CSS3. It's not intended to be an exhaustive guide to All Things Web, but more of an introduction to the current state of web development. <a href="http://html5.instructormatters.com">See the contents</a>.
       hr
       .row-fluid
-        .span2
-          img.feature-img( src="/img/dog.png", alt="")
-        .span4
-         
-          h3 Upcoming courses
-          if (editions.length == 0)
-            p No courses found
-          
-          span2
-            -editions.forEach( function (edition) {
-              h4.home-edition #{edition.course.name}
-              p Date:  #{edition.date} 
-              p Where: 
-                a(target='_blank', href='https://maps.google.com/?q=' + edition.geopoint.lat + ',' + edition.geopoint.lng) #{edition.address}
-              p Instructor:  
-                a(href='/instructors/' + edition.instructorId) #{edition.instructorName}
-              //-p #{edition.course.description}
-              a.btn.btn-danger( href='/courses/' + edition.courseUUID + '/editions/' + edition.id) Get it now !
-            -})
-        .span3
-          h3 Instructor matters
-          p We believe that in order to "get" things, real people need to sit with someone with real-world experience. These slides and labs are next to nothing if they don't come with someone that has walked the talk.
-          h3 Pick & Mix
-          p These materials are open source; cut, paste and shuffle the course contents to make it fit your own schedule. 
-          p Remove the parts that you don't like, dig deeper where you do, and when ready contribute back your results to make a better course.
-        .span3
-          img.hidden-phone.feature-img( src="/img/apple.png", alt="")
+        section.row-fluid.span6
+          .span4
+            img.feature-img( src="/img/dog.png", alt="")
+          .span8
+            h1.header-3 Upcoming courses
+            -if (editions.length == 0) {
+              p No courses found
+            -} else {
+              .row-fluid
+              -editions.forEach( function (edition) {
+                mixin homeEditionItem(edition)
+              -})
+            -}
+        section.row-fluid.span6
+          .span6
+            h1.header-3 Instructor matters
+            p We believe that in order to "get" things, real people need to sit with someone with real-world experience. These slides and labs are next to nothing if they don't come with someone that has walked the talk.
+            h3 Pick & Mix
+            p These materials are open source; cut, paste and shuffle the course contents to make it fit your own schedule. 
+            p Remove the parts that you don't like, dig deeper where you do, and when ready contribute back your results to make a better course.
+          .span6
+            img.hidden-phone.feature-img( src="/img/apple.png", alt="")

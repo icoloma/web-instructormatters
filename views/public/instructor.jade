@@ -3,53 +3,38 @@ include ../includes/admin-mixins
 
 append content
 
- 
-  -if(locals.currentUser && locals.currentUser.email == instructor.email){
-    p
-      a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit') <i class="icon-user icon-white"></i> Edit
-  -}
-  .row-fluid
+  section.row-fluid
     .span3
-      p
-        img.profile(src='https://profiles.google.com/s2/photos/profile/' + instructor.googleId)
-      if (geolocation)
-      .row-fluid
-        p.address #{instructor.address} 
-          a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
+      figure.profile
+        img.profile-img(src='https://profiles.google.com/s2/photos/profile/' + instructor.googleId, title=instructor.name, alt=instructor.name)
+        if (geolocation)
+        figcaption
+          p.address #{instructor.address}
+            br
+            a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
     .span8
       if (instructor.aboutMe)
-        h3 About me:
-        p  #{instructor.aboutMe}  
+        h1.header-3 About me:
+        p  #{instructor.aboutMe}
+        -if(locals.currentUser && locals.currentUser.email == instructor.email) {
+          a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit') <i class="icon-user icon-white"></i> Edit
+        -}
      
     
-      h3 Courses:
-      ul.enumeration
-        -instructor.coursesWithInfo.forEach( function(course){
-          li
-            a(href='/courses/' + course.uuid) #{course.name}
-              -if(course.certified)
-                span.certified-badge(title="Certified instructor")
+      h2.header-3 Courses:
+      ul.courses-list.enumeration
+        -instructor.coursesWithInfo.forEach(function (course) {
+          mixin courseItem(course.name, course.uuid, course.certified)
         -})
     
-  .row-fluid
+  section.row-fluid
     .span12
-
-  -if(instructor.videos.length > 0)  
-    .row-fluid
-      .span12
-        h3 Videos:
-        -instructor.videos.forEach( function(video){
-          .span3.video-container
-            a(href=video.url, target='_blank')
-              img.video-thumbnail(src=video.thumbnail, title="#{video.title}  (#{video.duration} secs)")
-              span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
-            .video-data  
-              .video-caption 
-                a.video-title(href=video.url, target='_blank') #{video.title}
-                span.video-likes #{video.ranking.numLikes} likes, 
-                span.video-dislikes #{video.ranking.numDislikes} dislikes
-
-        -})
+      -if(instructor.videos.length > 0)  
+        h1.header-3 Videos:
+        .row-fluid
+          -instructor.videos.forEach(function (video) {
+            mixin videoItem(video)
+          -})
 
 
   

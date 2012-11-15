@@ -64,10 +64,10 @@ updateUserData = function (dbUser, req, res) {
       var query = {googleId:req.user.id, name:req.user.displayName, deleted:false};
       if (dbUser.deleted){
         query.admin=false;
-        query.certified=false;
         query.address=null;
         query.geopoint=null;
         query.courses=[];
+        query.certificates=[];
         query.videos=[];
       }
       models.Users

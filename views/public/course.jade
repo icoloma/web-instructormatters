@@ -6,54 +6,41 @@ append content
  
   .main  
     if (locals.isAdmin)  
-      a(href="/courses/" + course.uuid + '/edit').btn.btn-primary Edit
+      a(href="/courses/" + course.uuid + '/edit').btn Edit
 
-    .row-fluid
-      h3 Description
+    section.row-fluid
+      h1.header-3 Description
       p #{course.description}
 
-      h3 Details
+      h2.header-3 Details
       ul
-        li #{course.duration} legth
-
-        if(course.link)
+        li #{course.duration} length.
+        -if(course.link)
           li Check out the 
             a(href=course.link) materials
         li Show all instructors in
-          a(href="/instructors/course/" + course.uuid)  google map
-        
+          a(href="/instructors/course/" + course.uuid)  Google Maps
+          | .
 
-    .row-fluid
+    section.row-fluid
         
       if(course.videos.length >0)
-        h3 Most valuated instructor videos
+        h1.header-3 Most valuated instructor videos
         each video in course.videos
-          //- each video in uservideos
-          .span3
-            a(href=video.url, target='_blank')
-              img.video-thumbnail(src=video.thumbnail, title=video.title)
-            .video-data  
-              .video-caption 
-                span.video-title #{video.title} 
-                span.video-instructor by 
-                  a(href='/instructors/' + video.instructorId) #{video.instructorName} 
-                span.video-length #{video.duration} secs. 
-                span.video-likes #{video.ranking.numLikes} likes, 
-                span.video-dislikes #{video.ranking.numDislikes} dislikes
-    .row-fluid 
-      h3 Upcoming
+          mixin videoItem(video)
+    section.row-fluid.upcoming-editions
+      h1.header-3 Upcoming
       -if(editions.length > 0) {
-        ul
-        -editions.forEach(function (edition) {
-          li  
-            a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} 
-            &nbsp; - #{edition.address} (by #{edition.instructorName})
-                
-        -})
+        ul.upcoming-list
+          -editions.slice(0, 10).forEach(function (edition) {
+            li  
+              a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} 
+              &nbsp; - #{edition.address} (by <a href="/instructors/#{edition.instructor}">#{edition.instructorName}</a>)
+          -})
       -} else {
         p No upcoming courses found 
       -}
-
       -if(locals.isCertifiedInstructor) {
-        a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
+        .controls-group
+          a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
       -}

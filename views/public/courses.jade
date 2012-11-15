@@ -1,34 +1,33 @@
 extends ../layout
 append content
     
-    p The following is the list of courses supported by InstructorMatters. We are into making them grow, so if you feel like something is missing, drop us a line <a href="http://twitter.com/instmatters">on Twitter</a>.
     .row-fluid
-      .span8
+      section.span8
+        p The following is the list of courses supported by InstructorMatters. We are into making them grow, so if you feel like something is missing, drop us a line on <a href="http://twitter.com/instmatters">Twitter</a>.
         -courses.forEach(function (course) {
           .row-fluid
-            h3= course.name
+            h2.header-3= course.name
             p #{course.description} 
             //- each uservideos in course.videos
-            each video in course.videos
-              .video.span3
-                a(href=video.url, target='_blank')
-                  img.video-thumbnail(src=video.thumbnail, title=video.title)
-                p #{video.title}
-                a(href="/instructors/" + video.instructorId) #{video.instructorName}
+            -if(course.videos && course.videos.length > 0)
+              .row-fluid
+                each video in course.videos
+                  mixin videoItem(video)
           .row-fluid
-            a.btn.btn-danger(href="/courses/" + course.uuid) more info
+            a.btn(href="/courses/" + course.uuid) More info
 
         -})
-      .span3.soon
-        h3 Upcoming
-        ul.list2
+      section.span4.upcoming-editions
+        h1.header-3 Upcoming
+        ul.upcoming-list
           -editions.forEach( function (edition) {
             li
-              h4 #{edition.course.name}
-              p #{edition.date} - #{edition.address}
+              h2.header-4 
+                a(href='/courses/' + edition.courseUUID + '/editions/' + edition.id) #{edition.course.name}
+              p #{edition.date} &dash; #{edition.address}
               //-p #{edition.course.description}
-              a.btn.btn-large( href='/courses/' + edition.courseUUID + '/editions/' + edition.id)
-                  &nbsp; Go!!
+              a.btn.btn-large( href='/courses/' + edition.courseUUID + '/editions/' + edition.id) 
+                | &nbsp;Go!!
           -})
 
     if (locals.currentUser && locals.currentUser.admin) 

@@ -1,4 +1,5 @@
 .pricing {
+  .clearfix();
   .border-radius(5px);
   border: 3px solid @gray;
   background-color: @warningBackground;
@@ -6,34 +7,43 @@
   padding: 10px 20px;
   margin-bottom: 10px;
 
-  &> h3 {
+  &> .pricing-h {
     background: @gray;
     margin: 0 -20px 10px;
     color: white;
     padding: 0 20px;
   }
-  &.certified {
-    border-color: @acqua;
-    color: @acquaprofonda;
-    &> h3 {
-      background-color: @acqua;
-    }
+}
+
+.pricing-h {
+  margin: 0 -20px 10px;
+  color: white;
+  padding: 0 20px;
+}
+
+&.certified {
+  border-color: @acqua;
+  color: @acquaprofonda;
+  &> .pricing-h {
+    background-color: @acqua;
   }
-  &.yours {
-    border-color: darken(@terra, 30%);
-    .price {
-      color: darken(@terra, 30%);
-    }
-    color: @acquaprofonda;
-    &> h3 {
-      background-color: darken(@terra, 30%);
-    }
+}
+
+.yours {
+  border-color: darken(@terra, 30%);
+  .price {
+    color: darken(@terra, 30%);
+  }
+  color: @acquaprofonda;
+  &> .pricing-h {
+    background-color: darken(@terra, 30%);
   }
 }
 
 .checklist {
   margin-left: 0;
   clear: both;
+  float: left;
 }
 .checklist > li{
   list-style: none;
@@ -56,113 +66,116 @@
 }
 .contact-message {
   width: 95%;
-
+  resize: vertical;
 }
-
-/*
-.pricing {
-  margin-bottom: 40px;
-  border: 1px solid #d4d4d4;
-  border-width: 1px 1px 4px 1px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  -moz-border-radius-topleft: 5px;
-  -moz-border-radius-topright: 5px;
-  -webkit-border-top-right-radius: 5px;
-  -webkit-border-top-left-radius: 5px;
-  border-bottom-left-radius: 9px;
-  border-bottom-right-radius: 9px;
-  -moz-border-radius-bottomleft: 9px;
-  -moz-border-radius-bottomright: 9px;
-  -webkit-border-bottom-right-radius: 9px;
-  -webkit-border-bottom-left-radius: 9px;
-}
-.pricing table {
-  width: 100%;
-  font-family: @headingsFontFamily;
-  font-size: 12px;
-  color: #c0c2c2;
-  font-weight: 400;
-  
-}
-.pricing thead th {
-  background: #333;
-  width: 84.3%;
-  padding: 13px 8%;
-  font-size: 24px;
-  color: #f4f4f4;
+.sign-up {
   text-align: center;
-  text-transform: uppercase;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  -moz-border-radius-topright: 4px;
-  -webkit-border-top-right-radius: 4px;
-  -webkit-border-top-left-radius: 4px;
-  float: left;
+  clear: both;
 }
-.pricing tfoot td {
-  background: #ededed;
-  width: 84.3%;
-  padding: 20px 8%;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  -moz-border-radius-bottomleft: 6px;
-  -moz-border-radius-bottomright: 6px;
-  -webkit-border-bottom-right-radius: 6px;
-  -webkit-border-bottom-left-radius: 6px;
-}
-.pricing td {
-  background: #fff;
-  width: 84.3%;
-  padding: 10px 8%;
-  border-top: 1px solid #ffffff;
-  border-bottom: 1px solid #d4d4d4;
-  float: left;
+
+
+// .pricing {
+//   margin-bottom: 40px;
+//   border: 1px solid #d4d4d4;
+//   border-width: 1px 1px 4px 1px;
+//   border-top-left-radius: 5px;
+//   border-top-right-radius: 5px;
+//   -moz-border-radius-topleft: 5px;
+//   -moz-border-radius-topright: 5px;
+//   -webkit-border-top-right-radius: 5px;
+//   -webkit-border-top-left-radius: 5px;
+//   border-bottom-left-radius: 9px;
+//   border-bottom-right-radius: 9px;
+//   -moz-border-radius-bottomleft: 9px;
+//   -moz-border-radius-bottomright: 9px;
+//   -webkit-border-bottom-right-radius: 9px;
+//   -webkit-border-bottom-left-radius: 9px;
+// }
+// .pricing table {
+//   width: 100%;
+//   font-family: @headingsFontFamily;
+//   font-size: 12px;
+//   color: #c0c2c2;
+//   font-weight: 400;
+  
+// }
+// .pricing thead th {
+//   background: #333;
+//   width: 84.3%;
+//   padding: 13px 8%;
+//   font-size: 24px;
+//   color: #f4f4f4;
+//   text-align: center;
+//   text-transform: uppercase;
+//   border-top-left-radius: 4px;
+//   border-top-right-radius: 4px;
+//   -moz-border-radius-topleft: 4px;
+//   -moz-border-radius-topright: 4px;
+//   -webkit-border-top-right-radius: 4px;
+//   -webkit-border-top-left-radius: 4px;
+//   float: left;
+// }
+// .pricing tfoot td {
+//   background: #ededed;
+//   width: 84.3%;
+//   padding: 20px 8%;
+//   border-bottom-left-radius: 6px;
+//   border-bottom-right-radius: 6px;
+//   -moz-border-radius-bottomleft: 6px;
+//   -moz-border-radius-bottomright: 6px;
+//   -webkit-border-bottom-right-radius: 6px;
+//   -webkit-border-bottom-left-radius: 6px;
+// }
+// .pricing td {
+//   background: #fff;
+//   width: 84.3%;
+//   padding: 10px 8%;
+//   border-top: 1px solid #ffffff;
+//   border-bottom: 1px solid #d4d4d4;
+//   float: left;
         
-}
-tfoot td{text-align: center;}
-.pricing td.focus {
-  background: #333;
-  width: 84.3%;
-  padding: 25px 8%;
-  font-size: 32px;
-  color: #fff;
-  font-weight: 400;
-  text-align: center;
+// }
+// tfoot td{text-align: center;}
+// .pricing td.focus {
+//   background: #333;
+//   width: 84.3%;
+//   padding: 25px 8%;
+//   font-size: 32px;
+//   color: #fff;
+//   font-weight: 400;
+//   text-align: center;
   
-  border-bottom: 1px solid #d4d4d4;
-}
-.pricing td.focus-best {
-  background: #a00;
-  width: 84.3%;
-  padding: 25px 8%;
-  font-size: 32px;
-  color: #fff;
-  font-weight: 400;
-  text-align: center;
+//   border-bottom: 1px solid #d4d4d4;
+// }
+// .pricing td.focus-best {
+//   background: #a00;
+//   width: 84.3%;
+//   padding: 25px 8%;
+//   font-size: 32px;
+//   color: #fff;
+//   font-weight: 400;
+//   text-align: center;
   
-  border-bottom: 1px solid #d4d4d4;
-}
-.pricing td.focus span {
-  font-size: 10px;
-  display: block;
-}
-.pricing td.focus-best span {
-  font-size: 10px;
-  display: block;
-}
-.pricing td h6 {
-  width: 60%;
-  font-size: 12px;
-  color: #c0c2c2;
-  font-weight: 400;
+//   border-bottom: 1px solid #d4d4d4;
+// }
+// .pricing td.focus span {
+//   font-size: 10px;
+//   display: block;
+// }
+// .pricing td.focus-best span {
+//   font-size: 10px;
+//   display: block;
+// }
+// .pricing td h6 {
+//   width: 60%;
+//   font-size: 12px;
+//   color: #c0c2c2;
+//   font-weight: 400;
   
-  float: left;
-}
-.pricing td p {
-  width: 40%;
-  text-align: right;
-  float: left;
-}
-*/
+//   float: left;
+// }
+// .pricing td p {
+//   width: 40%;
+//   text-align: right;
+//   float: left;
+// }

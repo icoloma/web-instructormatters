@@ -3,23 +3,21 @@ include ../includes/admin-mixins
 
 append content
   .container-fluid
-    .row-fluid.map-container
-      
-      .span3.instructors
-        p
-          a.btn(id='certifiedButton') Only certified
-          a.btn(id='allButton', style="display:none") Show all
-        
-        -instructors.forEach(function (instructor) {
-          span(data-certified=instructor.certified.toString(), data-id=instructor.id)
-            a.instructor(data-id=instructor.id, href="/instructors/#{instructor.id}")= instructor.name
-            -if(instructor.certified)
-              span.certified-badge
-            p.address= instructor.address
-        -})
+  section.row-fluid.map-container
+    .span3.instructors
+      p
+        a.btn(id='certifiedButton') Only certified
+        a.btn(id='allButton', style="display:none") Show all
+      -instructors.forEach(function (instructor) {
+        span(data-certified=instructor.certified.toString(), data-id=instructor.id)
+          a.instructor(data-id=instructor.id, href="/instructors/#{instructor.id}")= instructor.name
+          -if(instructor.certified)
+            span.certified-badge
+          p.address= instructor.address
+      -})
 
-      .span9
-        .map.hidden-phone //- (style="height:100%")
+    .span9
+      .map.hidden-phone //- (style="height:100%")
 
 append scripts
   script 

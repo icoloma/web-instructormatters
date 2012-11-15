@@ -26,8 +26,8 @@ append content
             li Date: #{edition.date} 
             li Venue: #{edition.address}
             li
-              .contact
-                a( ).btn.contact.btn-primary
+              .contactform
+                a.btn.contact.btn-primary
                   i.icon-envelope.icon-white
                   &nbsp;More info
         -if(videos.length > 0)  
@@ -101,7 +101,7 @@ append scripts
             editionVenue: '#{edition.address}'
             }),
           instructorId: !{JSON.stringify(instructor.id)},
-          el: $('.contact')
+          el: $('.contactform')
         });
 
       });

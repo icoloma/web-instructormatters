@@ -53,12 +53,21 @@ h1, h2, h3, h4, h5, h6 {
     color: @grayLight;
   }
 }
-h1 { font-size: 36px; line-height: 40px; }
-h2 { font-size: 30px; line-height: 40px; }
-h3 { font-size: 24px; line-height: 30px; }
-h4 { font-size: 18px; line-height: 20px; }
-h5 { font-size: 14px; line-height: 20px; }
-h6 { font-size: 12px; line-height: 20px; }
+//Instmatters
+
+.h1-mixin() { font-size: 36px; line-height: 40px; }
+.h2-mixin() { font-size: 30px; line-height: 40px; }
+.h3-mixin() { font-size: 24px; line-height: 30px; }
+.h4-mixin() { font-size: 18px; line-height: 20px; }
+.h5-mixin() { font-size: 14px; line-height: 20px; }
+.h6-mixin() { font-size: 12px; line-height: 20px; }
+
+h1, .header-1 { .h1-mixin() }
+h2, .header-2 { .h2-mixin() }
+h3, .header-3 { .h3-mixin() }
+h4, .header-4 { .h4-mixin() }
+h5, .header-5 { .h5-mixin() }
+h6, .header-6 { .h6-mixin() }
 
 h1 small { font-size: 24px; }
 h2 small { font-size: 18px; }

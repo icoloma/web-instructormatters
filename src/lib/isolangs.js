@@ -604,8 +604,8 @@ exports.isoLangs = {
         "nativeName":"Sesotho"
     },
     "es":{
-        "name":"Spanish; Castilian",
-        "nativeName":"español, castellano"
+        "name":"Spanish",
+        "nativeName":"español"
     },
     "su":{
         "name":"Sundanese",

@@ -2,11 +2,11 @@ extends ../layout
 
 append content
   .row-fluid
-    p.span12 To contact us, just fill in the following form and click send.
-    .span6
+    section.span6
+      p To contact us, just fill in the following form and click send.
       .contactform
 
-    .span6(itemscope, itemtype="http://schema.org/Organization")
+    section.span6(itemscope, itemtype="http://schema.org/Organization")
       p
         b(itemprop="name") InstructorMatters 
         | is a registered trademark of Extrema Sistemas S.L.
@@ -20,7 +20,7 @@ append content
           meta(name="addressRegion", content="Madrid")
         br
         b Phone:
-        span(itemprop="telephone") +34 91 172 7081
+        a(itemprop="telephone", href="tel:+34911727081") +34 91 172 7081
 append scripts
   script
     define('contactView',

@@ -1,0 +1,28 @@
+
+mixin courseItem(name, uuid, certified)
+  li.course-item
+    a(href='/courses/' + uuid).course-link #{name}
+      -if(certified)
+        span.certified-badge(title="Certified instructor")
+
+mixin videoItem(video)
+  .span3.video-container
+    a(href=video.url, target='_blank').video-link
+      img.video-thumbnail(src=video.thumbnail, title="#{video.title}  (#{video.duration} secs)")
+      span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
+    .video-data  
+      .video-caption 
+        a.video-title(href=video.url, target='_blank') #{video.title}
+        span.video-likes #{video.ranking.numLikes} likes, 
+        span.video-dislikes #{video.ranking.numDislikes} dislikes
+
+mixin homeEditionItem(edition)
+  .span12
+    h2.home-edition.header-4 #{edition.course.name}
+    p Date:  #{edition.date} 
+    p Where: 
+      a(target='_blank', href='https://maps.google.com/?q=' + edition.geopoint.lat + ',' + edition.geopoint.lng) #{edition.address}
+    p Instructor:  
+      a(href='/instructors/' + edition.instructorId) #{edition.instructorName}
+    //-p #{edition.course.description}
+    a.btn.btn-danger( href='/courses/' + edition.courseUUID + '/editions/' + edition.id) Get it now !

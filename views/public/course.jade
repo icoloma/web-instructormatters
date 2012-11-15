@@ -50,10 +50,10 @@ append content
             &nbsp; - #{edition.address} (by #{edition.instructorName})
                 
         -})
+      -} else {
+        p No upcoming courses found 
       -}
 
       -if(locals.isCertifiedInstructor) {
         a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
-      -} else {
-        p No upcoming courses found 
       -}

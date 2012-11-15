@@ -6,7 +6,7 @@
         <div class="controls">
           <div class="input-prepend">
             <span class="add-on"><i class="icon-envelope"></i></span>
-            <input class="email" name="email" type="text" value="{{user.email}}" required {{#if user.oauth}} disabled {{/if}} > 
+            <input class="email" name="email" type="text" value="{{user.email}}" required {{#if user.googleId}} disabled {{/if}} > 
           </div>
         </div>  
 
@@ -51,8 +51,8 @@
     </div>
 
     <div class="span2">
-      {{#if user.oauth}}
-      <img src='https://profiles.google.com/s2/photos/profile/{{user.oauth}}'/>
+      {{#if user.googleId}}
+      <img src='https://profiles.google.com/s2/photos/profile/{{user.googleId}}'/>
       {{/if}}
     </div>
   </div>

@@ -11,7 +11,7 @@ append content
   .row-fluid
     .span3
       p
-        img.profile(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
+        img.profile(src='https://profiles.google.com/s2/photos/profile/' + instructor.googleId)
       if (geolocation)
       .row-fluid
         p.address #{instructor.address} 

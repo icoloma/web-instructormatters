@@ -7,7 +7,12 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps' ],
       events: {
         'submit form': 'save',
         'click #delete' : 'delete',
+       
         'change input': function(e) {
+          this.model.unset('geopoint');
+          if ("address" === e.srcElement.name){
+            this.model.unset( '');
+          }
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
         },
@@ -38,6 +43,13 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps' ],
 
       save: function(e) {
         e.preventDefault();
+
+        if ( !this.model.get('geopoint')){
+          this.marker.setVisible(false);
+          this.infoWindow.close();
+          Core.renderMessage({ level :'warn',  message :'Address not found' });
+          return;
+        }
 
         this.model.get('geopoint').zoom = this.map.getZoom();
 
@@ -115,10 +127,7 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps' ],
         $($('input:submit')[0]).prop('disabled', !loc);
 
         if (!loc){
-          this.marker.setVisible(false);
-          this.infoWindow.close();
-          Core.renderMessage({ level :'warn',  message :'Address not found,ill not be shown on the map' });
-          this.model.set({geopoint:{}})
+          this.model.unset('geopoint');
           return;
         }  
         

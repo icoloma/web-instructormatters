@@ -5,10 +5,10 @@ var Courses = require('./Courses'),
   Videos = require('./Videos'),
   Certificates = require('./Certificates');
 
-
 var wrapResult = require('./helpers').wrapResult,
-  wrapError = require('./helpers').wrapError;
-  wrapJSON = require('./helpers').wrapJSON;
+  wrapError = require('./helpers').wrapError,
+  wrapJSON = require('./helpers').wrapJSON,
+  localizeDates = require('./helpers').localizeDates;
 
 
 module.exports = {
@@ -39,6 +39,8 @@ module.exports = {
           , courses = items[1]
           , coursesMap = {}
 
+        localizeDates(editions);
+    
         courses.forEach(function (course) {
           coursesMap[course.uuid] = {name: course.name, description: course.description, uuid: course.uuid};
         })
@@ -103,6 +105,9 @@ module.exports = {
         }
       });
   },
+
+
+
   /*
     Retornamos las ediciones junto con el nombre del curso
   */
@@ -132,6 +137,8 @@ module.exports = {
           , courses = items[1]
           , coursesMap = {}
 
+        localizeDates(editions);
+        
         courses.forEach(function (course) {
           coursesMap[course.uuid] = {
             name: course.name,

@@ -16,7 +16,7 @@ append content
 
       .row
         .span2
-            img.profile(src='https://profiles.google.com/s2/photos/profile/' + instructor.oauth)
+            img.profile(src='https://profiles.google.com/s2/photos/profile/' + instructor.googleId)
             a(href='/instructors/' + instructor.id)  #{instructor.name}
         .span8 
           h3 Edition details:
@@ -30,11 +30,27 @@ append content
                 a( ).btn.contact.btn-primary
                   i.icon-envelope.icon-white
                   &nbsp;More info
+        -if(videos.length > 0)  
+          .row-fluid
+            .span12
+              h3 Videos:
+              -videos.forEach( function(video){
+                .span3.video-container
+                  a(href=video.url, target='_blank')
+                    img.video-thumbnail(src=video.thumbnail, title="#{video.title}  (#{video.duration} secs)")
+                    span.locale.label(class=isoLangs.getColor(video.locale)) #{ isoLangs.get(video.locale) }
+                  .video-data  
+                    .video-caption 
+                      a.video-title(href=video.url, target='_blank') #{video.title}
+                      span.video-likes #{video.ranking.numLikes} likes, 
+                      span.video-dislikes #{video.ranking.numDislikes} dislikes
+
+              -})
 
 
       
   .certificates
-    if (locals.isEditionOwner && edition.state != 'NEW') 
+    if (locals.isEditionOwner && edition.state != 'NEW' && certificates.length > 0) 
       h3 Certificates
       ul
         - certificates.forEach(function (certificate){

@@ -20,7 +20,7 @@
   <input name="date" type="date" value="{{edition.date}}" required autocomplete="off" placeholder="yyyy-mm-dd">
  
   <label>Instructor: </label>
-  <select name="instructor" required>
+  <select name="instructorId" required>
     {{#instructors}}
       <option value="{{this.id}}" >{{this.name}}</option>
     {{/instructors}}

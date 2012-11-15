@@ -1,7 +1,15 @@
 var adminUser = {
-  email: "rvidal@extrema-sistemas.com",
-  name: "José Roberto Vidal",
+  email: "ehdez73@gmail.com",
+  name: "Ernesto Hernández",
+  googleId : "116308562574216710328"
 }
+
+//var adminUser = {
+//  email: "rvidal@extrema-sistemas.com",
+//  name: "José Roberto Vidal",
+//  googleId : 
+//}
+
 
 var randomInt = function (max) {
   return Math.floor(Math.random() * max);
@@ -14,6 +22,7 @@ var users = [
     aboutMe : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus tincidunt leo, quis pellentesque massa accumsan in. Nunc imperdiet volutpat diam quis euismod. Vivamus sed endrerit orci. Integer aliquet felis et urna vestibulum nec aliquam orci tempor. In vitae sem augue. Morbi luctus ',
     admin: true,
     deleted: false,
+    googleId: adminUser.googleId,
     certificates: ['core-spring','spring-web','eis'],
     courses: ['core-spring','spring-web','eis'],
     languages: 'en, es',
@@ -26,24 +35,28 @@ var users = [
     aboutMe : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus tincidunt leo, quis pellentesque massa accumsan in. Nunc imperdiet volutpat diam quis euismod. Vivamus sed endrerit orci. Integer aliquet felis et urna vestibulum nec aliquam orci tempor. In vitae sem augue. Morbi luctus ',
     admin: false,
     deleted: false,
+    googleId: '114057820308432184721',
     certificates: ['core-spring','html5-css3','eis'],
     courses: ['core-spring','eis'],
     languages: 'en, es',
     address : "Madrid, Spain",
     geopoint :  { "lat" : 40.4166909, "lng" : -3.70034540000006, "zoom" : 10 }
   },
+ 
   {
-    email: "ehdez73@gmail.com",
-    name: "Ernesto",
+    email: "ehdez@extrema-sistemas.com",
+    name: "Ernesto Hdez (Extrema)",
     aboutMe : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus tincidunt leo, quis pellentesque massa accumsan in. Nunc imperdiet volutpat diam quis euismod. Vivamus sed endrerit orci. Integer aliquet felis et urna vestibulum nec aliquam orci tempor. In vitae sem augue. Morbi luctus ',
     admin: false,
     deleted: false,
-    certificates: ['core-spring','spring-web','html5-css3'],
-    courses: ['html5-css3','spring-web'],
+    googleId: '109792900130705825881',
+    certificates: ['core-spring','html5-css3','eis'],
+    courses: ['core-spring','eis'],
     languages: 'en, es',
-    address : "La Alberca, Murcia, Spain",
-    geopoint : { "lat" : 37.9423583, "lng" : -1.1434944999999743, "zoom" : 14 }
+    address : "Madrid, Spain",
+    geopoint :  { "lat" : 40.4166909, "lng" : -3.70034540000006, "zoom" : 10 }
   },
+
 ],
   courses =  [
     {
@@ -95,6 +108,19 @@ var users = [
   { url: "http://www.youtube.com/watch?v=LmP1EmUUqgU" , youtubeId : "LmP1EmUUqgU"},
   { url: "http://www.youtube.com/watch?v=fW8amMCVAJQ" , youtubeId : "fW8amMCVAJQ"},
   { url: "http://www.youtube.com/watch?v=ye25XBGhF0A" , youtubeId : "ye25XBGhF0A"},
+  { url: "http://www.youtube.com/watch?v=UErR7i2onW0" , youtubeId: "UErR7i2onW0" },
+  { url: "http://www.youtube.com/watch?v=NYbTNFN3NBo" , youtubeId: "NYbTNFN3NBo" },
+  { url: "http://www.youtube.com/watch?v=amCxbVG8QUs" , youtubeId: "amCxbVG8QUs" },
+  { url: "http://www.youtube.com/watch?v=P4cj1t7v5L4" , youtubeId: "P4cj1t7v5L4" },
+  { url: "http://www.youtube.com/watch?v=gJYn4I-OGJU" , youtubeId: "gJYn4I-OGJU" },
+  { url: "http://www.youtube.com/watch?v=Yq5hZQ-pM9k" , youtubeId: "Yq5hZQ-pM9k" },
+  { url: "http://www.youtube.com/watch?v=ncPQbKBBMgY" , youtubeId: "ncPQbKBBMgY" },
+  { url: "http://www.youtube.com/watch?v=yqlcsWK7EA8" , youtubeId: "yqlcsWK7EA8" },
+  { url: "http://www.youtube.com/watch?v=QuG3qrgM4AM" , youtubeId: "QuG3qrgM4AM" },
+  { url: "http://www.youtube.com/watch?v=5NtBYdgXfJY" , youtubeId: "5NtBYdgXfJY" },
+  { url: "http://www.youtube.com/watch?v=l797bjL3hKA" , youtubeId: "l797bjL3hKA" },
+  { url: "http://www.youtube.com/watch?v=7ZoSaYZCK8E" , youtubeId: "7ZoSaYZCK8E" },
+  { url: "http://www.youtube.com/watch?v=LdjPmqXXTCU" , youtubeId: "LdjPmqXXTCU" },
 ],
   states = ["NEW", "NEW", "NEW", "NEW", "NEW", "PENDING", "PAID"];
 
@@ -147,7 +173,7 @@ for(var i = 0; i < numEditions; i++) {
     deleted: false,
     address: onePlace.address,
     geopoint: onePlace.geopoint,
-    instructor: oneUser._id,
+    instructorId: oneUser._id,
     instructorName: oneUser.name,
     state: states[Math.round(Math.random() * numStates)],
     courseUUID: oneCourse.uuid,

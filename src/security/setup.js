@@ -15,7 +15,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  models.Users.findOne({oauth:id}, function (err, user) {
+  models.Users.findOne({googleId:id}, function (err, user) {
     done(err, user);
   });
 });
@@ -50,10 +50,10 @@ updateUserData = function (dbUser, req, res) {
 
   if (dbUser.deleted){
     // fuerza que se actualicen los datos 
-    dbUser.set({oauth:null});
+    dbUser.set({googleId:null});
   }
 
-  if (dbUser.oauth){
+  if (dbUser.googleId){
     res.redirect('/instructors/' + dbUser.id);
     return;
   } 
@@ -61,7 +61,7 @@ updateUserData = function (dbUser, req, res) {
   // actualizamos el token y el displayName
   async.parallel([
     function(cb){
-      var query = {oauth:req.user.id, name:req.user.displayName, deleted:false};
+      var query = {googleId:req.user.id, name:req.user.displayName, deleted:false};
       if (dbUser.deleted){
         query.admin=false;
         query.certified=false;
@@ -76,7 +76,7 @@ updateUserData = function (dbUser, req, res) {
     }], function(err,num){
       if (err || num === 0){
         err && console.log(err.message); 
-        res.send(500, 'Error updating oauth token');
+        res.send(500, 'Error updating googleId token');
         return; 
       } 
       res.redirect('/instructors/' + dbUser.id + '/edit');

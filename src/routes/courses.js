@@ -4,7 +4,8 @@ var Courses = require('../db/models').Courses,
   services = require('../db/models').services,
   models = require('../db/models'),
   editions = require('./editions.js'),
-  codeError = require('./errorHandlers').codeError;
+  codeError = require('./errorHandlers').codeError,
+  localizeDates = require('../db/models/helpers').localizeDates;
 
 /*
   Mostrar un curso (edicion)
@@ -50,6 +51,9 @@ exports.showDetails = function (req, res, next) {
 
       var course = results[0],
         editions = results[1];
+
+
+      localizeDates(editions);
       
       course.videos = results[2];
 

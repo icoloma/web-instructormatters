@@ -8,42 +8,9 @@ var Certificates = require('../db/models').Certificates
   , Pdfkit = require('pdfkit')
   , fs = require('fs')
   , UUID = require('../lib/uuid')
-  , codeError = require('./errorHandlers.js').codeError;
+  , codeError = require('./errorHandlers.js').codeError
+  , localizeDates = require('../db/models/helpers').localizeDates;
 
-/*
-* Mostrar un certificado 
-*/
-exports.view = function (req, res) {
-  res.format({
-    html: function () {
-      async.parallel([
-        function (cb) {
-          Courses.findCourseByUUID(req.edition.courseUUID, cb);
-        },
-        function (cb) {
-          Users.findUser(req.edition.instructor, cb)
-        }
-        ],
-        function (err, results) {
-          if(err) return next(err);
-
-          var  course = results[0],
-            instructor = results[1];
-
-          res.render('public/certificate', {
-            title: 'Certificate of training',
-            certificate: req.certificate,
-            edition: req.edition,
-            course: course,
-            instructor: instructor
-          });
-      });
-    },
-    json: function () {
-      res.send(req.certificate)
-    }
-  });
-};
 
 /*
 * Certificados de una edición en concreto
@@ -110,7 +77,7 @@ exports.pdf = function( req, res ){
       models.Courses.findOne({uuid:req.edition.courseUUID, deleted:false}, cb);
     }, function (cb) {
       // find instructor
-      models.Users.findById(req.edition.instructor, cb);
+      models.Users.findById(req.edition.instructorId, cb);
     }
     ], 
     function (err, results) {

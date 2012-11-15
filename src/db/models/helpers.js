@@ -50,4 +50,11 @@ module.exports = {
       callback(err, wrapJSON(result));
     }
   },
+
+  localizeDates : function(editions) {
+    _.map(editions, function(edition){
+      edition.date =new Date( /(.+)T.+/.exec(edition.date)[1]).toLocaleDateString();
+    });
+  }
+
 }

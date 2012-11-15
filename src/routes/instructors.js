@@ -28,7 +28,10 @@ exports.list =  function (req, res, next) {
             // is certified in the request course?
             instructor.certified =  _.contains( instructor.certificates, req.params.uuid);
           }
+          delete instructor.certificates;
+          
         });
+
 
         res.format({
           html: function () {

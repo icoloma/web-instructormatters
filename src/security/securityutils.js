@@ -71,7 +71,7 @@ exports.isEditionOwner = function(req, res, next) {
       next(err);
       return;
     }
-    var isOwner = req.user.id === edition.instructor.toJSON()
+    var isOwner = req.user.id === edition.instructorId;
     if (!isOwner){
        console.log(req.user.email + " tried to access as owner for edition '" + req.params.idEdition + "'");
       next(codeError(401, "You are not the owner of this edition"));
@@ -129,7 +129,7 @@ exports.exposeInstructor = function (req, res, next){
         next(err);
         return;
       }
-      res.locals.isEditionOwner = req.user.id === edition.instructor.toString();
+      res.locals.isEditionOwner = req.user.id === edition.instructorId.toString();
       next();
     });
   

@@ -33,7 +33,7 @@ append main_content
               p Where: 
                 a(target='_blank', href='https://maps.google.com/?q=' + edition.geopoint.lat + ',' + edition.geopoint.lng) #{edition.address}
               p Instructor:  
-                a(href='/instructors/' + edition.instructor) #{edition.instructorName}
+                a(href='/instructors/' + edition.instructorId) #{edition.instructorName}
               //-p #{edition.course.description}
               a.btn.btn-danger( href='/courses/' + edition.courseUUID + '/editions/' + edition.id) Get it now !
             -})

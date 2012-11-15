@@ -3,6 +3,7 @@ var Editions = require('../db/models').Editions,
   Courses = require('../db/models').Courses,
   Users = require('../db/models').Users,
   Certificates = require('../db/models').Certificates,
+  Videos = require('../db/models').Videos,
   services = require('../db/models').services,
   mailSender = require('../mailer/setup'),
   codeError = require('./errorHandlers').codeError;
@@ -28,7 +29,7 @@ exports.view = function (req, res, next) {
           ], 
           function (err, results) {
             if(err) return next(err);
-
+            item.date = /(.+)T.+/.exec(item.date)[1];
             // Mostramos
             res.render('admin/edition', {
               title: 'Edition',
@@ -60,21 +61,28 @@ exports.showDetails = function (req, res, next) {
             Courses.findCourseByUUID(edition.courseUUID, cb);
           },
           function (cb) {
-            Users.findUser(edition.instructor, cb);
+            Users.findUser(edition.instructorId, cb);
           },
           function (cb) {
             Certificates.findEditionCertificates(edition.id, cb);
+          },
+          function (cb) {
+            Videos.findInstructorVideos(edition.instructor, cb);
           }
           ],
           function (err, results) {
             if(err) return next(err);
 
+            var videos = _.filter( results[3], function(video){ return video.courseUUID === edition.courseUUID });
+            edition.date = new Date(edition.date).toLocaleDateString();
+            
             res.render('public/edition', {
               title: 'Course Edition',
               edition: edition,
               course: results[0],
               instructor: results[1],
-              certificates: results[2]
+              certificates: results[2],
+              videos: videos
             });
           });
 
@@ -86,9 +94,7 @@ exports.showDetails = function (req, res, next) {
   });
 
 };
-/*
-    
-*/
+
 /*
   Añadir edición - ventana 
 */
@@ -135,6 +141,7 @@ exports.create =  function (req, res, next) {
       },
       function (cb) {
         json.instructorName = req.user.name;
+        json.instructorId = req.user.id;
         Editions.saveEdition(json, cb);
       }
       ],
@@ -209,7 +216,7 @@ exports.list = function (req, res, next) {
      return next(codeError(401, 'Instructor is not logged'));
   }
 
-  services.getEditionsFullInfo({instructor: req.user.id},
+  services.getEditionsFullInfo({instructorId: req.user.id},
     function (err, editions) {
         if(err) return next(err);
         res.format({
@@ -250,3 +257,4 @@ exports.sendMail = function (req, res, next) {
     next();
   });
 };
+

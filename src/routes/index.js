@@ -41,8 +41,7 @@ module.exports = function (server) {
   server.post('/courses/:uuid/editions/:idEdition/contact', editions.sendMail, mailer.sendMail);
   
   // -- Certificates-- 
-  server.get( '/certificates/:uuid', certificates.checkAvailability, certificates.view);
-  server.get( '/certificates/:uuid/pdf', certificates.checkAvailability, certificates.pdf);
+  server.get( '/certificates/:uuid', certificates.checkAvailability, certificates.pdf);
   server.post('/courses/:uuid/editions/:idEdition/certificates', security.isEditionOwner, certificates.save);
   server.get( '/courses/:uuid/editions/:idEdition/certificates', certificates.list);
   server.del( '/courses/:uuid/editions/:idEdition/certificates/:id', security.isEditionOwner, certificates.del);

@@ -18,7 +18,7 @@ var EditionSchema = new mongoose.Schema({
     lng: Number,
     zoom: Number
    },
-  instructor: {type: ObjectId, ref: 'Users', required: true},
+  instructorId: {type: ObjectId, ref: 'Users', required: true},
   instructorName : String,   // Saved when creating 
   courseUUID: {type: String, required: true},
   deleted: {type: Boolean, default: false},
@@ -75,8 +75,9 @@ var Editions = mongoose.model('Editions', EditionSchema);
 Editions.prototype.toJSON = function(){
   return {
     id: this._id.toString(),
-    date: this.date.toLocaleDateString(),
-    instructor: this.instructor.toString(),
+    date: this.date.toISOString(),
+    instructorId: this.instructorId.toString(),
+    instructorName: this.instructorName.toString(),
     courseUUID: this.courseUUID,
     state: this.state,
     address: this.address,

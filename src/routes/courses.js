@@ -96,7 +96,7 @@ exports.showDetails = function (req, res, next) {
   Mostramos una lista de vídeos por cada curso así como las siguientes ediciones
 */
 exports.list =  function (req, res, next) {
-  var now =  /(.+)T.+/.exec(new Date().toISOString());
+  var now =  new Date();
 
   services.getFullCoursesList(now, 4,  function (err, editions, courses) {
     if(err) return next(err);

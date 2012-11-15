@@ -11,7 +11,7 @@ Modelo de una edición de un curso
 
 
 var EditionSchema = new mongoose.Schema({
-  date: {type: String, required: true},
+  date: {type: Date, required: true},
   address: {type: String, required: true},
   geopoint : { 
     lat: Number,
@@ -75,7 +75,7 @@ var Editions = mongoose.model('Editions', EditionSchema);
 Editions.prototype.toJSON = function(){
   return {
     id: this._id.toString(),
-    date: this.date,
+    date: this.date.toLocaleDateString(),
     instructor: this.instructor.toString(),
     courseUUID: this.courseUUID,
     state: this.state,

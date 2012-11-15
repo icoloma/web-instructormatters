@@ -3,9 +3,9 @@ var services = require('../db/models').services;
 /*
   Home
 */
-exports.home = function (req, res) {
+exports.home = function (req, res, next) {
 
-  var now =  /(.+)T.+/.exec(new Date().toISOString());
+  var now =  new Date();
 
   services.getFullCoursesList(now, 3, function (err, editions, courses) {
     if(err) return next(err);

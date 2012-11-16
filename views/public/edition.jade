@@ -22,8 +22,10 @@ append content
           ul.unstyled
             li Course: 
               a(href='/courses/' + course.uuid)  #{course.name}
-            li Date: #{edition.date} 
             li Venue: #{edition.address}
+              a(target='_blank', href='https://maps.google.es/maps?q=' + edition.geopoint.lat + ',' + edition.geopoint.lng )  (show in google maps)
+              
+            li Date: #{edition.date} 
             li
               .contactform
                 a.btn.contact.btn-primary

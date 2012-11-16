@@ -13,8 +13,11 @@ mixin videoItem(video)
     .video-data  
       .video-caption 
         a.video-title(href=video.url, target='_blank') #{video.title}
-        span.video-likes #{video.ranking.numLikes} likes, 
-        span.video-dislikes #{video.ranking.numDislikes} dislikes
+        span.video-instructorby by 
+          a(href='/instructors/' + video.instructorId) #{video.instructorName}
+        p
+          span.video-likes #{video.ranking.numLikes} likes, 
+          span.video-dislikes #{video.ranking.numDislikes} dislikes
 
 mixin homeEditionItem(edition)
   .span12

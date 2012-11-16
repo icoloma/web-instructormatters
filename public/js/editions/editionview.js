@@ -27,12 +27,22 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
       },
 
       onChange : function(e) {
+        if ("address" === e.srcElement.name){
+          this.model.unset('geopoint');
+        }
         var $ct = $(e.currentTarget);
         this.model.set($ct.attr('name'), $ct.val());
       },
 
       save: function(e) {
+        e.preventDefault();
 
+        if ( !this.model.get('geopoint')){
+          this.marker.setVisible(false);
+          this.infoWindow.close();
+          Core.renderMessage({ level :'warn',  message :'Address not found' });
+          return;
+        }
 
         this.model.save({}, {
          
@@ -46,7 +56,6 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
             window.location=location;              
           }
         });
-        e.preventDefault();
       },
 
       delete: function(){ 

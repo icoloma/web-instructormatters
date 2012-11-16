@@ -145,8 +145,6 @@ exports.view =  function (req, res, next) {
     } else {
       instructor.ranking = 0;
     }
-
-
     return instructor;
  }
 

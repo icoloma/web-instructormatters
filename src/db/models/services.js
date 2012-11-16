@@ -118,7 +118,7 @@ module.exports = {
       function(cb){
         Editions
          .find( query )
-         .sort('date','ascending')
+         .sort('date','descending')
          .exec(wrapError(cb));
       },
       function(cb){

@@ -9,8 +9,9 @@ append content
   ul
     -editions.forEach(function (edition) {
       li
-        a( href="/courses/" + edition.courseUUID + "/editions/" + edition.id, class='edition-' + edition.state)  #{edition.date} 
+        a( href="/courses/" + edition.courseUUID + "/editions/" + edition.id )  #{edition.date} 
         [#{edition.course.name}] - #{edition.address} 
+        span( class='label label-'+ edition.state) #{edition.state}
     -})
 
   

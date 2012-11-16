@@ -4,6 +4,9 @@ append content
     .row-fluid
       section.span8
         p The following is the list of courses supported by InstructorMatters. We are into making them grow, so if you feel like something is missing, drop us a line on <a href="http://twitter.com/instmatters">Twitter</a>.
+
+        if (locals.currentUser && locals.currentUser.admin) 
+          a(href="/courses/new").btn.btn-primary New Course
         -courses.forEach(function (course) {
           .row-fluid
             h2.header-3= course.name
@@ -21,17 +24,9 @@ append content
         h1.header-3 Upcoming
         ul.upcoming-list
           -editions.forEach( function (edition) {
-            li
-              h2.header-4 
-                a(href='/courses/' + edition.courseUUID + '/editions/' + edition.id) #{edition.course.name}
-              p #{edition.date} &dash; #{edition.address}
-              //-p #{edition.course.description}
-              a.btn.btn-large( href='/courses/' + edition.courseUUID + '/editions/' + edition.id) 
-                | &nbsp;Go!!
+            mixin homeEditionItem(edition)
+            
           -})
-
-    if (locals.currentUser && locals.currentUser.admin) 
-      a(href="/courses/new").btn.btn-primary New Course
  
 
 

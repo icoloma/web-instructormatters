@@ -32,12 +32,13 @@ exports.list =  function (req, res, next) {
           
         });
 
-
+        var title = (!res.locals.courseName) ? 'All Instructors' : 'Instructor for ' + res.locals.courseName;
+        
         res.format({
           html: function () {
             var json = JSON.stringify(items);
             res.render('public/instructors', {
-              title: 'Instructors',
+              title: title,
               instructors: items,
               json: json
             });
@@ -49,6 +50,20 @@ exports.list =  function (req, res, next) {
       }
     )
   };
+
+/*
+ Añade el nombre del curso a la request
+*/ 
+exports.addCourseInfo = function (req,res,next){
+ if (req.params.uuid){
+  Courses.findCourseByUUID( req.params.uuid, function(err, course){
+    res.locals.courseName = course.name;
+    next();
+  });
+ } else {
+   next();
+ }
+};
 
 
 /*
@@ -164,6 +179,9 @@ exports.view =  function (req, res, next) {
     });
   });
 }
+
+
+
 
 
 

@@ -17,7 +17,7 @@ append content
         li #{course.duration} length.
         -if(course.link)
           li Check out the 
-            a(href=course.link) materials
+            a(href=course.link, target="_blank") materials
         li Show all instructors in
           a(href="/instructors/course/" + course.uuid)  Google Maps
           | .

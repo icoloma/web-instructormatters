@@ -13,12 +13,14 @@ append content
             br
             a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
     .span8
+      if(locals.currentUser && locals.currentUser.email == instructor.email) 
+        a.btn.edit(href='/instructors/' + instructor.id + '/edit') 
+          i.icon-user
+          &nbsp;Edit
+      
       if (instructor.aboutMe)
         h1.header-3 About me:
         p  #{instructor.aboutMe}
-        -if(locals.currentUser && locals.currentUser.email == instructor.email) {
-          a.btn.btn-primary.edit(href='/instructors/' + instructor.id + '/edit') <i class="icon-user icon-white"></i> Edit
-        -}
      
     
       h2.header-3 Courses:

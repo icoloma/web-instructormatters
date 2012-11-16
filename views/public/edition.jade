@@ -11,7 +11,7 @@ append content
         span( class="pull-right label label-" + edition.state) #{edition.state}
       if (locals.isEditionOwner && edition.state ==  'NEW' || locals.isAdmin)
         p
-          a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn.btn-primary Edit
+          a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn Edit
 
       .row
         .span2
@@ -28,8 +28,8 @@ append content
             li Date: #{edition.date} 
             li
               .contactform
-                a.btn.contact.btn-primary
-                  i.icon-envelope.icon-white
+                a.btn.contact
+                  i.icon-envelope.icon
                   &nbsp;More info
         -if(videos.length > 0)  
           .row-fluid

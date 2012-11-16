@@ -29,6 +29,7 @@ var users = [],
       name: 'Spring Web 3.1',
       duration: '4 days',
       deleted: false,
+      link: 'http://mylearn.vmware.com/descriptions/EDU_DATASHEET_SpringWeb_V311.pdf',
       description: 'Rich web applications with spring Soufflé cotton candy sesame snaps liquorice toffee tootsie roll. Danish caramels dessert tart. Tiramisu fruitcake macaroon jelly. Chocolate bar cookie ice cream bear claw powder sweet roll liquorice cheesecake. Topping dessert sugar plum. Cupcake chocolate cake apple pie marzipan marshmallow dessert. '
     },
     {
@@ -36,13 +37,16 @@ var users = [],
       name: 'HTML5 & CSS3',
       duration: '4 days',
       deleted: false,
+      link: 'http://html5.instructormatters.com/',
       description: 'All about HTML5 and CSS3. Jelly beans chocolate bar chocolate cake toffee fruitcake tiramisu toffee bonbon. Pudding powder pastry powder cotton candy danish. Halvah gummies chocolate tiramisu marshmallow macaroon chocolate liquorice donut. Icing icing cupcake chocolate tiramisu jelly beans tootsie roll candy. Halvah candy cookie pastry faworki caramels macaroon lemon drops tart. Croissant sweet roll apple pie. Donut tootsie roll soufflé. Sweet roll candy toffee liquorice faworki.'
+
     },
     {
       uuid: 'core-spring',
       name: 'Core Spring',
       duration: '4 days',
       deleted: false,
+      link: 'https://docs.google.com/viewer?url=http%3A%2F%2Fmylearn.vmware.com%2Fdescriptions%2FEDU_DATASHEET_CoreSpring_V32.pdf',
       description: 'Spring framework 101. The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother\'s keeper and the finder of lost children.'
     },
     {
@@ -50,6 +54,7 @@ var users = [],
       name: 'Enterprise Integration with Spring.',
       duration: '4 days',
       deleted: false,
+      link: 'https://docs.google.com/viewer?url=http%3A%2F%2Fmylearn.vmware.com%2Fdescriptions%2FEDU_DATASHEET_EnterpriseIntegrationSpring_V20.pdf',
       description: 'Learn all about Enterprise Integration with Spring framework.  Look, just because I don\'t be givin\' no man a foot massage don\'t make it right for Marsellus to throw Antwone into a glass motherfuckin\' house, fuckin\' up the way the nigger talks. Motherfucker do that shit to me, he better paralyze my ass, \'cause I\'ll kill the motherfucker, know what I\'m sayin\'?'
     },
 ],

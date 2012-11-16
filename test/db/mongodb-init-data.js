@@ -89,6 +89,9 @@ var users = [],
   { youtubeId : "LdjPmqXXTCU" },
 ].map(function (video) {
   video.url = "http://www.youtube.com/watch?v=" + video.youtubeId;
+  video.title = video.url;
   return video;
 }),
-  states = ["NEW", "NEW", "NEW", "NEW", "NEW", "PENDING", "PAID"];
+  states = ["NEW", "NEW", "NEW", "NEW", "NEW", "PENDING", "PAID"]
+  ,
+  defaultGoogleId = "109093485030374661399";

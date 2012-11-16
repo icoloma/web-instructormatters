@@ -39,8 +39,10 @@ var randomizeUser = function (user) {
     certificates: chosenCerts,
     address: chosenLocation.address,
     geopoint: chosenLocation.geopoint,
-
   });
+  if (!user.googleId){
+    user.googleId = defaultGoogleId;
+  }
   return user;
 }
 
@@ -115,32 +117,28 @@ for(var i = 0; i < numEditions; i++) {
 }
 
 //Create videos
-var getVideo = function () {
-  if(videos.length > 0) {
-    return videos.splice(randomInt(numVideos), 1)[0];
-  } else {
-    var yId = Math.random().toString(36).substring(6);
-    return {
-      youtubeId: yId,
-      url: "http://www.youtube.com/watch?v=" + yId
-    }
-  }
-};
+var getVideo = function () { 
+  var randomVideo = videos[randomInt(videos.length)];
+  var video = { 
+      youtubeId : randomVideo.youtubeId,
+      url: randomVideo.url
+    };
+  return video;}
+;
 
-var locales = ["en", "es"], numVideos = videos.length, oneVideo;
+var locales = ["en", "es"], oneVideo;
 
 for(var i = 0; i < numUsers; i++) {
   oneUser = users[i];
 
   for(var j = 0; j < 3; j ++) {
-    oneVideo = getVideo(),
-    numVideos = videos.length;
-
+    var oneVideo = getVideo();
+    
     var likes = randomInt(1000),
       dislikes = randomInt(likes);
 
     Object.extend(oneVideo, {
-      title: Math.random().toString(36).substring(6),
+      title: oneUser.name + "-video:" + Math.random().toString(36).substring(6),
       locale: locales[randomInt(2)],
       instructorId: oneUser._id,
       instructorName: oneUser.name,

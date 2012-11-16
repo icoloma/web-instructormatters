@@ -9,9 +9,8 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps' ],
         'click #delete' : 'delete',
        
         'change input': function(e) {
-          this.model.unset('geopoint');
           if ("address" === e.srcElement.name){
-            this.model.unset( '');
+            this.model.unset('geopoint');
           }
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());

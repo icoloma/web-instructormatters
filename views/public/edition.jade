@@ -8,8 +8,7 @@ append content
   .main  
    .form-actions
       if (locals.isEditionOwner)
-        p State: 
-          span( class="edition-#{edition.state}") #{edition.state}
+        span( class="pull-right label label-" + edition.state) #{edition.state}
       if (locals.isEditionOwner && edition.state ==  'NEW' || locals.isAdmin)
         p
           a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn.btn-primary Edit

@@ -2,6 +2,8 @@
 var Users = require('../db/models').Users
   , Courses = require('../db/models').Courses
   , services = require('../db/models').services
+  , Videos = require('../db/models').Videos
+  , request = require('request')
   , codeError = require('./errorHandlers').codeError;
 
 /*
@@ -32,7 +34,7 @@ exports.list =  function (req, res, next) {
           
         });
 
-        var title = (!res.locals.courseName) ? 'All Instructors' : 'Instructor for ' + res.locals.courseName;
+        var title = (!res.locals.courseName) ? 'All Instructors' : 'Instructors for ' + res.locals.courseName;
         
         res.format({
           html: function () {
@@ -136,32 +138,19 @@ exports.view =  function (req, res, next) {
        return;
     }
 
-    // evitamos que nos inyecten estas propiedades
-    if (!res.locals.isAdmin) {
-      delete req.body.admin;
-      delete req.body.certificates;
-    }
-
-    var instructor = updateRanking(req.body);
-
-    Users.updateInstructor(req.params.idInstructor, instructor, 
-      function (err, num) {
-        if(err) return next(err);
-        res.send(204);   // OK, no content
-      }
-    );
+    var instructor = _.omit(req.body, "admin", "certificates");
+    
+    doUpdateVideoInstructorRanking(instructor, function( instructor){
+      Users.updateInstructor(req.params.idInstructor, instructor, 
+        function (err, num) {
+          if(err) return next(err);
+          res.send(204);   // OK, no content
+        }
+      );
+    });
   };
  
 
- var updateRanking = function( instructor) {
-    if (instructor.videos && instructor.videos.length > 0) {
-      var sum = _.reduce( instructor.videos, function(memo, video){ return memo + video.ranking.value;}, 0);
-      instructor.ranking = sum / instructor.videos.length;
-    } else {
-      instructor.ranking = 0;
-    }
-    return instructor;
- }
 
  exports.del = function (req, res, next) {
   Users.deleteUser(req.user.id, function (err, num) {
@@ -178,10 +167,96 @@ exports.view =  function (req, res, next) {
           }
     });
   });
-}
+},
+
+exports.updateRanking = function(req,res,next) {
+  updateInstructorRanking( function(err){
+    if (err) {next(err); }
+    res.redirect("/?code=updated");
+  } );
+};
 
 
+var updateInstructorRanking = function( callback ){
+  Users.findAllUsers( function(err, instructors){
+    console.log("updating instructos ranking ...");
+    var numInstructorProcessed = 0;
+    _.each( instructors, function(instructor){
+      instructor = _.omit( instructor,'expires');
+      doUpdateVideoInstructorRanking(instructor, 
+        function(err, instructorWithRanking){
+          if (err){ callback(err); }
+          Users.updateInstructor(instructorWithRanking.id, instructorWithRanking, function(err,callback2){
+            if (err) { callback(err);} 
 
+            console.log(instructorWithRanking.email + "  updated with ranking =" + instructorWithRanking.ranking);
+            numInstructorProcessed = numInstructorProcessed + 1;
+            if (numInstructorProcessed === instructors.length){
+              console.log("ranking updated");
+              callback(null);
+            }
+         });
+
+        }
+      );
+    }, this); 
+  });
+};
+
+exports.updateInstructorRanking = updateInstructorRanking;
+
+doUpdateVideoInstructorRanking = function( instructor, callback) {
+    Videos.findInstructorVideos(instructor.id, function(err, videos){
+      if (err) {
+        callback(err);
+        exit;
+      } 
+      if (videos && videos.length > 0) {
+        var numVideosProcessed = 0;
+        _.each(videos, function(video){
+          var url = 'http://gdata.youtube.com/feeds/api/videos/' + video.youtubeId + '?v=2&alt=json&format=5';
+          request({uri: url}, function(err, response, body){
+              var self = this;
+              self.items = new Array();
+              if(err && response.statusCode !== 200){console.log('Request error.');}
+              var data = JSON.parse(body);
+              var numLikes = 0;
+              var numDislikes = 0;
+              if ( data.entry.yt$rating ){
+                numLikes = data.entry.yt$rating.numLikes;
+                numDislikes = data.entry.yt$rating.numDislikes;
+              }
+              var rankingValue = numLikes - numDislikes;
+              video.title = data.entry.title.$t;
+              video.thumbnail = data.entry.media$group.media$thumbnail[1].url;
+              video.duration =  data.entry.media$group.yt$duration.seconds;
+              video.ranking.numLikes = numLikes;
+              video.ranking.numDislikes = numDislikes;
+              video.ranking.value= rankingValue;
+             
+              Videos.update( {_id: video.id}, video, function(err,cb){
+                if(err) {
+                  callback(err);
+                }
+                console.log(instructor.email + ": video " + video.title );
+              });
+              numVideosProcessed = numVideosProcessed + 1;
+         
+             if (numVideosProcessed === videos.length) {
+              var sum = _.reduce( videos, function(memo, video){ return memo + video.ranking.value;}, 0);
+              instructor.ranking = sum / videos.length;
+              callback(null, instructor);
+             }
+          });
+        });
+
+      } else {
+        instructor.ranking = 0;
+        callback(null,instructor);
+      }
+
+    });
+ }
 
 
 

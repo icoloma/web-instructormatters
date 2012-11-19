@@ -19,7 +19,8 @@
     "passport": "0.1.12",
     "passport-google-oauth" : "0.1.4",
     "pdfkit": "0.1.9",
-    "underscore": "*"
+    "underscore": "*",
+    "request" : "*"
   },
 
    "devDependencies": {

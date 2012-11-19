@@ -72,9 +72,7 @@ _.extend(UserSchema.statics, {
   // hay que convertir de String a Boolean 
   normalizeBooleans: function(params){
     if (params.admin !== true) params.admin = (params.admin === "true");
-    params.certified = (params.certified === "true");
-    
-  },
+ },
 
   updateUser: function (id, params, callback) {
     this.normalizeBooleans(params);
@@ -100,9 +98,6 @@ _.extend(UserSchema.statics, {
 
   updateInstructor: function (instructorID, params, callback) {
     //TO DO: ¿admin: false en la busqueda?
-    
-    // TO DO 
-    delete params.videos;
     this.update({_id: instructorID, deleted: false}, params, wrapResult(callback));
   },
 });

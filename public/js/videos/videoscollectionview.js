@@ -94,7 +94,7 @@ define([ 'core', 'videos/videotrview', 'videos/videomodel', 'hbs!videos/videosco
             var numLikes = 0;
             var numDislikes = 0;
             if ( data.entry.yt$rating ){
-             numLikes = data.entry.yt$rating.numLikes;
+              numLikes = data.entry.yt$rating.numLikes;
               numDislikes = data.entry.yt$rating.numDislikes;
             }
             var rankingValue = numLikes - numDislikes;

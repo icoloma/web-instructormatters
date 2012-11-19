@@ -16,6 +16,7 @@ var express = require('express')
   , passport = require('./src/security/setup')
   , security = require('./src/security/securityutils')
   , errorHandlers = require('./src/routes/errorHandlers')
+  , cronUtils = require('./src/cron/cronutils');
  ;
 
 var app = express();
@@ -51,3 +52,6 @@ routes(app);
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
+
+
+cronUtils.updateRankings();

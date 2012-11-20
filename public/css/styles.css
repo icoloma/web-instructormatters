@@ -4897,6 +4897,11 @@ a {
 .wrapper:after {
   clear: both;
 }
+/*
+.main-content {
+  min-height: 600px;
+}
+*/
 ::-webkit-validation-bubble-message {
   font: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
@@ -5137,7 +5142,7 @@ p.certified {
 }
 .location-link {
   color: #cdb380;
-  display: block;
+  white-space: nowrap;
 }
 .location-link:hover {
   color: orange;
@@ -5149,13 +5154,7 @@ p.certified {
   background-size: 1.4em;
   margin-top: -5px;
 }
-/*
-@media (max-width: 767px) {
-  .instructor-list {
-    overflow: visible;
-  }
-}
-*/.map img {
+.map img {
   max-width: none;
 }
 .map {

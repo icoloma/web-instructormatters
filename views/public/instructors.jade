@@ -6,11 +6,12 @@ append content
   section.row-fluid.map-container
     .span3.instructors
       p
-        a.btn(id='certifiedButton') Only certified
-        a.btn(id='allButton', style="display:none") Show all
+       a.btn(id='certifiedButton', data-toggle='button', title="Only certified instructors") 
+        i.icon-instructor 
+        &nbsp;Only
       .instructor-list
         -instructors.forEach(function (instructor) {
-          span(data-certified=instructor.certified.toString(), data-id=instructor.id)
+          span.instructor-item(data-certified=instructor.certified.toString(), data-id=instructor.id, data-lat=instructor.geopoint.lat, data-lng=instructor.geopoint.lng)
             span.location(data-id=instructor.id)⬇
             -if(instructor.certified)
               span.certified-badge  
@@ -18,6 +19,7 @@ append content
               &nbsp;!{instructor.name}
             p.address= instructor.address
         -})
+        span#noInstructors No instructors found
 
     .span9
       .map.hidden-phone //- (style="height:100%")
@@ -38,4 +40,5 @@ append scripts
      
       }
     );
+
 

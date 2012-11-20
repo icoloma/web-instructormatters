@@ -1,4 +1,4 @@
-define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message', 'bootstrap_alert', 'bootstrap_dropdown', 'bootstrap_collapse'], 
+define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message', 'bootstrap_alert', 'bootstrap_dropdown', 'bootstrap_collapse', 'bootstrap_button'], 
   function($, Underscore, _unused, Messages, messageTmpl) {
   
   window.B = Backbone;

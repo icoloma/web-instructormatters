@@ -9,6 +9,7 @@ var require = {
     bootstrap_alert: 'lib/bootstrap-alert',
     bootstrap_dropdown: 'lib/bootstrap-dropdown',
     bootstrap_collapse: 'lib/bootstrap-collapse',
+    bootstrap_button: 'lib/bootstrap-button',
     flexslider: 'lib/jquery.flexslider',
     messages: 'lib/messages'
   },

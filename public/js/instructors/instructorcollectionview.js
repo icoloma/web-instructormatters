@@ -2,30 +2,17 @@ define(
 [ 'core', 'hbs!instructors/instructorcollectionview', 'lib/gmaps' ], 
 function(K, template, Gmaps) {
 
-  var countryNames = {
-    'undefined': 'Great kingdom of undefined',
-    'ES': 'Spain',
-    'UK': 'United Kingdom',
-    'US': 'United States'
-  }
 
   return B.View.extend({
 
     events: {
-      'change select[name="country"]': 'onSelectCountry',
       'click .location': 'onClickInstructor',
-      'click #certifiedButton': 'hideNonCertifiedInstructors',
-      'click #allButton': 'showNonCertifiedInstructors' 
+      'click #certifiedButton': 'filterInstructors',
     },
 
     initialize: function() {
       this.geo = { latitude: 40.416698, longitude: -3.700333 };
       $(window).on('resize', this.resizeMap);
-
-      // if there is HTML5 geolocation, override default location
-      navigator.geolocation && navigator.geolocation.getCurrentPosition(_.bind(function(data) {
-        this.geo = data.coords
-      }, this));
     },
 
     remove: function(){
@@ -35,65 +22,25 @@ function(K, template, Gmaps) {
     render: function() {
       this.resizeMap();
       Gmaps.loadMapsAPI(this.doRender, this);
-      this.renderCountryPicker();
     },
 
     resizeMap: function(){
       var newSize = $(window).height() - 300;
       $('.map').height( newSize + 40);
       $('.instructor-list').height(newSize);
-
     },
 
-    renderCountryPicker: function() {
-      // sorted list of unique country names
-      var countries = _.chain(this.options.instructors)
-        .map(function(instructor) {
-          return instructor.country || 'undefined';
-        })
-        .uniq()
-        .sort()
-        .value();
-
-      // concatenate <option> tags
-      var optionTmpl = _.template('<option value="{{value}}">{{-label}}</option>');
-      var $options = 
-        optionTmpl({ value: '', label: 'Pick your country'}) +
-        optionTmpl({ value: '', label: 'All'}) +
-        _.map(countries, function(country) {
-          return optionTmpl({ 
-            value: country, 
-            label: countryNames[country] || country
-          });
-        }).join('');
-
-      // create select and disable first option ("select your country")
-      $('.country-picker')
-        .html('<select name="country">' + $options + '</select>')
-        .find('option:first-child')
-        .attr('disabled', '');
-    },
-
-    onSelectCountry: function(e) {
-      var country = $(e.currentTarget).val()
-      , selectedInstructors = _.filter(this.options.instructors, function(instructor) {
-        var value =  country === ''? true :
-          instructor.country == country || country == 'undefined' && !instructor.country
-        this.$('[data-id=' + instructor.id + ']').toggle('hidden', !value);
-        return value;
-      });
-      this.addInstructorsToMap(selectedInstructors);
-    },
-
+   
     // invoked by Google maps when the library has been loaded
     doRender: function() {
       this.map = new google.maps.Map(this.$('.map')[0], {
-        zoom: 5,
         center: new google.maps.LatLng(this.geo.latitude, this.geo.longitude),
         mapTypeId: google.maps.MapTypeId.ROADMAP
       });
       this.addInstructorsToMap(this.options.instructors);
+      google.maps.event.addListener(this.map, 'bounds_changed', _.bind(this.filterInstructors,this));
     },
+
 
     addInstructorsToMap: function(selectedInstructors) {
       this.markers && _.each(this.markers, function(marker) {
@@ -140,34 +87,46 @@ function(K, template, Gmaps) {
       }
     },
 
-    hideNonCertifiedInstructors: function(e){
-      $('#allButton').show();
-      $('#certifiedButton').hide();
-      $('[data-certified="false"]').hide();
-      
-      $('[data-certified="false"]').each( function(idx,elem) {
-        var elem = $(elem);
-        elem.hide();
-        var id = elem.data('id');
-        var m = window.view.markers[id];
-        m.marker.setMap(null);
-      });
-      
+    filterInstructors: function(e){
+      if ($('.map:visible').length ){
+        var latLngBounds = this.map.getBounds();
+        $('.instructor-item').each( function(idx,elem) {
+          elem = $(elem);
+          var lat =  elem.data('lat');
+          var lng = elem.data('lng');
+          var latLng = new google.maps.LatLng(lat,lng);
+          var showOnlyCertified = $('#certifiedButton').hasClass('active');
+          if (e) {
+            // the 'active' class is added after
+            showOnlyCertified = !showOnlyCertified ;
+          }
+          var mustHide = showOnlyCertified && ! elem.data('certified')
+          if (!latLngBounds.contains(latLng) || mustHide){
+            elem.hide();
+            var id = elem.data('id');
+            var m = window.view.markers[id];
+            m.marker.setMap(null);
+          } else {
+            elem.show();
+            var id = elem.data('id');
+            var m = window.view.markers[id];
+            m.marker.setMap(window.view.map);
+          }
+          
+        });
+        if (! $('.instructor-item:visible').length){
+          $('#noInstructors').show();
+        } else {
+          $('#noInstructors').hide();
+        }
+      }
+     
     },
 
-    showNonCertifiedInstructors: function(e){
-      $('#allButton').hide();
-      $('#certifiedButton').show();
-      $('[data-certified="false"]').each( function(idx,elem) {
-        var elem = $(elem);
-        elem.show();
-        var id = elem.data('id');
-        var m = window.view.markers[id];
-        m.marker.setMap(window.view.map);
-      });
-    }
+    
 
   })
 
 });
     
+

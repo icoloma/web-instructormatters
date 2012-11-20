@@ -2,17 +2,19 @@ define(
 [ 'core', 'hbs!instructors/instructorcollectionview', 'lib/gmaps' ], 
 function(K, template, Gmaps) {
 
+  var $window = $(window);
+
 
   return B.View.extend({
 
     events: {
-      'click .location': 'onClickInstructor',
+      'click a.location-link': 'onClickInstructor',
       'click #certifiedButton': 'filterInstructors',
     },
 
     initialize: function() {
       this.geo = { latitude: 40.416698, longitude: -3.700333 };
-      $(window).on('resize', this.resizeMap);
+      $(window).on('resize', _.throttle(this.resizeMap, 100));
     },
 
     remove: function(){
@@ -25,9 +27,15 @@ function(K, template, Gmaps) {
     },
 
     resizeMap: function(){
-      var newSize = $(window).height() - 300;
+      
+      var newSize = $window.height() - 250;
       $('.map').height( newSize + 40);
-      $('.instructor-list').height(newSize);
+      if ($window.width() > 767 ){
+        $('.instructor-list').height(newSize);
+      } else {
+        $('.instructor-list').height('');
+      }
+
     },
 
    
@@ -88,18 +96,23 @@ function(K, template, Gmaps) {
     },
 
     filterInstructors: function(e){
-      if ($('.map:visible').length ){
+      var showOnlyCertified = $('#certifiedButton').hasClass('active');
+      if (e) {
+        // the 'active' class is added after
+        showOnlyCertified = !showOnlyCertified ;
+      }
+      var title= showOnlyCertified ? "Show all instructors": "Show only certified instructors";
+      
+      $('#certifiedButton').attr('title',title) ; 
+ 
+      title="Only certified instructors"
+      if (this.map && $('.map:visible').length ){
         var latLngBounds = this.map.getBounds();
         $('.instructor-item').each( function(idx,elem) {
           elem = $(elem);
           var lat =  elem.data('lat');
           var lng = elem.data('lng');
           var latLng = new google.maps.LatLng(lat,lng);
-          var showOnlyCertified = $('#certifiedButton').hasClass('active');
-          if (e) {
-            // the 'active' class is added after
-            showOnlyCertified = !showOnlyCertified ;
-          }
           var mustHide = showOnlyCertified && ! elem.data('certified')
           if (!latLngBounds.contains(latLng) || mustHide){
             elem.hide();
@@ -114,11 +127,11 @@ function(K, template, Gmaps) {
           }
           
         });
-        if (! $('.instructor-item:visible').length){
-          $('#noInstructors').show();
-        } else {
-          $('#noInstructors').hide();
-        }
+      }
+      if ( $('.instructor-item:visible').length == 0){
+        $('#noInstructors').show();
+      } else {
+        $('#noInstructors').hide();
       }
      
     },

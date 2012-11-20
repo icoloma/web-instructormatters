@@ -6,18 +6,23 @@ append content
   section.row-fluid.map-container
     .span3.instructors
       p
-       a.btn(id='certifiedButton', data-toggle='button', title="Only certified instructors") 
+       a.btn(id='certifiedButton', data-toggle='button') 
         i.icon-instructor 
-        &nbsp;Only
+        &nbsp;Certified
       .instructor-list
         -instructors.forEach(function (instructor) {
           span.instructor-item(data-certified=instructor.certified.toString(), data-id=instructor.id, data-lat=instructor.geopoint.lat, data-lng=instructor.geopoint.lng)
-            span.location(data-id=instructor.id)⬇
             -if(instructor.certified)
               span.certified-badge  
             a.instructor( href="/instructors/#{instructor.id}")
               &nbsp;!{instructor.name}
-            p.address= instructor.address
+            p.address
+              !{instructor.address} 
+              a.location-link.hidden-phone(data-id=instructor.id)  
+                span.location ▶
+                &nbsp;View in map
+
+
         -})
         span#noInstructors No instructors found
 

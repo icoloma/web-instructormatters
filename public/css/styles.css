@@ -4897,9 +4897,6 @@ a {
 .wrapper:after {
   clear: both;
 }
-.main-content {
-  min-height: 600px;
-}
 ::-webkit-validation-bubble-message {
   font: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
@@ -5087,7 +5084,6 @@ footer .brand {
 }
 .certified-badge {
   display: inline-block;
-  margin-left: 5px;
   width: 1.4em;
   height: 1.4em;
   background: url(img/instructor-badge2.png) no-repeat center bottom;
@@ -5134,11 +5130,32 @@ p.certified {
 }
 .location {
   font-family: fico;
+  font-size: 12px;
 }
 .instructor-list {
   overflow: auto;
 }
-.map img {
+.location-link {
+  color: #cdb380;
+  display: block;
+}
+.location-link:hover {
+  color: orange;
+}
+.icon-instructor {
+  width: 1.4em;
+  height: 1.4em;
+  background: url(img/instructor-badge2.png) no-repeat center bottom;
+  background-size: 1.4em;
+  margin-top: -5px;
+}
+/*
+@media (max-width: 767px) {
+  .instructor-list {
+    overflow: visible;
+  }
+}
+*/.map img {
   max-width: none;
 }
 .map {

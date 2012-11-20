@@ -6,7 +6,7 @@ append content
  
   .main  
     if (locals.isAdmin)  
-      a(href="/courses/" + course.uuid + '/edit').btn Edit
+      a(href="/courses/" + course.uuid + '/edit').btn.pull-right Edit
 
     section.row-fluid
       h1.header-3 Description
@@ -25,11 +25,11 @@ append content
     section.row-fluid
         
       if(course.videos.length >0)
-        h1.header-3 Most valuated instructor videos
+        h1.header-3 Best instructor videos
         each video in course.videos
           mixin videoItem(video)
     section.row-fluid.upcoming-editions
-      h1.header-3 Upcoming
+      h1.header-3 Upcoming courses
       -if(editions.length > 0) {
         ul.upcoming-list
           -editions.slice(0, 10).forEach(function (edition) {

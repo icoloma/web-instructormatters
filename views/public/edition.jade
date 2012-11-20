@@ -9,19 +9,19 @@ append content
    .form-actions
       if (locals.isEditionOwner)
         span( class="pull-right label label-" + edition.state) #{edition.state}
-      if (locals.isEditionOwner && edition.state ==  'NEW' || locals.isAdmin)
-        p
-          a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn Edit
+    
 
       .row
         .span2
-            img.profile(src='https://profiles.google.com/s2/photos/profile/' + instructor.googleId)
-            a(href='/instructors/' + instructor.id)  #{instructor.name}
+            a(title=instructor.name, href='/instructors/' + instructor.id)
+              img.profile(src='https://profiles.google.com/s2/photos/profile/' + instructor.googleId)
         .span8 
           h3 Edition details:
           ul.unstyled
+            li Instructor: 
+              a(href='/instructors/' + instructor.id) #{instructor.name}
             li Course: 
-              a(href='/courses/' + course.uuid)  #{course.name}
+              a(href='/courses/' + course.uuid) #{course.name}
             li Venue: #{edition.address}
               a(target='_blank', href='https://maps.google.es/maps?q=' + edition.geopoint.lat + ',' + edition.geopoint.lng )  (show in google maps)
               
@@ -31,6 +31,9 @@ append content
                 a.btn.contact
                   i.icon-envelope.icon
                   &nbsp;More info
+                if (locals.isEditionOwner && edition.state ==  'NEW' || locals.isAdmin)
+                  | 
+                  a( href='/courses/' + course.uuid + '/editions/' + edition.id + '/edit').btn Edit
         -if(videos.length > 0)  
           .row-fluid
             .span12
@@ -53,7 +56,7 @@ append content
   .certificates
     if (locals.isEditionOwner && edition.state != 'NEW' && certificates.length > 0) 
       h3 Certificates
-      ul
+      ul.unstyled
         - certificates.forEach(function (certificate){
           li 
             if (edition.state == 'PAID' || locals.isAdmin)

@@ -14,7 +14,7 @@ append content
             a(target='_blank', href='https://maps.google.es/maps?q=' + geolocation ) (show in google maps)
     .span8
       if(locals.currentUser && locals.currentUser.email == instructor.email) 
-        a.btn.edit(href='/instructors/' + instructor.id + '/edit') 
+        a.btn.edit.pull-right(href='/instructors/' + instructor.id + '/edit') 
           i.icon-user
           &nbsp;Edit
       

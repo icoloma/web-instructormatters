@@ -5132,6 +5132,12 @@ p.certified {
   max-width: 200px;
   width: 100%;
 }
+.location {
+  font-family: fico;
+}
+.instructor-list {
+  overflow: auto;
+}
 .map img {
   max-width: none;
 }

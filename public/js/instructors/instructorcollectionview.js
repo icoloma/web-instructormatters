@@ -13,13 +13,14 @@ function(K, template, Gmaps) {
 
     events: {
       'change select[name="country"]': 'onSelectCountry',
-      'hover .instructor': 'onClickInstructor',
+      'click .location': 'onClickInstructor',
       'click #certifiedButton': 'hideNonCertifiedInstructors',
       'click #allButton': 'showNonCertifiedInstructors' 
     },
 
     initialize: function() {
       this.geo = { latitude: 40.416698, longitude: -3.700333 };
+      $(window).on('resize', this.resizeMap);
 
       // if there is HTML5 geolocation, override default location
       navigator.geolocation && navigator.geolocation.getCurrentPosition(_.bind(function(data) {
@@ -27,9 +28,21 @@ function(K, template, Gmaps) {
       }, this));
     },
 
+    remove: function(){
+      $(window).on('off', this.resizeMap);
+    },
+
     render: function() {
+      this.resizeMap();
       Gmaps.loadMapsAPI(this.doRender, this);
       this.renderCountryPicker();
+    },
+
+    resizeMap: function(){
+      var newSize = $(window).height() - 300;
+      $('.map').height( newSize + 40);
+      $('.instructor-list').height(newSize);
+
     },
 
     renderCountryPicker: function() {

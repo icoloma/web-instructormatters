@@ -8,12 +8,10 @@ define([ 'core', 'videos/videotrview', 'videos/videomodel', 'hbs!videos/videosco
     return B.View.extend({
 
       events: {
-        'click .addVideo' : 'addVideo',
-        'submit form'     : 'save',
+        'click .addVideo'       : 'addVideo',
       },
 
       render: function() {
-       
         var coursesWithNames = [];
         this.options.coursesWithNames = coursesWithNames;
         this.options.courses.forEach( function(course){
@@ -63,24 +61,23 @@ define([ 'core', 'videos/videotrview', 'videos/videomodel', 'hbs!videos/videosco
           data:  data,
           dataType: 'json',
           contentType: 'application/json',
-          success: function(data, textStatus, jqXHR) {
-            window.location = '/instructors/' + self.options.instructorId +  "?code=updated";
-          },
-
           on201: function(xhr){
-             Core.renderMessage( { level:"success", message:'Videos saved'},'.videos-messages-container');
+            Core.renderMessage( { level:"success", message:'Instructor data and Videos saved'});
+            Core.loadingButton($('#send'), false);
           },
-
         });
-
-
       },
 
       save: function(e){
+        numVideosProcessed = 0;
 
-         e.preventDefault();
+        /* La llamada ajax JSONP a Youtube puede dar un 400 que no se puede capturar a traves del error: */
+        setTimeout( _.bind(function() {
+          if (numVideosProcessed < this.collection.length)
+             Core.renderMessage({ level :'danger',  message :'Videos couldn\'t be saved'});
+            Core.loadingButton($('#send'), false);
+        }, this), 10000);
 
-         numVideosProcessed = 0;
 
         // Obtenemos información de cada video:
         this.collection.forEach( function( videoModel ){
@@ -89,8 +86,9 @@ define([ 'core', 'videos/videotrview', 'videos/videomodel', 'hbs!videos/videosco
           url: 'http://gdata.youtube.com/feeds/api/videos/' + youtubeId + '?v=2&alt=json-in-script&format=5', 
           dataType: 'jsonp',
           context: this,
+
           success: function(data) {
-            numVideosProcessed += 1;
+           
             var numLikes = 0;
             var numDislikes = 0;
             if ( data.entry.yt$rating ){
@@ -110,11 +108,15 @@ define([ 'core', 'videos/videotrview', 'videos/videomodel', 'hbs!videos/videosco
               }
             });
             if (videoModel.get('duration') <= 180 ) {
-              numVideosProcessed == 3 && this.saveVideos();
+              numVideosProcessed += 1;
+              numVideosProcessed == this.collection.length && this.saveVideos();
             } else {
-               Core.renderMessage({ level :'danger',  message :'The video "' + videoModel.get('title') +  '" is over 3 min.'}, '.videos-messages-container');
+              Core.renderMessage({ level :'danger',  message :'The video "' + videoModel.get('title') +  '" is over 3 min.'});
+              Core.loadingButton($('#send'), false);
             }
-          } 
+          }
+       
+
         });
       }, this);
 

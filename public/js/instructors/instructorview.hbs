@@ -1,37 +1,38 @@
 
-<form class="form-actions">
-   
-  <p>
-    <input type="submit" class="btn btn-primary" value="Save" />
-    <a id="delete" class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
-    <a href="/instructors/{{instructor.id}}" class="btn">Cancel</a>
-  </p>
+<form id="instructorForm">
   <div class="row">
+      <div class="span3">
+        <img src='https://profiles.google.com/s2/photos/profile/{{instructor.googleId}}' class="profile-img"/>
+      </div>
       <div class="span8">
-
-        <label>instructor name: </label>
+        <label>Instructor name: </label>
         <input name="name" type="text" value="{{instructor.name}}" disabled >
 
         <label>About me: </label>
-        <input name="aboutMe" type="text" value="{{instructor.aboutMe}}">
-
-
+        <textarea rows="4" name="aboutMe" maxlength="255" class="input-xxlarge"> {{instructor.aboutMe}}</textarea>
+        
         <label>Courses:</label>
         {{#each courses}}
             <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox"> {{this.name}} 
         {{/each}}
-
-        <label>Address:</label>
-        <input name="address" type="text" value="{{instructor.address}}" required />
-        <div class="map hidden-phone" id="map_canvas" ></div>
-
-      
       </div>
+   </div> 
 
-      <div class="span2">
-        <img src='https://profiles.google.com/s2/photos/profile/{{instructor.googleId}}' class="profile"/>
-      </div>
-    </div>
+   <div class="row">
+    <label>Address:</label>
+    <input name="address" type="text" value="{{instructor.address}}" required />
+    <div class="map hidden-phone" id="map_canvas" ></div>
+   </div>
+
+   
+  <div class="videos row"></div>
+  
+  <div class="row">
+   <input type="submit" id="send" class="btn btn-primary" value="Save" data-loading-text="Saving..." data-original-text="Save" />
+   <a href="/instructors/{{instructor.id}}" class="btn">Cancel</a>  
+   {{#if instructor.admin}}
+    <a id="delete" class="btn btn-danger" ><i class="icon-trash icon-white"></i> Delete</a>
+   {{/if}}
   </div>
 </form>
 

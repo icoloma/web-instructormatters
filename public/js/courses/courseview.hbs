@@ -1,4 +1,4 @@
-<form class="well">
+<form>
 
   <label>Course name: </label>
   <input name="name" type="text" value="{{course.name}}" required>
@@ -22,12 +22,13 @@
   <p>
     <input type="submit" class="btn btn-primary" value="Save" />
 
-  {{#if course.id}}
+  {{#if course.id  }}
+    <a href="/courses/{{course.uuid}}" class="btn"><i class="icon-remove"></i> Cancel</a>
+  {{/if}}    
+
+  {{#if course.id }}
     <a class="btn btn-danger"user id="delete"><i class="icon-trash icon-white"></i> Delete</a>
   {{/if}}
 
-{{#if course.id  }}
-  <a href="/courses/{{course.uuid}}" class="btn"><i class="icon-remove"></i> Cancel</a>
-{{/if}}    
   
 </form>

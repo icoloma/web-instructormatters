@@ -1,17 +1,21 @@
 
-define([ 'core', 'hbs!./instructorview', 'lib/gmaps' ], 
-  function(Core, template, GMaps) {
+define([ 'core', 'hbs!./instructorview', 'lib/gmaps', 'videos/videomodel', 'videos/videoscollectionview',  ], 
+  function(Core, template, GMaps, VideoModel, VideoCollectionView) {
 
     return Backbone.View.extend({
 
       events: {
-        'submit form': 'save',
+        'submit form#instructorForm': 'save',
         'click #delete' : 'delete',
-       
+ 
         'change input': function(e) {
           if ("address" === e.srcElement.name){
             this.model.unset('geopoint');
           }
+          var $ct = $(e.currentTarget);
+          this.model.set($ct.attr('name'), $ct.val());
+        },
+        'change textarea': function(e) {
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
         },
@@ -24,8 +28,10 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps' ],
         }
       },
 
+   
+
       render: function() {
-        this.$el.html( template( { instructor: this.model.toJSON(), courses: this.options.courses }));
+        this.$el.html( template( { instructor: this.model.toJSON(), courses: this.options.courses}));
         if (this.model.attributes.id) {
           $.map(this.model.attributes.courses, function(item){ 
             var query = 'input[name=courses_' + item + ']';
@@ -36,38 +42,52 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps' ],
         // Carga la librería GoogleMaps
         GMaps.loadMapsAPI(this.addGMapAutocompleter, this);
 
+        var videos = new Backbone.Collection([], { model: VideoModel });
+        videos.url = '/instructors/' + this.model.attributes.id + '/videos';
+
+        window.instructorView = this;
+        window.courses = this.options.courses;
+        
+        var instructor = this.model;
+        videos.fetch({ 
+          success: function(collection, response){
+              window.videoCollectionView = new VideoCollectionView({
+                collection: collection,
+                instructorId:  window.instructorView.model.attributes.id,
+                instructorName: window.instructorView.model.attributes.name,
+                courses: window.courses,
+                el: $('.videos')
+              });
+              window.videoCollectionView.render();
+          }
+        });
+
         return this;
       },
 
 
       save: function(e) {
         e.preventDefault();
-
         if ( !this.model.get('geopoint')){
           this.marker.setVisible(false);
           this.infoWindow.close();
           Core.renderMessage({ level :'warn',  message :'Address not found' });
           return;
         }
-
-        this.model.get('geopoint').zoom = this.map.getZoom();
-
+        Core.loadingButton($('#send'), true);
         this.doSave();
-        
       },
 
       doSave: function() {
         var self = this;
         this.model.save({ }, {
-         
           success: function(resp, status, xhr) {
-            window.location = self.model.url()  + "?code=updated";
-          },
-
-          on201: function( xhr) {
-            // Http status Ok, Created
-            var loc = xhr.getResponseHeader("loc") + "?code=saved";
-            window.location=loc;              
+            if (window.videoCollectionView.collection.length > 0) {
+              window.videoCollectionView.save();
+            } else {
+               Core.renderMessage({ level :'success',  message :'Instructor saved' });
+               Core.loadingButton($('#send'), false);
+            }
           }
         });
       },

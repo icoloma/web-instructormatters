@@ -4915,6 +4915,9 @@ a {
 .contactform {
   margin-top: 20px;
 }
+label {
+  font-weight: bold;
+}
 .navbar .brand,
 footer .brand {
   display: block;
@@ -5171,6 +5174,7 @@ img.infoWindow-img {
   max-height: 40px;
   max-width: 40px;
   float: left;
+  box-shadow: 0 0 5px #031634;
 }
 .infoWindow-description {
   margin-left: 50px;

@@ -5,8 +5,6 @@ append content
  
   .main  
 
-  .videos
-
 append scripts
 
   script 
@@ -14,7 +12,7 @@ append scripts
       [ 'instructors/instructorview', 'instructors/instructormodel' ], 
       function(InstructorView, InstructorModel) {
 
-        var instructorView = new InstructorView({
+        instructorView = new InstructorView({
           model: new InstructorModel( !{ JSON.stringify(instructor) } ),
           courses: !{JSON.stringify(courses)},
           el: $('.main')
@@ -24,26 +22,26 @@ append scripts
 
 
   //- Edición de vídeos
-  script 
-    define('editvideosview', 
-      [ 'videos/videomodel', 'videos/videoscollectionview',  'jquery' ], 
+    script 
+      define('editvideosview', 
+        [ 'videos/videomodel', 'videos/videoscollectionview',  'jquery' ], 
 
-        function(VideoModel, VideoCollectionView) {
-    
-          var videos = new Backbone.Collection([], {
-              model: VideoModel,
+          function(VideoModel, VideoCollectionView) {
+      
+            var videos = new Backbone.Collection([], {
+                model: VideoModel,
+              });
+            videos.url = '/instructors/#{instructor.id}/videos';
+            
+            videos.fetch({ 
+              success: function(collection, response){
+                  new VideoCollectionView({
+                    collection: collection,
+                    instructorId: '!{instructor.id}',
+                    instructorName: '!{instructor.name}',
+                    courses: !{JSON.stringify(courses)},
+                    el: this.$('.videos')
+                  }).render();
+              }
             });
-          videos.url = '/instructors/#{instructor.id}/videos';
-          
-          videos.fetch({ 
-            success: function(collection, response){
-                new VideoCollectionView({
-                  collection: collection,
-                  instructorId: '!{instructor.id}',
-                  instructorName: '!{instructor.name}',
-                  courses: !{JSON.stringify(courses)},
-                  el: this.$('.videos')
-                }).render();
-            }
-          });
-    });
+      });

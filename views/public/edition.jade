@@ -6,10 +6,9 @@ include ../includes/admin-mixins
 append content
  
   .main  
-   .form-actions
+   .form
       if (locals.isEditionOwner)
         span( class="pull-right label label-" + edition.state) #{edition.state}
-    
 
       .row
         .span2

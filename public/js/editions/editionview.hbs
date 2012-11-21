@@ -1,12 +1,4 @@
-<form class="well">
-  <p>
-    <input type="submit" class="btn btn-primary" value="Save" />
-  {{#if edition.id }}
-    <a class="btn btn-danger delete" ><i class="icon-trash icon-white"></i> Delete</a>
-  {{/if}}
-    <a href="/courses/{{course.uuid}}" class="btn cancel"><i class="icon-remove"></i>Cancel</a>
-  
-  <p>
+<form>
 
   <label>Course: </label>
   <input type="text" value="{{course.name}}" disabled />
@@ -35,5 +27,19 @@
     </select>
   {{/if}} 
 
+  <p>
+    <input type="submit" class="btn btn-primary" value="Save" />
+
+    {{#if edition.id }}
+      <a href="/courses/{{course.uuid}}/editions/{{edition.id}}" class="btn cancel"><i class="icon-remove"></i>Cancel</a>
+    {{else}}
+      <a href="/courses/{{course.uuid}}" class="btn cancel"><i class="icon-remove"></i>Cancel</a>
+    {{/if}}
+  
+    {{#if edition.id }}
+      <a class="btn btn-danger delete" ><i class="icon-trash icon-white"></i> Delete</a>
+    {{/if}}
+  
+  <p>
   
 </form>

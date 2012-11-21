@@ -43,6 +43,11 @@ define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message'
       if (!exp) {
         throw new AssertException(message || 'assertion failed');
       }
+    },
+
+    loadingButton: function( button , active ) {
+       button.attr( "value", active? button.data('loadingText') : button.data('originalText'));
+       button.attr( "disabled", active);
     }
     
 };

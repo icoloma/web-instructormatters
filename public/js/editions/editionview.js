@@ -132,8 +132,8 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
         
         if (place && place.geometry.viewport) {
           this.map.fitBounds(place.geometry.viewport);
-        } else if (geopoint && geopoint.zoom){
-          this.map.setZoom(geopoint.zoom);
+        } else {
+          this.map.setZoom(9);
         }
 
         // position map and marker 

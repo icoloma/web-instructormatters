@@ -30,10 +30,10 @@ app.configure(function() {
   app.use(express.cookieParser()); 
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(security.checkDomain);
   app.use(express.session({ secret: 'keyboard cat' }));
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(security.checkDomain);
   app.use(security.exposeCurrentUser);
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));

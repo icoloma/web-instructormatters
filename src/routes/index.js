@@ -20,7 +20,7 @@ module.exports = function (server) {
   
   // -- ContactForm --
   server.get('/contact',  statics.contactUsForm);
-  server.post('/contact', mailer.sendMail);
+  server.post('/contact', mailer.checkRecaptcha, mailer.sendMail);
  
    // -- Courses --
   server.get( '/courses', courses.list);
@@ -38,7 +38,7 @@ module.exports = function (server) {
   server.del( '/courses/:uuid/editions/:idEdition', security.isEditionOwner, editions.del);
   server.get( '/courses/:uuid/editions/:idEdition/edit', security.isEditionOwner, editions.view);
   server.get( '/myeditions', editions.list); 
-  server.post('/courses/:uuid/editions/:idEdition/contact', editions.sendMail, mailer.sendMail);
+  server.post('/courses/:uuid/editions/:idEdition/contact', mailer.checkRecaptcha, editions.sendMail, mailer.sendMail);
   
   // -- Certificates-- 
   server.get( '/certificates/:uuid', certificates.checkAvailability, certificates.pdf);

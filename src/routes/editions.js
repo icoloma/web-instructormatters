@@ -250,9 +250,10 @@ var getInstructors = function (req, callback) {
 }
 
 exports.sendMail = function (req, res, next) {
+
   Editions.findEditionInstructor(req.params.idEdition, function (err, edition) {
     if(err) return next(err);
-    req.instructorEmail = edition.instructor.email;
+    req.instructorEmail = edition.instructorId.email;
     req.editionURL =  'http://instructormatters.com' + /(.+)\/contact/.exec(req.originalUrl)[1];
     next();
   });

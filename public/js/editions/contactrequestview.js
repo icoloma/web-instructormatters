@@ -1,10 +1,12 @@
 define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'], 
   function(Core, ContactRequestModel, template) {
+   
+    var recaptcha_public_key = '6Ld6XNkSAAAAAFWO8kLJP_tyktr_SB3c9zqD7fn_';
 
     return B.View.extend({
 
       events : {
-        'submit form' : 'send',
+        'click  #send' : 'send',
         'change input, textarea' : 'onChange',
         'click .btn.contact' : 'render'
       },
@@ -15,9 +17,17 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
         this.$el.html(template({
             editionDate: this.options.editionDate,
             editionVenue: this.options.editionVenue,
-            courseName : this.options.courseName
+            courseName : this.options.courseName,
           })
         );
+        Recaptcha.create( recaptcha_public_key, 'recaptcha',
+            {
+              theme: "white",
+              callback: Recaptcha.focus_response_field
+            }
+          );
+
+
       },
 
       onChange : function(e) {
@@ -26,15 +36,19 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
       },
 
       send: function(e) {
+        $('button.#send').button('loading');
         e.preventDefault();
         var self = this;
         try {
-
+          this.model.set('recaptcha_challenge_field', $('#recaptcha_challenge_field').val());
+          this.model.set('recaptcha_response_field',$('#recaptcha_response_field').val());
           this.model.save({}, {
             success:  function(resp, status, xhr) {
-              this.view.remove()
+              this.view.remove();
+              $('#send').button('reset');
             },
             on201: function(xhr) {
+              $('#send').button('reset');
               //after a sucessful mail delivery, we remove the view.
               self.restore();
             }

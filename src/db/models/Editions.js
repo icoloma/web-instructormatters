@@ -44,8 +44,8 @@ _.extend(EditionSchema.statics, {
     this
       .findById(editionID)
       .where('deleted').equals(false)
-      .select('instructor')
-      .populate('instructor')
+      .select('instructorId')
+      .populate('instructorId')
       .exec(callback);
   },
 

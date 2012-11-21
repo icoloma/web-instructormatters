@@ -1,9 +1,5 @@
 <form class="well">
 
-  <input type="hidden" name="courseName" value="{{courseName}}">   
-  <input type="hidden" name="editionDate" value="{{editionDate}}"> 
-  <input type="hidden" name="editionVenue" value="{{editionVenue}}"> 
-
   <label> Your email</label>
   <input name="from" type="email" value="{{contactrequest.from}}">
 
@@ -11,6 +7,8 @@
   <textarea name="text" class="contact-message">{{contactrequest.body}}</textarea>
 
   <div class="control-group">
-    <input type="submit" class="btn btn-primary" value="Send"/>
+    <div id="recaptcha"/>
+    <button type="button" id="send" data-loading-text="Sending..." class="btn btn-primary">Send</button>
+  </div>
 
 </form>

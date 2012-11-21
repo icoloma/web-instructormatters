@@ -6,8 +6,14 @@ var passport = require('passport')
 
   // API Access link for creating client ID and secret:
   // https://code.google.com/apis/console/
-  var GOOGLE_CLIENT_ID = "467976947492.apps.googleusercontent.com";
-  var GOOGLE_CLIENT_SECRET = "mUgiW_akVYRSRCmgFduHXka-";
+
+  // Localhost
+  //var GOOGLE_CLIENT_ID = "467976947492.apps.googleusercontent.com";
+  //var GOOGLE_CLIENT_SECRET = "mUgiW_akVYRSRCmgFduHXka-";
+
+  // InstructorMatters.com
+  var GOOGLE_CLIENT_ID = "467976947492-5ng5pc4f6n03p8bm0k97rmrd4ua1mqjf.apps.googleusercontent.com";
+  var GOOGLE_CLIENT_SECRET = "npHd2ZC8M3_iHYzaXzkGb9Kg"; 
 
 
 passport.serializeUser(function(user, done) {

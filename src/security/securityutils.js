@@ -134,3 +134,20 @@ exports.exposeInstructor = function (req, res, next){
     });
   
  }
+
+ // comprobamos que el dominio sea "instructormatters.com"
+exports.checkDomain = function (req,res,next){
+  var host =req.headers.host
+  if (host.indexOf("localhost") != -1) {
+    next();
+    return;
+  }
+  if (host.indexOf(":") != -1) {
+     host = /(.*):.*/.exec(host)[1];
+  }
+  if (host != "instructormatters.com"){
+    res.redirect("http://instructormatters.com");
+  }
+   next();
+}
+

@@ -245,14 +245,14 @@ doUpdateVideoInstructorRanking = function( instructor, callback) {
              if (numVideosProcessed === videos.length) {
               var sum = _.reduce( videos, function(memo, video){ return memo + video.ranking.value;}, 0);
               instructor.ranking = sum / videos.length;
-              callback(null, instructor);
+              callback(instructor);
              }
           });
         });
 
       } else {
         instructor.ranking = 0;
-        callback(null,instructor);
+        callback(instructor);
       }
 
     });

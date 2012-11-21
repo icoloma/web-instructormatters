@@ -23,11 +23,12 @@ append content
         p  #{instructor.aboutMe}
      
     
-      h2.header-3 Courses:
-      ul.courses-list.enumeration
-        -instructor.coursesWithInfo.forEach(function (course) {
-          mixin courseItem(course.name, course.uuid, course.certified)
-        -})
+      -if(instructor.coursesWithInfo.length > 0)  
+        h2.header-3 Courses:
+        ul.courses-list.enumeration
+          -instructor.coursesWithInfo.forEach(function (course) {
+            mixin courseItem(course.name, course.uuid, course.certified)
+          -})
     
   section.row-fluid
     .span12

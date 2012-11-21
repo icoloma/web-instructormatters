@@ -10,7 +10,7 @@ var Users = require('../db/models').Users
 * Listado de todos los instructores
 */
 exports.list =  function (req, res, next) {
-  var query = {  address : { $exists : true }, deleted: false };
+  var query = {  address : { $exists : true }, deleted: false, courses: { $ne : [] }};
   if (req.params.uuid){
     query.courses = req.params.uuid;
   }

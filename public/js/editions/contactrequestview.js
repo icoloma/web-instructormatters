@@ -18,6 +18,7 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
             editionDate: this.options.editionDate,
             editionVenue: this.options.editionVenue,
             courseName : this.options.courseName,
+            message : this.options.message
           })
         );
         Recaptcha.create( recaptcha_public_key, 'recaptcha',

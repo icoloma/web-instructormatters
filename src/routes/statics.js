@@ -27,10 +27,16 @@ exports.pricing = function (req, res) {
   });
 }
 
+
 exports.contactUsForm = function(req, res) {
+  var message = '';
+  if (req.query.subject &&  req.query.subject === 'becomeCertifiedInstructor'){
+    message = "I want to be a certified instructor";
+  }
   res.render('public/contact', {
     title: 'Contact',
-    adressee: {name : 'Instructor Matters'}
+    adressee: {name : 'Instructor Matters'},
+    message : message
   });
 }
 

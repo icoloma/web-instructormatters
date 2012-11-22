@@ -20,12 +20,11 @@ mixin videoItem(video)
           span.video-dislikes #{video.ranking.numDislikes} dislikes
 
 mixin homeEditionItem(edition)
-  .span12
-    h2.home-edition.header-4 #{edition.course.name}
-    p Date:  #{edition.date} 
-    p Where: 
-      a(target='_blank', href=edition.googleMapURL) #{edition.address}
-    p Instructor:  
-      a(href='/instructors/' + edition.instructorId) #{edition.instructorName}
-    //-p #{edition.course.description}
-    a.btn.btn-danger( href='/courses/' + edition.courseUUID + '/editions/' + edition.id) Get it now !
+  ul.unstyled
+    li  
+      p
+        a( href='/courses/' + edition.courseUUID + '/editions/' + edition.id) #{edition.course.name}
+        |  by 
+        a(href='/instructors/' + edition.instructorId) #{edition.instructorName}
+      p.edition-detail <b>#{fromNow(edition.date)}</b> #{edition.address} 
+        

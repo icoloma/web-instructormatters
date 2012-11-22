@@ -12,11 +12,12 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
+  , moment = require('moment')
   , routes = require('./src/routes')
   , passport = require('./src/security/setup')
   , security = require('./src/security/securityutils')
   , errorHandlers = require('./src/routes/errorHandlers')
-  , cronUtils = require('./src/cron/cronutils');
+  , cronUtils = require('./src/cron/cronutils')
  ;
 
 var app = express();
@@ -42,7 +43,10 @@ app.configure(function() {
 
   // jade helpers
   app.locals({
-    isoLangs: require('./src/lib/isolangs').isoLangs
+    isoLangs: require('./src/lib/isolangs').isoLangs,
+    fromNow: function(date) {
+      return moment(date).fromNow();
+    }
   });
 
 });

@@ -4918,6 +4918,11 @@ a {
 label {
   font-weight: bold;
 }
+.edition-detail {
+  font-size: 11px;
+  color: #555555;
+  margin-top: -10px;
+}
 .navbar .brand,
 footer .brand {
   display: block;

@@ -35,7 +35,7 @@ append content
           -editions.slice(0, 10).forEach(function (edition) {
             li  
               a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} 
-              &nbsp; - #{edition.address} (by <a href="/instructors/#{edition.instructor}">#{edition.instructorName}</a>)
+              &nbsp; - #{edition.address} (by <a href="/instructors/#{edition.instructorId}">#{edition.instructorName}</a>)
           -})
       -} else {
         p No courses scheduled

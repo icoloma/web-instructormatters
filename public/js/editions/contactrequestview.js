@@ -6,7 +6,7 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
     return B.View.extend({
 
       events : {
-        'click  #send' : 'send',
+        'submit form': 'send',
         'change input, textarea' : 'onChange',
         'click .btn.contact' : 'render'
       },
@@ -37,8 +37,8 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
       },
 
       send: function(e) {
-        $('button.#send').button('loading');
         e.preventDefault();
+        Core.loadingButton($('#send'), true);
         var self = this;
         try {
           this.model.set('recaptcha_challenge_field', $('#recaptcha_challenge_field').val());
@@ -46,10 +46,10 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
           this.model.save({}, {
             success:  function(resp, status, xhr) {
               this.view.remove();
-              $('#send').button('reset');
+              Core.loadingButton($('#send'), false);
             },
             on201: function(xhr) {
-              $('#send').button('reset');
+              Core.loadingButton($('#send'), false);
               //after a sucessful mail delivery, we remove the view.
               self.restore();
             }

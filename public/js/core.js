@@ -68,7 +68,7 @@ $(document).ajaxError(function(e, xhr, settings, exception) {
     //alert('error in: ' + settings.url + ' \n'+'error:\n' + xhr.responseText );
     core.renderMessage({ level:'error', message: xhr.responseText});  
   }
-  var buttonSend = $('button.#send');
+  var buttonSend = $('#send');
   if (buttonSend) buttonSend.button('reset');
 }); 
 

@@ -1,14 +1,14 @@
 <form class="well">
 
   <label> Your email</label>
-  <input name="from" type="email" >
+  <input name="from" type="email" required >
 
   <label>Your message</label>
-  <textarea name="text" class="contact-message">{{message}}</textarea>
+  <textarea name="text" class="contact-message" required>{{message}}</textarea>
 
   <div class="control-group">
     <div id="recaptcha"/>
-    <button type="button" id="send" data-loading-text="Sending..." class="btn btn-primary">Send</button>
+    <input type="submit" id="send" class="btn btn-primary" value="Send" data-loading-text="Sending..." data-original-text="Send" />
   </div>
 
 </form>

@@ -25,11 +25,14 @@ exports.sendMail = function (req, res) {
     contactRequest['subject'] = MAIL_SUBJECT;
 
     console.log('Sending contact mail ' + JSON.stringify( _.omit(contactRequest, 'recaptcha_response_field','recaptcha_challenge_field')));
-    contactRequest.replyTo = contactRequest.senderName + " <" + contactRequest.from + ">";
+    contactRequest.replyTo =  contactRequest.from;
+
+    contactRequest.text = contactRequest.text + '\n--\n' + 
+               'from : ' + contactRequest.replyTo + '\n';
 
     if (req.editionURL){
       // El contacto es a través de una edición en concreto, añadimos el enlace a dicha edición
-      contactRequest.text = contactRequest.text + '\n--\n' + 
+      contactRequest.text = contactRequest.text +
                             contactRequest.editionDate + '\n' +
                             contactRequest.courseName + '\n' +
                             contactRequest.editionVenue + '\n'+

@@ -55,4 +55,4 @@ http.createServer(app).listen(app.get('port'), function(){
 });
 
 
-cronUtils.updateRankings();
+//cronUtils.updateRankings();

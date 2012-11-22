@@ -127,7 +127,7 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps', 'videos/videomodel', 'vide
         var self=this;
         this.model.destroy({
           success: function(resp, status, xhr) {
-            window.location=self.model.urlRoot+ "?code=deleted";;
+            window.location=self.model.urlRoot+ "/#deleted";;
           }
         });
         e.preventDefault();

@@ -174,7 +174,7 @@ exports.view =  function (req, res, next) {
 exports.updateRanking = function(req,res,next) {
   updateInstructorRanking( function(err){
     if (err) {next(err); }
-    res.redirect("/?code=updated");
+    res.redirect("/#updated");
   } );
 };
 

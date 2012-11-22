@@ -26,13 +26,13 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
         this.model.save({}, {
 
           success: function(resp, status, xhr) {
-            window.location =  resp.url() + "?code=updated";
+            window.location =  resp.url() + "/#updated";
           },
 
 
           on201: function(xhr){
               // Http status Ok, Created
-              var location = xhr.getResponseHeader("location") + "?code=saved";
+              var location = xhr.getResponseHeader("location") + "/#saved";
               window.location=location;              
 
           }
@@ -48,7 +48,7 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
         var self=this;
         this.model.destroy({
           success: function(resp, status, xhr) {
-            window.location= "/courses/?code=deleted";;
+            window.location= "/courses/#deleted";;
           }
         });
         e.preventDefault();

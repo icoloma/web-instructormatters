@@ -74,9 +74,12 @@ $(document).ajaxError(function(e, xhr, settings, exception) {
 
   
 // render any existing messages
-var messageKey = core.getParamValue('code');
-messageKey && core.renderMessage(Messages[messageKey]);
-
+var messageKey = location.hash;
+if (messageKey){
+  core.renderMessage(Messages[messageKey]);
+  // remove Hash
+  history.pushState("", document.title, window.location.pathname);
+}  
 return core;
 
   

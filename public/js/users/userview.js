@@ -63,13 +63,13 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
         this.model.save({}, {
          
           success: function(resp, status, xhr) {
-            window.location = self.model.url()  + "?code=updated";
+            window.location.href = self.model.url()  + "/#updated";
           },
 
           on201: function( xhr) {
             // Http status Ok, Created
-            var location = xhr.getResponseHeader("location") + "?code=saved";
-            window.location=location;              
+            var location = xhr.getResponseHeader("location") + "/#saved";
+            window.location.href =location;              
           }
         });
         e.preventDefault();
@@ -80,7 +80,7 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
         var self=this;
         this.model.destroy({
           success: function(resp, status, xhr) {
-            window.location=self.model.urlRoot+ "?code=deleted";;
+            window.location.href =self.model.urlRoot+ "/#deleted";;
           }
         });
         e.preventDefault();

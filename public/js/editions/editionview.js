@@ -47,12 +47,12 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
         this.model.save({}, {
          
           success: function(resp, status, xhr) {
-            location.href = resp.url() + "?code=updated";
+            location.href = resp.url() + "/#updated";
           },
 
           on201: function(xhr){
             // Http status Ok, Created
-            var location = xhr.getResponseHeader("location") + "?code=saved";
+            var location = xhr.getResponseHeader("location") + "/#saved";
             window.location=location;              
           }
         });
@@ -65,7 +65,7 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
         this.model.urlRoot = '/admin/courses/' + this.model.get('course') + '/editions'
         this.model.destroy({
           success: function() {
-            location.href = '/courses/'+ self.options.course.uuid + '?code=deleted';
+            location.href = '/courses/'+ self.options.course.uuid + '/#deleted';
           }
         });
       },

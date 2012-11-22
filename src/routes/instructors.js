@@ -240,7 +240,6 @@ doUpdateVideoInstructorRanking = function( instructor, callback) {
                 if(err) {
                   callback(err);
                 }
-                console.log(instructor.email + ": video " + video.title );
               });
               numVideosProcessed = numVideosProcessed + 1;
          

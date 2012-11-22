@@ -53,7 +53,7 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
           on201: function(xhr){
             // Http status Ok, Created
             var location = xhr.getResponseHeader("location") + "/#saved";
-            window.location=location;              
+            window.location.href=location;              
           }
         });
       },

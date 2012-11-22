@@ -26,14 +26,14 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
         this.model.save({}, {
 
           success: function(resp, status, xhr) {
-            window.location =  resp.url() + "/#updated";
+            window.location.href =  resp.url() + "/#updated";
           },
 
 
           on201: function(xhr){
               // Http status Ok, Created
               var location = xhr.getResponseHeader("location") + "/#saved";
-              window.location=location;              
+              window.location.href=location;              
 
           }
 
@@ -48,7 +48,7 @@ define([ 'core', 'backbone', 'hbs!./courseview' ],
         var self=this;
         this.model.destroy({
           success: function(resp, status, xhr) {
-            window.location= "/courses/#deleted";;
+            window.location.href= "/courses/#deleted";;
           }
         });
         e.preventDefault();

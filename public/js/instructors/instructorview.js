@@ -66,7 +66,7 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps', 'videos/videomodel', 'vide
       },
 
 
-      save: function(e) {
+      save: _.throttle(function(e) {
         e.preventDefault();
         if ( !this.model.get('geopoint')){
           this.marker.setVisible(false);
@@ -76,7 +76,7 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps', 'videos/videomodel', 'vide
         }
         Core.loadingButton($('#send'), true);
         this.doSave();
-      },
+      }, 1000),
 
       doSave: function() {
         var self = this;

@@ -31,7 +31,7 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
       },
 
       list : function() {
-        window.location = this.model.urlRoot ;
+        window.location.href = this.model.urlRoot ;
       },
 
       render: function() {

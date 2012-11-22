@@ -27,7 +27,7 @@ define([ 'core', 'certificates/certificatetrview', 'certificates/certificatemode
         this.$tbody.append(trView.render().$el);
       },
 
-      save: function(e) {
+      save: _.throttle(function(e) {
         
         e.preventDefault();
 
@@ -44,19 +44,19 @@ define([ 'core', 'certificates/certificatetrview', 'certificates/certificatemode
           dataType: 'json',
           contentType: 'application/json',
           success: function(data, textStatus, jqXHR) {
-            window.location = '/courses/' + self.options.course.uuid + '/editions/' + self.model.id  + "/#updated";
+            window.location.href = '/courses/' + self.options.course.uuid + '/editions/' + self.model.id  + "/#updated";
           },
 
           on201: function(xhr){
               // Http status Ok, Created
               var location = xhr.getResponseHeader("location") + "/#saved";
-              window.location=location;              
+              window.location.href=location;              
           }
 
         });
 
 
-      }
+      }, 1000),
 
     });
 

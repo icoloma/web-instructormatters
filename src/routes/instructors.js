@@ -4,6 +4,7 @@ var Users = require('../db/models').Users
   , services = require('../db/models').services
   , Videos = require('../db/models').Videos
   , request = require('request')
+  , googleMapURL = require('../db/models/helpers').googleMapURL
   , codeError = require('./errorHandlers').codeError;
 
 /*
@@ -77,6 +78,7 @@ exports.show =  function (req, res, next) {
     instructor = _.omit(instructor, ['admin', 'expires'])
     res.format({
       html: function(){
+        instructor.googleMapURL =googleMapURL(instructor),
         res.render('public/instructor', {
           title: instructor.name,
           instructor: instructor,

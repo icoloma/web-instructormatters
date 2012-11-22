@@ -6,6 +6,7 @@ var Editions = require('../db/models').Editions,
   Videos = require('../db/models').Videos,
   services = require('../db/models').services,
   mailSender = require('../mailer/setup'),
+  googleMapURL = require('../db/models/helpers').googleMapURL,
   codeError = require('./errorHandlers').codeError;
 
 /*
@@ -72,10 +73,9 @@ exports.showDetails = function (req, res, next) {
           ],
           function (err, results) {
             if(err) return next(err);
-
+            edition.googleMapURL= googleMapURL(edition);
             var videos = _.filter( results[3], function(video){ return video.courseUUID === edition.courseUUID });
             edition.date = new Date(edition.date).toLocaleDateString();
-            
             res.render('public/edition', {
               title: 'Course Edition',
               edition: edition,

@@ -24,7 +24,7 @@ mixin homeEditionItem(edition)
     h2.home-edition.header-4 #{edition.course.name}
     p Date:  #{edition.date} 
     p Where: 
-      a(target='_blank', href='https://maps.google.com/?q=' + edition.geopoint.lat + ',' + edition.geopoint.lng) #{edition.address}
+      a(target='_blank', href=edition.googleMapURL) #{edition.address}
     p Instructor:  
       a(href='/instructors/' + edition.instructorId) #{edition.instructorName}
     //-p #{edition.course.description}

@@ -55,6 +55,14 @@ module.exports = {
     _.map(editions, function(edition){
       edition.date =new Date( /(.+)T.+/.exec(edition.date)[1]).toLocaleDateString();
     });
+  },
+
+  googleMapURL : function( item ) {
+    return 'https://maps.google.com/?' +  'q=' + encodeURI(item.address) + '&ll=' + item.geopoint.lat + ',' + item.geopoint.lng ;
   }
+
+
+
+
 
 }

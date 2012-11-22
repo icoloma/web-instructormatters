@@ -8,6 +8,7 @@ var Courses = require('./Courses'),
 var wrapResult = require('./helpers').wrapResult,
   wrapError = require('./helpers').wrapError,
   wrapJSON = require('./helpers').wrapJSON,
+  googleMapURL = require('./helpers').googleMapURL,
   localizeDates = require('./helpers').localizeDates;
 
 
@@ -47,6 +48,7 @@ module.exports = {
 
         _.each( editions, function (edition) { 
           edition.course = coursesMap[edition.courseUUID]; 
+          edition.googleMapURL= googleMapURL(edition);
         });
 
         callback(null, editions, courses);

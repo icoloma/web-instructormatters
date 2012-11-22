@@ -17,7 +17,7 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
           certificates : this.options.certificates,
           isAdmin: this.options.isAdmin
         })); 
-        this.$("select[name=instructor]").val(this.model.attributes.instructor);
+        this.$("select[name=instructorId]").val(this.model.attributes.instructorId);
         this.$("select[name=state]").val(this.model.attributes.state);
 
         GMaps.loadMapsAPI(this.addGMapAutocompleter, this);

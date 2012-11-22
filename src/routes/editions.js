@@ -25,7 +25,7 @@ exports.view = function (req, res, next) {
             Courses.findCourseByUUID(item.courseUUID, cb);
           },
           function (cb) {
-              getInstructors(req, cb);
+              getInstructors(req, res, cb);
           }
           ], 
           function (err, results) {
@@ -104,7 +104,7 @@ exports.add = function (req, res, next) {
       Courses.findCourseByUUID(req.params.uuid, cb);
     },
     function (cb) {
-      getInstructors(req, cb);
+      getInstructors(req, res, cb);
     }
     ],
     function (err, results) {
@@ -115,7 +115,7 @@ exports.add = function (req, res, next) {
 
       res.render('admin/edition', {
         title: 'Edition',
-        edition: { instructor: defaultInstructor.id, courseUUID: defaultCourse.uuid},
+        edition: { instructorId: defaultInstructor.id, courseUUID: defaultCourse.uuid},
         instructors: results[1],
         course: defaultCourse
       });
@@ -140,9 +140,26 @@ exports.create =  function (req, res, next) {
         Courses.findCourseByUUID(course, cb);
       },
       function (cb) {
-        json.instructorName = req.user.name;
-        json.instructorId = req.user.id;
-        Editions.saveEdition(json, cb);
+        if (req.user.id === json.instructorId) {
+          json.instructorName = req.user.name;
+          json.instructorId = req.user.id;
+          Editions.saveEdition(json, cb);
+          return;
+        } 
+
+        if (!res.locals.isAdmin){
+          next( codeError('401'));
+          return;
+        } 
+        
+        Users.findUser( json.instructorId, function( err, user){
+          if (err) { next(err); return; }
+          json.instructorName = user.name;
+          json.instructorId =  user.id;
+          Editions.saveEdition(json, cb);
+        });
+
+
       }
       ],
 
@@ -239,8 +256,8 @@ exports.list = function (req, res, next) {
   en caso contrario, solo se mostrará a el mismo
 */
 
-var getInstructors = function (req, callback) {
-  if (req.user.admin) {
+var getInstructors = function (req, res, callback) {
+  if (res.locals.isAdmin) {
     // TODO: Ojo, esto no es óptimo si el número de instructores es muy grande
     Users.findInstructors({courses: req.params.uuid}, callback);
   } else {

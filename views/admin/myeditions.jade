@@ -5,13 +5,16 @@ include ../includes/admin-mixins
 append content
 
   h2 Your course's editions
-  
-  ul
-    -editions.forEach(function (edition) {
-      li
-        a( href="/courses/" + edition.courseUUID + "/editions/" + edition.id )  #{edition.date} 
-        [#{edition.course.name}] - #{edition.address} 
-        span( class='label label-'+ edition.state) #{edition.state}
-    -})
+
+  -if(editions.length > 0)
+    ul
+      -editions.forEach(function (edition) {
+        li
+          a( href="/courses/" + edition.courseUUID + "/editions/" + edition.id )  #{edition.date} 
+          [#{edition.course.name}] - #{edition.address} 
+          span( class='label label-'+ edition.state) #{edition.state}
+      -})
+  -else
+    p No editions found
 
   

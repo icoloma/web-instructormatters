@@ -29,8 +29,7 @@ var UserSchema = new mongoose.Schema({
   address: String,
   geopoint : { 
     lat: Number,
-    lng: Number,
-    zoom: Number
+    lng: Number
    },
   
 }, {strict: true});
@@ -123,8 +122,7 @@ Users.prototype.toJSON = function() {
     address: this.address,
     geopoint: { 
       lat: this.geopoint.lat, 
-      lng: this.geopoint.lng, 
-      zoom: this.geopoint.zoom },
+      lng: this.geopoint.lng },
   }
 };
 

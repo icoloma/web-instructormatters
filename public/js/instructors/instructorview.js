@@ -162,9 +162,7 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps', 'videos/videomodel', 'vide
         
         if (place && place.geometry.viewport) {
           this.map.fitBounds(place.geometry.viewport);
-        } else if (geopoint.zoom){
-          this.map.setZoom(geopoint.zoom);
-        }
+        } 
 
         // position map and marker 
         this.map.setCenter(loc);

@@ -7,7 +7,6 @@ append content
     .span3
       figure.profile
         img.profile-img(src='https://profiles.google.com/s2/photos/profile/' + instructor.googleId, title=instructor.name, alt=instructor.name)
-        if (geolocation)
         figcaption
           p.address #{instructor.address}
             br

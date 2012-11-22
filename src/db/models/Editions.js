@@ -15,8 +15,7 @@ var EditionSchema = new mongoose.Schema({
   address: {type: String, required: true},
   geopoint : { 
     lat: Number,
-    lng: Number,
-    zoom: Number
+    lng: Number
    },
   instructorId: {type: ObjectId, ref: 'Users', required: true},
   instructorName : String,   // Saved when creating 
@@ -83,8 +82,7 @@ Editions.prototype.toJSON = function(){
     address: this.address,
     geopoint: { 
       lat: this.geopoint.lat, 
-      lng: this.geopoint.lng, 
-      zoom: this.geopoint.zoom }
+      lng: this.geopoint.lng }
   }
 };
  

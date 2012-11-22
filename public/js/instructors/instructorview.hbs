@@ -5,12 +5,14 @@
         <img src='https://profiles.google.com/s2/photos/profile/{{instructor.googleId}}' class="profile-img"/>
       </div>
       <div class="span8">
+        
         <label>Instructor name: </label>
         <input name="name" type="text" value="{{instructor.name}}" disabled >
+       
 
         <label>About me: </label>
         <textarea rows="4" name="aboutMe" maxlength="255" class="input-xxlarge"> {{instructor.aboutMe}}</textarea>
-        
+
         <label>Courses:</label>
         {{#each courses}}
             <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox"> {{this.name}} 

@@ -81,8 +81,7 @@ exports.show =  function (req, res, next) {
         instructor.googleMapURL =googleMapURL(instructor),
         res.render('public/instructor', {
           title: instructor.name,
-          instructor: instructor,
-          geolocation: instructor.geopoint.lat + ',' +  instructor.geopoint.lng + '&z=' + instructor.geopoint.zoom
+          instructor: instructor
         });
       },
       json: function(){
@@ -141,7 +140,7 @@ exports.view =  function (req, res, next) {
     }
 
     var instructor = _.omit(req.body, "admin", "certificates");
-    
+
     doUpdateVideoInstructorRanking(instructor, function( instructor){
       Users.updateInstructor(req.params.idInstructor, instructor, 
         function (err, num) {
@@ -171,38 +170,48 @@ exports.view =  function (req, res, next) {
   });
 },
 
+/** launched from URL */
 exports.updateRanking = function(req,res,next) {
   updateInstructorRanking( function(err){
-    if (err) {next(err); }
-    res.redirect("/#updated");
-  } );
+    if (err) {
+      res.redirect("/#error");
+    }else {
+      res.redirect("/");
+    }
+  });
 };
 
 
 var updateInstructorRanking = function( callback ){
-  Users.findAllUsers( function(err, instructors){
-    console.log("updating instructos ranking ...");
-    var numInstructorProcessed = 0;
-    _.each( instructors, function(instructor){
-      instructor = _.omit( instructor,'expires');
-      doUpdateVideoInstructorRanking(instructor, 
-        function(err, instructorWithRanking){
-          if (err){ callback(err); }
-          Users.updateInstructor(instructorWithRanking.id, instructorWithRanking, function(err,callback2){
-            if (err) { callback(err);} 
+  Users.findAllUsers( 
+    function(err, instructors){
+      if (err) { callback(err); return;}
+      console.log("updating instructos ranking ...");
+      var numInstructorProcessed = 0;
+      _.each( instructors, function(instructor){
+        instructor = _.omit( instructor,'expires');  // da problemas?
+        doUpdateVideoInstructorRanking(
+          instructor, 
+          _.bind(function(instructorWithRanking){
+            console.log("Updating " + instructorWithRanking.id)
+            Users.updateInstructor(
+              instructorWithRanking.id, 
+              instructorWithRanking, 
+            
+              function(err,num){
+                  if (err) { callback(err);} 
+                  console.log(instructorWithRanking.email + "  updated with ranking =" + instructorWithRanking.ranking);
+                  numInstructorProcessed = numInstructorProcessed + 1;
+                  if (numInstructorProcessed === instructors.length){
+                    console.log("ranking updated");
+                    callback(null);
+                  }
+               });
 
-            console.log(instructorWithRanking.email + "  updated with ranking =" + instructorWithRanking.ranking);
-            numInstructorProcessed = numInstructorProcessed + 1;
-            if (numInstructorProcessed === instructors.length){
-              console.log("ranking updated");
-              callback(null);
-            }
-         });
-
-        }
-      );
-    }, this); 
-  });
+          },this)
+        );
+      }, this); 
+    });
 };
 
 exports.updateInstructorRanking = updateInstructorRanking;
@@ -244,8 +253,7 @@ doUpdateVideoInstructorRanking = function( instructor, callback) {
               numVideosProcessed = numVideosProcessed + 1;
          
              if (numVideosProcessed === videos.length) {
-              var sum = _.reduce( videos, function(memo, video){ return memo + video.ranking.value;}, 0);
-              instructor.ranking = sum / videos.length;
+              instructor.ranking = _.reduce( videos, function(memo, video){ return memo + video.ranking.value;}, 0);
               callback(instructor);
              }
           });

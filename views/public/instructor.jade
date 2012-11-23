@@ -9,8 +9,9 @@ append content
         img.profile-img(src='https://profiles.google.com/s2/photos/profile/' + instructor.googleId, title=instructor.name, alt=instructor.name)
         figcaption
           p.address #{instructor.address}
-            br
-            a(target='_blank', href= instructor.googleMapURL) (show in google maps)
+            -if(instructor.googleMapURL)
+              br
+              a(target='_blank', href= instructor.googleMapURL) (show in google maps)
     .span8
       if(locals.currentUser && locals.currentUser.email == instructor.email) 
         a.btn.edit.pull-right(href='/instructors/' + instructor.id + '/edit') 

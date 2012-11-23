@@ -58,7 +58,8 @@ module.exports = {
   },
 
   googleMapURL : function( item ) {
-    return 'https://maps.google.com/?' +  'q=' + encodeURI(item.address) + '&ll=' + item.geopoint.lat + ',' + item.geopoint.lng ;
+    if (item.address && item.geopoint.lat && item.geopoint.lng)
+      return 'https://maps.google.com/?' +  'q=' + encodeURI(item.address) + '&ll=' + item.geopoint.lat + ',' + item.geopoint.lng ;
   }
 
 

@@ -55,17 +55,44 @@ append content
   .certificates
     if (locals.isEditionOwner && edition.state != 'NEW' && certificates.length > 0) 
       h3 Certificates
-      ul.unstyled
-        - certificates.forEach(function (certificate){
-          li 
-            if (edition.state == 'PAID' || locals.isAdmin)
-              a( href='/certificates/' + certificate.uuid) #{certificate.name} - #{certificate.email}
-            else
-              &nbsp; #{certificate.name} - #{certificate.email}
-        - })
+      if (edition.state == 'PAID' || locals.isAdmin)
+        form( id="certificatesForm", method='post', action='/courses/' +  course.uuid + '/editions/' +  edition.id + '/certificates/send' )
+          ul.unstyled
+            - certificates.forEach(function (certificate){
+              li 
+                label.checkbox
+                  input(type="checkbox", name="certificateUUID", class="certificateUUID", value=certificate.uuid)
+                  a( href='/certificates/' + certificate.uuid) #{certificate.name} - #{certificate.email}
+            - })
+          a#Send.btn.btn-primary Send certificates
+
+      else
+        ul.unstyled
+          - certificates.forEach(function (certificate){
+            li #{certificate.name} - #{certificate.email}
+          - })  
+
 
 append scripts
-  if (locals.isEditionOwner && edition.state == 'NEW')
+  if (locals.isEditionOwner && edition.state != 'NEW') 
+    script
+     define('editview', 
+        ['core'],
+        function(Core){
+          $("#Send").click( function(e){
+            var certificates = $(".certificateUUID");
+            if ( _.any(certificates, function(elem){ return elem.checked })) {
+              $('#certificatesForm').submit();
+            } else {
+               Core.renderMessage({ level :'danger',  message : 'No certificates selected'});
+             }
+           
+          });
+        }
+      );
+
+
+  if (locals.isEditionOwner && edition.state == 'NEW') 
     //- Edición de certificados
     script 
       define('editview', 

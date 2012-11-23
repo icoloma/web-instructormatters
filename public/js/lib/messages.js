@@ -5,7 +5,8 @@ define([ 'hbs!./message' ],
       '#updated' : { level :'success',  message :'Item updated' },
       '#saved'   : { level :'info',  message :'Item saved' },
       '#deleted' : { level :'warn',  message :'Item deleted successfully' },
-      '#error'   : { level :'error', message :'Error while processing your request' }
+      '#error'   : { level :'error', message :'Error while processing your request' },
+      '#mailSent': { level :'info',   message :'Mails sent correctly' }
   }
 
 });

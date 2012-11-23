@@ -17,6 +17,24 @@ var transport = nodemailer.createTransport('SMTP', {
   }
 });
 
+exports.sendCertificate = function( certificate, callback ) {
+  var  mail = {
+    to : certificate.email,
+    subject : "Your InstructorMatters certificate",
+    text : "Hello " + certificate.name + "\nYour InstructorMatter's certificate is ready, you can download it from http://instructormatters.com/certificates/" + certificate.uuid 
+  };
+  console.log("Sending certificate " + certificate.uuid + " to " + certificate.email);
+  transport.sendMail(mail, function (error, responseStatus) {
+      if (error){ 
+        return callback(error,responseStatus)
+      };
+      callback(null,responseStatus);
+    });
+  transport.close();
+  return;
+}
+
+
 exports.sendMail = function (req, res) {
 
     var contactRequest = req.body;

@@ -9,7 +9,8 @@ var Certificates = require('../db/models').Certificates
   , fs = require('fs')
   , UUID = require('../lib/uuid')
   , codeError = require('./errorHandlers.js').codeError
-  , localizeDates = require('../db/models/helpers').localizeDates;
+  , localizeDates = require('../db/models/helpers').localizeDates
+  , sendCertificate = require('../mailer/setup').sendCertificate;
 
 
 /*
@@ -61,6 +62,39 @@ exports.del = function (req, res) {
     res.send(204);  // OK, no content
   });
 }
+
+exports.send = function(req, res, next) {
+  var certificates = req.body.certificateUUID;
+  if (!certificates){
+   res.redirect('/courses/' + req.params.uuid + '/editions/' + req.params.idEdition ); 
+   return;
+  }
+  if (certificates.constructor === String) {
+   certificates = [ certificates ];
+  } 
+
+  var sentMail = 0;
+  _.each(certificates, function(certificateUUID){
+    Certificates.findCertificate(certificateUUID, function(err, certificate){
+      if (err) { 
+        console.log("Error finding certificate: " + certificateUUID);
+        return next(err)
+      };
+      sendCertificate(certificate[0], function(err,status){
+        if (err) {
+          return next(err)
+        }
+        sentMail = sentMail +1;
+        if (sentMail === certificates.length){
+          res.redirect('/courses/' + req.params.uuid + '/editions/' + req.params.idEdition +'/#mailSent');
+        }
+      });
+    });
+  },this)
+}
+
+
+
 
 exports.pdf = function( req, res ){
    

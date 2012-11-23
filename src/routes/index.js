@@ -44,6 +44,7 @@ module.exports = function (server) {
   server.get( '/certificates/:uuid', certificates.checkAvailability, certificates.pdf);
   server.post('/courses/:uuid/editions/:idEdition/certificates', security.isEditionOwner, certificates.save);
   server.get( '/courses/:uuid/editions/:idEdition/certificates', certificates.list);
+  server.post( '/courses/:uuid/editions/:idEdition/certificates/send', security.isEditionOwner, certificates.send);
   server.del( '/courses/:uuid/editions/:idEdition/certificates/:id', security.isEditionOwner, certificates.del);
 
   // -- Users-- 

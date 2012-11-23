@@ -3,6 +3,7 @@ var Users = require('../db/models').Users
   , Courses = require('../db/models').Courses
   , services = require('../db/models').services
   , Videos = require('../db/models').Videos
+  , calculateInstructorRanking = require('../db/models/helpers').calculateInstructorRanking
   , request = require('request')
   , googleMapURL = require('../db/models/helpers').googleMapURL
   , codeError = require('./errorHandlers').codeError;
@@ -139,9 +140,12 @@ exports.view =  function (req, res, next) {
        return;
     }
 
-    var instructor = _.omit(req.body, "admin", "certificates");
-
-    doUpdateVideoInstructorRanking(instructor, function( instructor){
+    var videos = req.body.videos;
+    var instructor = _.omit(req.body, "admin", "certificates", "videos");
+    var self = this;
+    Videos.updateInstructorVideos( req.params.idInstructor, videos , function(err){
+      if(err) return next(err);
+      instructor.ranking = calculateInstructorRanking(videos);
       Users.updateInstructor(req.params.idInstructor, instructor, 
         function (err, num) {
           if(err) return next(err);
@@ -253,7 +257,7 @@ doUpdateVideoInstructorRanking = function( instructor, callback) {
               numVideosProcessed = numVideosProcessed + 1;
          
              if (numVideosProcessed === videos.length) {
-              instructor.ranking = _.reduce( videos, function(memo, video){ return memo + video.ranking.value;}, 0);
+              instructor.ranking = calculateInstructorRanking(videos);
               callback(instructor);
              }
           });

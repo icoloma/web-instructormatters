@@ -68,26 +68,39 @@ define([ 'core', 'hbs!./instructorview', 'lib/gmaps', 'videos/videomodel', 'vide
 
       save: _.throttle(function(e) {
         e.preventDefault();
+        if (this.checkRequiredFields()){return};
+        this.doSave();
+      }, 1000),
+
+      checkRequiredFields: function(){
+        var requiredMissing = false;
+        // check geopoint
         if ( !this.model.get('geopoint')){
           this.marker.setVisible(false);
           this.infoWindow.close();
           Core.renderMessage({ level :'warn',  message :'Address not found' });
-          return;
+          requiredMissing = true;
         }
-        Core.loadingButton($('#send'), true);
-        this.doSave();
-      }, 1000),
 
-      doSave: function() {
+        // check videoSize && tittle
+        _.each(window.videoCollectionView.collection.models, function(video){
+          if (video.get('duration') > 180 ){
+            Core.renderMessage({ level :'danger',  message :'The video "' + video.get('title') +  '" is over 3 min.'});
+            requiredMissing = true;
+          }
+        });
+        return requiredMissing;
+
+
+      },
+
+      doSave: function(res) {
+        Core.loadingButton($('#send'), true);
         var self = this;
+        this.model.videos =  window.videoCollectionView.collection;
         this.model.save({ }, {
           success: function(resp, status, xhr) {
-            if (window.videoCollectionView.collection.length > 0) {
-              window.videoCollectionView.save();
-            } else {
-               Core.renderMessage({ level :'success',  message :'Instructor saved' });
-               Core.loadingButton($('#send'), false);
-            }
+            window.location.href = self.model.url()  + "/#updated";
           }
         });
       },

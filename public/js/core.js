@@ -29,9 +29,9 @@ define([ 'jquery', 'underscore', 'backbone', 'lib/messages', 'hbs!./lib/message'
       */
     renderMessage : function(msg, container){
       if (!container){
-        container = '.messages-container';
+        container =  $('.messages-container');
       }
-      $(container).append(messageTmpl(msg));
+      container.append(messageTmpl(msg));
     },
 
     /** assertions */
@@ -68,8 +68,9 @@ $(document).ajaxError(function(e, xhr, settings, exception) {
     //alert('error in: ' + settings.url + ' \n'+'error:\n' + xhr.responseText );
     core.renderMessage({ level:'error', message: xhr.responseText});  
   }
-  var buttonSend = $('#send');
-  if (buttonSend) buttonSend.button('reset');
+
+  // reset any sendButton
+  core.loadingButton($("#send"),false);
 }); 
 
   
@@ -79,7 +80,12 @@ if (messageKey){
   core.renderMessage(Messages[messageKey]);
   // remove Hash
   history.pushState("", document.title, window.location.pathname);
+
+  // reset any sendButton
+  core.loadingButton($("#send"),false)
 }  
+
+
 return core;
 
   

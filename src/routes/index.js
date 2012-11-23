@@ -67,7 +67,6 @@ module.exports = function (server) {
   // -- Videos-- 
   server.get( '/ranking/update', security.isAdmin, instructors.updateRanking);
   server.get( '/instructors/:idInstructor/videos',  videos.list);
-  server.post( '/instructors/:idInstructor/videos', security.isHimself, videos.update);
   server.del( '/instructors/:idInstructor/videos/:idVideo', security.isHimself, videos.del);
   
   // -- Security --

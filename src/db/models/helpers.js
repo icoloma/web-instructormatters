@@ -60,7 +60,13 @@ module.exports = {
   googleMapURL : function( item ) {
     if (item.address && item.geopoint.lat && item.geopoint.lng)
       return 'https://maps.google.com/?' +  'q=' + encodeURI(item.address) + '&ll=' + item.geopoint.lat + ',' + item.geopoint.lng ;
+  },
+
+  calculateInstructorRanking : function(videos){
+   return _.reduce( videos, function(memo, video){ return memo + video.ranking.value;}, 0);
   }
+
+
 
 
 

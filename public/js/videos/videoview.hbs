@@ -1,18 +1,34 @@
 
-<td><input type="text" name="url" value="{{url}}" class="span5" required
+
+<td>
+  <div class="video-messages-container"/>
+  <label for="url">URL</label>
+  <input type="text" name="url" value="{{url}}" class="input-xxlarge" required
   placeholder="http[s]://www.youtube.com/watch?v={videoid}"  
   pattern="http(s)?://www.youtube.com/watch\?v=.+">
-<td>
+
+  <label for="locale">Locale</label>
   <select name="locale" class="locale">
     <option value="es">Spanish</option>
     <option value="en">English</option>
   </select>
-<td>
+
+  <label for="courseUUID">Course</label>
   <select name="courseUUID" class="courseUUID" required>
       <option value="">--</option>
     {{#courses}}
       <option value="{{uuid}}">{{name}}</option>
     {{/courses}}
    </select>
-</td>  
-<td><a class="btn btn-danger delete"><i class="icon-trash icon-white"></i> Delete </a>
+
+<td>
+  {{#if thumbnail}}
+    <figure>
+      <img src='{{thumbnail}}' title='{{title}}' class="span3"/>
+      <figcaption class="span3">{{title}}</figcaption>
+    </figure>
+  {{else}}
+    <div>No video loaded</div>
+  {{/if}}
+<td>
+  <a class="btn btn-danger delete"><i class="icon-trash icon-white"></i> Delete </a>

@@ -34,10 +34,14 @@ _.extend(VideoSchema.statics, {
       .exec(wrapError(callback));
   },
 
-  updateInstructorVideos: function(instructorId, body, callback) {
+  updateInstructorVideos: function(instructorId, videos, callback) {
+    if (videos.length > 3) {
+      callback(errors.codeError(400,'Only 3 videos are allowed'), 0);
+      return;
+    }
     
     var self = this;
-    async.forEachSeries(body, 
+    async.forEachSeries(videos, 
       function (video, cb) {
         if (video.id) {
           // update
@@ -75,7 +79,8 @@ _.extend(VideoSchema.statics, {
 
   deleteVideo: function (idVideo, callback) {
     this.remove({_id: idVideo}, callback);
-  }
+  },
+
 });
 
 var Videos = mongoose.model('Videos', VideoSchema);

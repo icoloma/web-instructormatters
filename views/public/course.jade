@@ -31,11 +31,14 @@ append content
     section.row-fluid.upcoming-editions
       h1.header-3 Upcoming courses
       -if(editions.length > 0) {
-        ul.upcoming-list
+        ul
           -editions.slice(0, 10).forEach(function (edition) {
-            li  
-              a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{edition.date} 
-              &nbsp; - #{edition.address} (by <a href="/instructors/#{edition.instructorId}">#{edition.instructorName}</a>)
+            li 
+              a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{fromNow(edition.date)}
+              &nbsp; - #{edition.address} (by <a href="/instructors/#{edition.instructorId}">#{edition.instructorName}</a>)&nbsp;  
+              -if (edition.finished)
+                span( class="label label-inverse") FINISHED
+              
           -})
       -} else {
         p No courses scheduled

@@ -31,9 +31,13 @@ _.extend(EditionSchema.statics, {
     this.findById(editionID, wrapResult(callback));
   },
 
-  findCourseEditions: function (uuid, numEditions, callback) {
+  findCourseEditions: function (uuid, numEditions, fromDate , callback) {
     this
-      .find({deleted: false, courseUUID: uuid})
+      .find({
+        deleted: false, 
+        courseUUID: uuid,
+        date : { $gte: fromDate}
+      })
       .sort('date', 'descending')
       .limit(numEditions)
       .exec(wrapJSON(callback));

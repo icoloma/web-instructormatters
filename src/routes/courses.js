@@ -34,12 +34,14 @@ exports.view = function (req, res, next) {
   Mostrar un curso (public)
 */
 exports.showDetails = function (req, res, next) {
+  var today = new Date();
   async.parallel([
     function (cb) {
       Courses.findCourseByUUID(req.params.uuid, cb);
     },
     function (cb) {
-      Editions.findCourseEditions(req.params.uuid, 10, cb);
+      var fromDate = new Date( today  - 1296000000 ); // 15*24*60*60*1000 = 15 days ago
+      Editions.findCourseEditions(req.params.uuid, 10, fromDate , cb);
     },
     function (cb) {
       Videos.findCourseVideos(req.params.uuid, 3, cb);
@@ -51,6 +53,10 @@ exports.showDetails = function (req, res, next) {
 
       var course = results[0],
         editions = results[1];
+      _.each(editions, function(edition){
+        if (new Date(edition.date) < today)
+        edition.finished = true ;
+      });
 
 
       localizeDates(editions);

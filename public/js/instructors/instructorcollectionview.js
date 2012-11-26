@@ -75,23 +75,28 @@ function(K, template, Gmaps) {
           infoWindow: infoWindow
         };
 
-        google.maps.event.addListener(marker, 'click', _.bind(this.openInfoWindow, this, instructor.id));
+        google.maps.event.addListener(marker, 'click', _.bind(this.openInfoWindow, this, instructor.id, instructor.googleId));
       }, this);
       this.map.fitBounds(bounds); 
     },
 
     onClickInstructor: function(e) {
       var id = $(e.currentTarget).data('id')
+      , googleId = $(e.currentTarget).data('googleid')
       , m = this.markers[id];
       K.assert(m, 'Cannot find marker for ' + id);
-      this.openInfoWindow(id);
+      this.openInfoWindow(id, googleId);
     },
 
-    openInfoWindow: function(id) {
+    openInfoWindow: function(id,googleId) {
       if (this.currentMarker != this.markers[id]) {
         this.currentMarker && this.currentMarker.infoWindow.close();
         this.currentMarker = this.markers[id];
         this.currentMarker.infoWindow.open(this.map, this.currentMarker.marker);
+        // load instructor profile image 
+        setTimeout(function(){
+          $('<img class="infoWindow-img" src="https://profiles.google.com/s2/photos/profile/' + googleId + '">').on('load', function() {$('#avatar-' + id ).replaceWith(this);});
+        }, 300);
       }
     },
 

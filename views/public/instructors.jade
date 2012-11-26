@@ -18,7 +18,7 @@ append content
               &nbsp;!{instructor.name}
             p.address
               !{instructor.address} 
-              a.location-link.hidden-phone(data-id=instructor.id)  
+              a.location-link.hidden-phone(data-id=instructor.id, data-googleid= '/' + instructor.googleId)  
                 span.location ▶
                 &nbsp;View in map
 
@@ -41,8 +41,6 @@ append scripts
           instructors: !{json}
         });
         window.view.render();
-
-     
       }
     );
 

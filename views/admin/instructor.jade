@@ -9,8 +9,11 @@ append scripts
 
   script 
     define('editview', 
-      [ 'instructors/instructorview', 'instructors/instructormodel' ], 
+      [ 'instructors/instructorview', 'instructors/instructormodel',  'jquery'  ], 
       function(InstructorView, InstructorModel) {
+
+        // load instructor profile image 
+        $('<img class="profile-img" src="https://profiles.google.com/s2/photos/profile/#{instructor.googleId}">').on('load', function() {$('#avatar').replaceWith(this);});
 
         instructorView = new InstructorView({
           model: new InstructorModel( !{ JSON.stringify(instructor) } ),
@@ -27,6 +30,7 @@ append scripts
         [ 'videos/videomodel', 'videos/videoscollectionview',  'jquery' ], 
 
           function(VideoModel, VideoCollectionView) {
+
       
             var videos = new Backbone.Collection([], {
                 model: VideoModel,
@@ -44,4 +48,6 @@ append scripts
                   }).render();
               }
             });
+
+
       });

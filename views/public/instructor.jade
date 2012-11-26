@@ -6,7 +6,9 @@ append content
   section.row-fluid
     .span3
       figure.profile
-        img.profile-img(src='https://profiles.google.com/s2/photos/profile/' + instructor.googleId, title=instructor.name, alt=instructor.name)
+
+        img#avatar.profile-img(src='/img/avatar.jpg', title=instructor.name, alt=instructor.name)
+      
         figcaption
           p.address #{instructor.address}
             -if(instructor.googleMapURL)
@@ -39,6 +41,15 @@ append content
             mixin videoItem(video)
           -})
 
+append scripts
+  script
+   define('viewName', 
+      ['core'],
+      function(Core){
+        // load instructor profile image 
+        $('<img class="profile-img" src="https://profiles.google.com/s2/photos/profile/#{instructor.googleId}">').on('load', function() {$('#avatar').replaceWith(this);});
+      }
+    );
 
   
 

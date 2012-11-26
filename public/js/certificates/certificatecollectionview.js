@@ -27,37 +27,27 @@ define([ 'core', 'certificates/certificatetrview', 'certificates/certificatemode
         this.$tbody.append(trView.render().$el);
       },
 
-      save: _.throttle(function(e) {
-        
+      save: function(e) {
+
+        Core.loadingButton($('#send'), true);
+
         e.preventDefault();
 
         var data = JSON.stringify(this.collection.toJSON());
         var courseUUID = this.options.courseUUID;
         var edition = this.options.edition;
-        var url = '/courses/' + courseUUID + "/editions/" + edition + "/certificates";
-        var self = this;
 
-        $.ajax({
-          type: 'POST',
-          url: url,
-          data: data,
-          dataType: 'json',
-          contentType: 'application/json',
-          success: function(data, textStatus, jqXHR) {
-            window.location.href = '/courses/' + self.options.course.uuid + '/editions/' + self.model.id  + "/#updated";
-          },
+        var urlEdition = '/courses/' + courseUUID + '/editions/' + edition;
 
-          on201: function(xhr){
-              // Http status Ok, Created
-              var location = xhr.getResponseHeader("location") + "/#saved";
-              window.location.href=location;              
+        this.collection.url = urlEdition + '/certificates';;
+
+        B.sync( "create", this.collection, {
+          on201: function( xhr) {
+            Core.renderMessage({ level :'info',  message :'Certificates saved' });
+            Core.loadingButton($('#send'), false);
           }
-
         });
-
-
-      }, 1000),
+      }
 
     });
-
 })

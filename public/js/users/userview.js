@@ -59,17 +59,18 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
 
       
       save: function(e) {
+        Core.loadingButton($('#send'), true);
         var self = this;
         this.model.save({}, {
          
           success: function(resp, status, xhr) {
-            window.location.href = self.model.url()  + "/#updated";
+            Core.renderMessage({ level :'info',  message :'User saved' });
+            Core.loadingButton($('#send'), false);
           },
 
           on201: function( xhr) {
-            // Http status Ok, Created
-            var location = xhr.getResponseHeader("location") + "/#saved";
-            window.location.href =location;              
+            Core.renderMessage({ level :'info',  message :'User saved' });
+            Core.loadingButton($('#send'), false);
           }
         });
         e.preventDefault();

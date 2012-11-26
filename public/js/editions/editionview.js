@@ -1,5 +1,5 @@
-define([ 'core', 'certificates/certificatecollectionview', 'certificates/certificatemodel', 'hbs!./editionview', 'lib/gmaps' ], 
-  function(Core, CertificateCollectionView,CertificateModel, template, GMaps ) {
+define([ 'core', 'hbs!./editionview', 'lib/gmaps' ], 
+  function(Core, template, GMaps ) {
 
     return B.View.extend({
 
@@ -45,7 +45,6 @@ define([ 'core', 'certificates/certificatecollectionview', 'certificates/certifi
         }
 
         this.model.save({}, {
-         
           success: function(resp, status, xhr) {
             location.href = resp.url() + "/#updated";
           },

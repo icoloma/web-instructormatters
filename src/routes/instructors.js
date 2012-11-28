@@ -146,6 +146,7 @@ exports.view =  function (req, res, next) {
     Videos.updateInstructorVideos( req.params.idInstructor, videos , function(err){
       if(err) return next(err);
       instructor.ranking = calculateInstructorRanking(videos);
+      console.log("new instructor ranking:" + instructor.ranking);
       Users.updateInstructor(req.params.idInstructor, instructor, 
         function (err, num) {
           if(err) return next(err);
@@ -178,6 +179,7 @@ exports.view =  function (req, res, next) {
 exports.updateRanking = function(req,res,next) {
   updateInstructorRanking( function(err){
     if (err) {
+      console.log(err);
       res.redirect("/#error");
     }else {
       res.redirect("/");
@@ -192,16 +194,15 @@ var updateInstructorRanking = function( callback ){
       if (err) { callback(err); return;}
       console.log("updating instructos ranking ...");
       var numInstructorProcessed = 0;
+
       _.each( instructors, function(instructor){
-        instructor = _.omit( instructor,'expires');  // da problemas?
+        console.log("processing " + instructor.email);
         doUpdateVideoInstructorRanking(
           instructor, 
           _.bind(function(instructorWithRanking){
-            console.log("Updating " + instructorWithRanking.id)
             Users.updateInstructor(
               instructorWithRanking.id, 
               instructorWithRanking, 
-            
               function(err,num){
                   if (err) { callback(err);} 
                   console.log(instructorWithRanking.email + "  updated with ranking =" + instructorWithRanking.ranking);
@@ -214,6 +215,7 @@ var updateInstructorRanking = function( callback ){
 
           },this)
         );
+
       }, this); 
     });
 };
@@ -221,8 +223,10 @@ var updateInstructorRanking = function( callback ){
 exports.updateInstructorRanking = updateInstructorRanking;
 
 doUpdateVideoInstructorRanking = function( instructor, callback) {
+    instructor  = _.omit( instructor,'expires','aboutMe','address','geopoint');  // dan problemas si son null
     Videos.findInstructorVideos(instructor.id, function(err, videos){
       if (err) {
+        console.log("error in instructor videos : " + instructor.id);
         callback(err);
         exit;
       } 
@@ -233,7 +237,7 @@ doUpdateVideoInstructorRanking = function( instructor, callback) {
           request({uri: url}, function(err, response, body){
               var self = this;
               self.items = new Array();
-              if(err && response.statusCode !== 200){console.log('Request error.');}
+              if( err){console.log('Request error. ' + err); callback(instructor); return;}
               var data = JSON.parse(body);
               var numLikes = 0;
               var numDislikes = 0;
@@ -251,6 +255,7 @@ doUpdateVideoInstructorRanking = function( instructor, callback) {
              
               Videos.update( {_id: video.id}, video, function(err,cb){
                 if(err) {
+                  console.log("error updating video " + video.id)
                   callback(err);
                 }
               });
@@ -271,6 +276,6 @@ doUpdateVideoInstructorRanking = function( instructor, callback) {
     });
  }
 
-
+exports.doUpdateVideoInstructorRanking = doUpdateVideoInstructorRanking ;
 
 

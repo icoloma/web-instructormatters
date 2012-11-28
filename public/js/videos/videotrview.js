@@ -15,10 +15,16 @@ define([ 'core', 'hbs!./videoview' ],
             $('.addVideo').show();
           }
 
-          if (this.model.id) {
-            Core.renderMessage({ level :'info',  message :'The video was deleted'}, $('.videos-messages-container'));
+          this.model.destroy({
+            success: function(model, response){
+              Core.renderMessage({ level :'info',  message :'The video was deleted'}, $('.videos-messages-container'));
+            },
+            error: function(model, error){
+              Core.renderMessage({ level :'error',  message :'Error removing video'}, $('.videos-messages-container'));
+            }
           }
-          this.model.destroy();
+
+            );
           this.remove();
         },
         

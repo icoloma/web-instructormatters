@@ -202,7 +202,7 @@ var updateInstructorRanking = function( callback ){
           _.bind(function(instructorWithRanking){
             Users.updateInstructor(
               instructorWithRanking.id, 
-              instructorWithRanking, 
+              {ranking: instructorWithRanking.ranking}, 
               function(err,num){
                   if (err) { callback(err);} 
                   console.log(instructorWithRanking.email + "  updated with ranking =" + instructorWithRanking.ranking);

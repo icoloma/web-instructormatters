@@ -5039,6 +5039,11 @@ footer .brand {
   width: 135px;
   background-position: -214px 0px;
 }
+.trustedBy {
+  white-space: nowrap;
+  top: -20px;
+  position: relative;
+}
 .pricing {
   *zoom: 1;
   -webkit-border-radius: 5px;

@@ -54,6 +54,12 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
           });
 
         }
+       
+        googleId = this.model.get('googleId');
+        // load instructor profile image 
+        setTimeout(function(){
+          $('<img class="profile-img" src="https://profiles.google.com/s2/photos/profile/' + googleId + '">').on('load', function() {$('#avatar').replaceWith(this);});
+        }, 300);
 
       },
 

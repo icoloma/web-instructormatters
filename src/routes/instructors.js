@@ -6,7 +6,9 @@ var Users = require('../db/models').Users
   , calculateInstructorRanking = require('../db/models/helpers').calculateInstructorRanking
   , request = require('request')
   , googleMapURL = require('../db/models/helpers').googleMapURL
-  , codeError = require('./errorHandlers').codeError;
+  , codeError = require('./errorHandlers').codeError
+  , isCertified = require( '../db/models/helpers').isCertified
+  , moment = require('moment');
 
 /*
 * Listado de todos los instructores
@@ -26,11 +28,10 @@ exports.list =  function (req, res, next) {
           if (!instructor.certificates){
             instructor.certified = false;
           } else if(!req.params.uuid){
-            // is certified in any course?
-            instructor.certified = instructor.certificates.length > 0;
+            instructor.certified = isCertified(instructor);
           } else {
             // is certified in the request course?
-            instructor.certified =  _.contains( instructor.certificates, req.params.uuid);
+            instructor.certified = isCertified(instructor, req.params.uuid);
           }
           delete instructor.certificates;
           
@@ -76,7 +77,7 @@ exports.addCourseInfo = function (req,res,next){
 exports.show =  function (req, res, next) {
   services.getInstructorFullInfo(req.params.idInstructor, function (err, instructor) {
     if(err) return next(err);
-    instructor = _.omit(instructor, ['admin', 'expires'])
+    instructor = _.omit(instructor, ['admin'])
     res.format({
       html: function(){
         instructor.googleMapURL =googleMapURL(instructor),
@@ -114,12 +115,23 @@ exports.view =  function (req, res, next) {
     function (error,results) {
       if(error) return next(err);
       if(res.locals.isAdmin || res.locals.currentUser.id === req.params.idInstructor) {
+
+        // añadimos fecha de expiración del certificado a los cursos ( a nivel informativo )
+        var courses = results[0];
+        _.each(courses, function(course){
+          var cert = _.find( res.locals.currentUser.certificates, function(cert){ return cert.uuid === course.uuid});
+          if (cert){
+            course.certExpiresDate =  moment( cert.expires, "YYYY-MM-DD").fromNow();
+          }
+
+        });
+
         res.format({
           html: function(){
             res.render('admin/instructor', {
               title: 'instructor',
               instructor: results[1],
-              courses: results[0]
+              courses: courses
             });
           },
           json: function(){
@@ -223,7 +235,7 @@ var updateInstructorRanking = function( callback ){
 exports.updateInstructorRanking = updateInstructorRanking;
 
 doUpdateVideoInstructorRanking = function( instructor, callback) {
-    instructor  = _.omit( instructor,'expires','aboutMe','address','geopoint');  // dan problemas si son null
+    //instructor  = _.omit( instructor,'expires','aboutMe','address','geopoint');  // dan problemas si son null
     Videos.findInstructorVideos(instructor.id, function(err, videos){
       if (err) {
         console.log("error in instructor videos : " + instructor.id);

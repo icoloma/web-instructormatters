@@ -6,17 +6,24 @@ append content
 
   h2 Instructors & admins 
   
-  ul
-    -users.forEach(function (user) {
-      li
-        a(href="/users/" + user.id ) 
-          if (user.name)
-            &nbsp; #{user.name} 
-          else
-            &nbsp; --
-          &nbsp; (#{user.email})
-    -})
-
   if (locals.currentUser && locals.currentUser.admin) 
     a(href="/users/new").btn.btn-primary New User
+  table.table 
+    thead
+      th Name
+      th e-mail
+      th Address
+
+    -users.forEach(function (user) {
+      tr
+        td
+          a(href="/users/" + user.id ) 
+            if (user.name)
+              &nbsp; #{user.name} 
+            else
+              &nbsp; --
+        td #{user.email}
+        td #{user.address}
+    -})
+
   

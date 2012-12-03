@@ -259,7 +259,7 @@ exports.list = function (req, res, next) {
 var getInstructors = function (req, res, callback) {
   if (res.locals.isAdmin) {
     // TODO: Ojo, esto no es óptimo si el número de instructores es muy grande
-    Users.findInstructors({courses: req.params.uuid, certificates:req.params.uuid}, callback);
+    Users.findInstructors({"courses": req.params.uuid, "certificates.uuid": req.params.uuid}, callback);
   } else {
     // Solo le permitimos asignarse a si mismo como instructor
     callback(null, [req.user]);

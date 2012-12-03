@@ -19,11 +19,13 @@ var UserSchema = new mongoose.Schema({
   name: String,
   email: {type: String, required: true},
   courses: [ { uuid: {type: String}}],
-  expires: Date,
+  
   googleId: String,
   admin: {type: Boolean, default: false},
   deleted: {type: Boolean, default: false},
-  certificates: [ { uuid: {type: String}}],
+  certificates: [{ uuid: {type: String},
+                   expires: Date
+                }],
   aboutMe : String,
   ranking: { type:Number, default: 0},
   address: String,
@@ -75,6 +77,11 @@ _.extend(UserSchema.statics, {
 
   updateUser: function (id, params, callback) {
     this.normalizeBooleans(params);
+    // La fecha viene como String
+    _.each(params.certificates, function(cert){
+      cert.expires = new Date(cert.expires);
+    });
+
     this.update({_id: id}, params, wrapResult(callback));
   },
 
@@ -110,15 +117,18 @@ Users.prototype.toJSON = function() {
     aboutMe: this.aboutMe,
     email: this.email,
     googleId: this.googleId,
-    expires: this.expires,
     admin: this.admin,
     ranking: this.ranking,
     courses: this.courses && this.courses.map(function (course) {
       return course;
     }),
+    
     certificates: this.certificates && this.certificates.map(function (certificate) {
-      return certificate
-    }),
+       return { "expires":  /(.*)T.*/.exec(certificate.expires.toISOString())[1],
+                "uuid" : certificate.uuid
+             }
+     }),
+
     address: this.address,
     geopoint: { 
       lat: this.geopoint.lat, 

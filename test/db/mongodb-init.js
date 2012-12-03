@@ -14,6 +14,14 @@ db.courses.drop();
 
 var extraUsers = 50;
 
+var randomDate = function () {
+    var now = new Date().getTime();
+    var month = 30 * 24 * 60* 60 * 1000;
+    var from = now - month;
+    var to = now + month;
+    return new Date(from + Math.random() * (to - from));
+}
+
 var randomizeUser = function (user) {
   var excludedCourse = randomInt(numCourses),
     excludedCert = randomInt(numCourses - 1),
@@ -28,7 +36,7 @@ var randomizeUser = function (user) {
   // print(i)
   chosenCourses.forEach(function (course, i) {
     if(i !== excludedCert)
-      chosenCerts.push(course);
+      chosenCerts.push( { uuid:course, expires : randomDate()});
   });
 
   Object.extend(user, {

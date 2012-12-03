@@ -64,12 +64,25 @@ module.exports = {
 
   calculateInstructorRanking : function(videos){
    return _.reduce( videos, function(memo, video){ return memo + video.ranking.value;}, 0);
+  },
+
+  isCertified: function( instructor, courseUUID) {
+  
+    if (courseUUID) {
+      var cert =  _.find(instructor.certificates, function(cert) { 
+        var certDate = new Date(cert.expires);
+        if (cert.uuid === courseUUID && certDate > new Date()) {
+          return true;
+        } else { 
+          return false;
+        }});
+      return cert? true: false;
+      
+    } else {
+      return _.find(instructor.certificates, function(cert) { return ( new Date(cert.expires) > new Date())})? true : false;
+    } 
+  
+    return true;
   }
-
-
-
-
-
-
 
 }

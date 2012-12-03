@@ -16,17 +16,19 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
           }
 
         },
-        'change input.certificates' : function(e){
-          if (e.currentTarget.checked){
-            this.model.attributes.certificates.push(e.currentTarget.value);
-          } else  {
-            this.model.attributes.certificates = _.without(this.model.attributes.certificates, e.currentTarget.value);
-          }
-
-        },
+       
         'change input.email,select,input.address': function(e) {
           var $ct = $(e.currentTarget);
           this.model.set($ct.attr('name'), $ct.val());
+        },
+
+        'change input.expires': function(e){
+          this.model.attributes.certificates = [];
+          var self = this;
+          $('.expires').each(function(idx, date){
+            if (date.value.length > 0 )
+              self.model.attributes.certificates.push( {uuid: $(date).data('uuid'),expires:date.value});
+          });
         }
       },
 
@@ -48,9 +50,10 @@ define([ 'core', 'backbone', 'hbs!./userview' ],
             var query = 'input[name=courses_' + item + ']';
             $(this.$(query)[0]).attr('checked', true);
           });
-          $.map(this.model.attributes.certificates, function(item){ 
-            var query = 'input[name=certificates_' + item + ']';
-            $(this.$(query)[0]).attr('checked', true);
+          $.map(this.model.attributes.certificates, function(certificate){ 
+            $(this.$( 'input[name=certificates_' + certificate.uuid + ']')[0]).attr('checked', true);
+            var expiresField =   $(this.$( 'input[name=expires_' + certificate.uuid + ']')[0]);
+            expiresField.val(certificate.expires);
           });
 
         }

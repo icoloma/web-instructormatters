@@ -35,12 +35,12 @@
             <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox courses"> {{this.name}} 
         {{/each}}
 
-        <h3>Certificates:</h3>
-        {{#each courses}}
-            <p><input type="checkbox" name="certificates_{{this.uuid}}" value="{{this.uuid}}" class="checkbox certificates"> {{this.name}} 
-        {{/each}}
-
+        <h3>Instructor Certificates:</h3>
       
+        {{#each courses}}
+          <label>{{this.name}}</label>
+          <input type="date" name="expires_{{this.uuid}}" data-uuid="{{this.uuid}}" class="expires"  autocomplete="off" placeholder="yyyy-mm-dd"> 
+        {{/each}}
 
         <p>
           <input type="submit" id="send" class="btn btn-primary" value="Save" data-loading-text="Saving..." data-original-text="Save" />

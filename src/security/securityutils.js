@@ -47,7 +47,7 @@ exports.isCertifiedInstructor = function(req, res, next) {
       return;
     }
 
-    if (req.user.admin ||  _.include(req.user.certificates, req.params.uuid)){
+    if (req.user.admin ||  models.helpers.isCertified(req.user, req.params.uuid)){
       next();
     } else {
       console.log(req.user.email + " tried to access as Certified instructor for course '" + req.params.uuid + "'");

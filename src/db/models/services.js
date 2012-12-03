@@ -9,7 +9,8 @@ var wrapResult = require('./helpers').wrapResult,
   wrapError = require('./helpers').wrapError,
   wrapJSON = require('./helpers').wrapJSON,
   googleMapURL = require('./helpers').googleMapURL,
-  localizeDates = require('./helpers').localizeDates;
+  localizeDates = require('./helpers').localizeDates,
+  isCertified =  require('./helpers').isCertified;
 
 
 module.exports = {
@@ -97,7 +98,7 @@ module.exports = {
             function (err, fullCourses) {
               _.map(fullCourses,
                 function (course) {
-                  course.certified =  _.contains( instructor.certificates, course.uuid)
+                  course.certified =  isCertified( instructor, course.uuid);
               });
 
               instructor.coursesWithInfo = fullCourses;
@@ -107,7 +108,6 @@ module.exports = {
         }
       });
   },
-
 
 
   /*

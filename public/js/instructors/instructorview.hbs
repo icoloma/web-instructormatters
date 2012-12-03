@@ -18,6 +18,7 @@
         <label>Courses:</label>
         {{#each courses}}
             <p><input type="checkbox" name="courses_{{this.uuid}}" value="{{this.uuid}}" class="checkbox"> {{this.name}} 
+              {{#if this.certExpiresDate}} <span class="certified-badge" title="Certified expires {{this.certExpiresDate}}"></span> {{/if}}
         {{/each}}
       </div>
    </div> 

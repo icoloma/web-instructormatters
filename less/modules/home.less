@@ -58,8 +58,12 @@
 }
 
 .clients-container {
-  margin: 0 auto;
+  box-sizing: border-box;
+  text-align: center;
+
+  display: table;
 }
+
 [class^="client-"] {
   display: inline-block;
   height: 50px;
@@ -98,6 +102,10 @@
 
 .trustedBy {
   white-space: nowrap;
-  font-size: 24px;
+}
+
+.trustedBy, .clients-list {
+  display: table-cell;
+  vertical-align: middle;
 }
 

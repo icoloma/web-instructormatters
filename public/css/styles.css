@@ -5041,8 +5041,7 @@ footer .brand {
 }
 .trustedBy {
   white-space: nowrap;
-  top: -20px;
-  position: relative;
+  font-size: 24px;
 }
 .pricing {
   *zoom: 1;
@@ -5206,6 +5205,13 @@ p.certified {
   background: url(img/instructor-badge2.png) no-repeat center bottom;
   background-size: 1.4em;
   margin-top: -5px;
+}
+.table .video-td {
+  text-align: center;
+  vertical-align: middle;
+}
+.video-td figcaption {
+  text-align: left;
 }
 .map img {
   max-width: none;

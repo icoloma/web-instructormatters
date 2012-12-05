@@ -2,17 +2,24 @@ extends ../layout
 
 
 append content
- 
-  .main  
-    form(method="post", action='/login')
-      fieldset
-       
-          p
-            label(for="username") Username:
-              input(type="text", name="username", value=user.name, required)
-          p
-            label(for="password") password:
-              input(type="password", name="password", required)
-          p.buttons
-            input(type="submit", value="Login")
 
+  .row-fluid
+    .span6
+      h1.header-2 Sign in using your Google Account
+      a(href="/login-auth", title="Login with your Google Account").google-login
+      p We need only basic access to your Google Account. Your email will never be publicly displayed, we have contact forms for that.
+      p <b>We do never have access to your password.</b>.
+    .span6
+      h2.header-2 Join <b>InstructorMatters</b>
+      p Sign up in <b>InstructorMatters</b> and start organizing your courses:
+      ul
+        li Set up your profile and appear in our <a href="/instructors">instructors map.</a>
+        li Upload your videos and show the world what a good instructor you are.
+        li Get contacted by potential students.
+        li Announce your upcoming editions.
+        li Get a pretty instructor badge <span class="certified-badge"></span>. We know you love badges.
+  hr
+  .row-fluid
+      p 
+        small This website uses cookies to keep track of your user session. You can disable them in your browser settings, but in that case you will not be able to complete the login process.
+ 

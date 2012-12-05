@@ -5332,6 +5332,16 @@ footer .brand:hover {
 .label-PENDING {
   background-color: #f89406;
 }
+.google-login {
+  float: left;
+  width: 80px;
+  height: 80px;
+  margin-right: 20px;
+  font-size: 0;
+  font-family: 'a';
+  background: url(http://aux.iconpedia.net/uploads/1570855644654910859.png);
+  background-size: 80px;
+}
 @media (min-width: 1200px) {
   .wrapper {
     max-width: 1170px;

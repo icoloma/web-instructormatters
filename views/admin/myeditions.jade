@@ -7,13 +7,23 @@ append content
   h2 Your editions
 
   -if(editions.length > 0)
-    ul
-      -editions.forEach(function (edition) {
-        li
-          a( href="/courses/" + edition.courseUUID + "/editions/" + edition.id )  #{edition.date} 
-          [#{edition.course.name}] - #{edition.address} 
-          span( class='label label-'+ edition.state) #{edition.state}
-      -})
+    table.table.table-striped
+      thead
+        tr
+          td Date
+          td Course
+          td Venue
+          td State
+      body
+        -editions.forEach(function (edition) {
+          tr
+            td
+              a( href="/courses/" + edition.courseUUID + "/editions/" + edition.id )  #{edition.date} 
+            td #{edition.course.name}
+            td #{edition.address} 
+            td 
+              span( class='label label-'+ edition.state) #{edition.state}
+        -})
   -else
     p No editions found
 

@@ -12,6 +12,7 @@ define([ 'core', 'certificates/certificatetrview', 'certificates/certificatemode
         this.$el.html(template());
         this.$tbody = this.$('tbody');
         this.collection.each(this.addTrView, this);
+        this.collection.url = '/courses/' + this.options.courseUUID + '/editions/' + this.options.edition + '/certificates'; 
       },
 
 
@@ -32,19 +33,19 @@ define([ 'core', 'certificates/certificatetrview', 'certificates/certificatemode
         Core.loadingButton($('#send'), true);
 
         e.preventDefault();
+        window.thisView = this;
 
         var data = JSON.stringify(this.collection.toJSON());
-        var courseUUID = this.options.courseUUID;
-        var edition = this.options.edition;
-
-        var urlEdition = '/courses/' + courseUUID + '/editions/' + edition;
-
-        this.collection.url = urlEdition + '/certificates';;
-
         B.sync( "create", this.collection, {
           on201: function( xhr) {
-            Core.renderMessage({ level :'info',  message :'Certificates saved' });
-            Core.loadingButton($('#send'), false);
+
+            // actualiza los certificados para recuperar los id's
+            window.thisView.collection.fetch({
+              success: function(resp, status, xhr) {
+                window.thisView.render();
+                Core.renderMessage({ level :'info',  message :'Certificates saved' });
+               }
+            });  
           }
         });
       }

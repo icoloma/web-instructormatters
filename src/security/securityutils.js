@@ -1,4 +1,5 @@
 var models = require('../db/models'),
+  helpers = require('../db/models/helpers'),
   codeError = require('../routes/errorHandlers').codeError;
 
 /*
@@ -47,7 +48,7 @@ exports.isCertifiedInstructor = function(req, res, next) {
       return;
     }
 
-    if (req.user.admin ||  models.helpers.isCertified(req.user, req.params.uuid)){
+    if (req.user.admin ||  helpers.isCertified(req.user, req.params.uuid)){
       next();
     } else {
       console.log(req.user.email + " tried to access as Certified instructor for course '" + req.params.uuid + "'");
@@ -105,7 +106,7 @@ exports.exposeInstructor = function (req, res, next){
     }
 
     // is Certified
-    if (!req.user || !(req.user.admin || _.include(req.user.certificates, req.params.uuid))) {
+    if (!req.user || !(req.user.admin ||  helpers.isCertified(req.user, req.params.uuid))) {
       res.locals.isCertifiedInstructor = false;
     } else {
       res.locals.isCertifiedInstructor = true;

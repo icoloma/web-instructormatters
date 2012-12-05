@@ -95,7 +95,7 @@ courses.forEach(function (course) {
 var numEditions = 60,
   editions = [],
   numUsers = users.length,
-  oneCourse, isCertified, oneUser, onePlace, oneDate,
+  oneCourse, isCertified, oneUser, onePlace, oneDate, certs,
   now = new Date();
 
 for(var i = 0; i < numEditions; i++) {
@@ -106,7 +106,10 @@ for(var i = 0; i < numEditions; i++) {
 
   while(!isCertified) {
     oneUser = users[randomInt(numUsers)];
-    if(oneUser.certificates.indexOf(oneCourse.uuid) > -1) {
+    certs = oneUser.certificates.map(function (c) {
+      return c.uuid;
+    });
+    if(certs.indexOf(oneCourse.uuid) > -1) {
       isCertified = true;
     }
   }

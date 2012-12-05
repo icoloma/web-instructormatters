@@ -45,7 +45,9 @@ app.configure(function() {
   app.locals({
     isoLangs: require('./src/lib/isolangs').isoLangs,
     fromNow: function(date) {
-      return moment(date).fromNow();
+      var time = moment(date).fromNow();
+
+      return time.charAt(0).toUpperCase() + time.slice(1);
     }
   });
 

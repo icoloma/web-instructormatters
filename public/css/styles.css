@@ -4734,11 +4734,6 @@ a.badge:hover {
     padding-left: 20px;
     padding-right: 20px;
   }
-  .navbar-fixed-top,
-  .navbar-fixed-bottom {
-    margin-left: -20px;
-    margin-right: -20px;
-  }
   .container-fluid {
     padding: 0;
   }
@@ -5000,7 +4995,9 @@ footer .brand {
   font-weight: bold;
 }
 .clients-container {
-  margin: 0 auto;
+  box-sizing: border-box;
+  text-align: center;
+  display: table;
 }
 [class^="client-"] {
   display: inline-block;
@@ -5041,7 +5038,11 @@ footer .brand {
 }
 .trustedBy {
   white-space: nowrap;
-  font-size: 24px;
+}
+.trustedBy,
+.clients-list {
+  display: table-cell;
+  vertical-align: middle;
 }
 .pricing {
   *zoom: 1;
@@ -5122,6 +5123,9 @@ footer .brand {
 .sign-up {
   text-align: center;
   clear: both;
+}
+.videos {
+  margin-top: 20px;
 }
 .video-thumbnail {
   width: 100%;
@@ -5348,11 +5352,6 @@ footer .brand:hover {
   .wrapper {
     width: auto;
     padding: 0 20px;
-  }
-  .home-image-slider,
-  footer {
-    margin-left: -20px;
-    margin-right: -20px;
   }
   .home-image-slider {
     padding: 0 20px;

@@ -9,26 +9,28 @@ append content
       a(href="/courses/" + course.uuid + '/edit').btn.pull-right Edit
 
     section.row-fluid
-      h1.header-3 Description
-      p #{course.description}
+      .span8
+        h1.header-3 Description
+        p #{course.description}
 
-      h2.header-3 Details
-      ul
-        li #{course.duration} length.
-        -if(course.link)
-          li Check out the 
-            a(href=course.link, target="_blank") materials
-        li Show all instructors in
-          a(href="/instructors/course/" + course.uuid)  Google Maps
-          | .
+        h2.header-3 Details
+        ul
+          li #{course.duration} length.
+          -if(course.link)
+            li Check out the 
+              a(href=course.link, target="_blank") materials.
+          li Show all instructors in
+            a(href="/instructors/course/" + course.uuid)  Google Maps
+            | .
+    
+    if(course.videos.length >0)
+      section.row-fluid
+          h1.header-3 Best instructor videos
+          .videos
+            each video in course.videos
+              mixin videoItem(video)
 
-    section.row-fluid
-        
-      if(course.videos.length >0)
-        h1.header-3 Best instructor videos
-        each video in course.videos
-          mixin videoItem(video)
-    section.row-fluid.upcoming-editions
+      section.row-fluid.upcoming-editions
       h1.header-3 Upcoming courses
       -if(editions.length > 0) {
         ul

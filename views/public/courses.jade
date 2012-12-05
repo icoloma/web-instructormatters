@@ -13,7 +13,7 @@ append content
             p #{course.description} 
             //- each uservideos in course.videos
             -if(course.videos && course.videos.length > 0)
-              .row-fluid
+              .videos
                 each video in course.videos
                   mixin videoItem(video)
           .row-fluid

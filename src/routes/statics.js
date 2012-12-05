@@ -18,6 +18,11 @@ exports.home = function (req, res, next) {
 
 }
 
+exports.login = function (req, res) {
+  res.render('public/login', {
+    title: 'Login'
+  });
+}
 /*
   Pricing
 */

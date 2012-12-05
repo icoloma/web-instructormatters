@@ -16,6 +16,7 @@ var models  = require('../db/models')
 module.exports = function (server) {
   
   server.get('/', statics.home);
+  server.get('/login', statics.login);
   server.get('/pricing', statics.pricing);
   
   // -- ContactForm --
@@ -71,7 +72,7 @@ module.exports = function (server) {
   server.del( '/instructors/:idInstructor/videos/:idVideo', security.isHimself, videos.del);
   
   // -- Security --
-  server.get('/login', 
+  server.get('/login-auth', 
       passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
                                               'https://www.googleapis.com/auth/userinfo.email'] }), 
       // The request will be redirected to Google for authentication, so this

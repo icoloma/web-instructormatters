@@ -1,12 +1,19 @@
-var numCourses = courses.length, numPlaces = places.length, numStates = states.length;
+var numCourses = courses.length, numPlaces = places.length, numStates = states.length,
+backupTime = new Date().getTime().toString();
 
-// use instructormatters;
+// use instructormatters, mover db
 var db = connect('localhost/instructormatters');
+db.copyDatabase("instructormatters", "backup-instmatters-" + backupTime);
 db.certificates.drop();
 db.editions.drop();
 db.videos.drop();
 db.users.drop();
 db.courses.drop();
+
+// Para borrar todos los backups con nombre 'backup-instmatters-(números)':
+//
+// db.adminCommand('listDatabases').databases.forEach(function(d) {if(d.name.match(/backup-instmatters-[0-9]+/)) {db.getSiblingDB(d.name).dropDatabase()} })
+
 
 //
 //Create users

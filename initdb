@@ -1,4 +1,7 @@
 #!/bin/bash
 # Inicializa la BBDDde mongo
 echo Para cambiar el usuario admin por defecto, editar test/db/mongodb-sample-data.js
+echo
+echo Para borrar los backups, ver mongo-init.js
+echo
 mongo test/db/mongodb-init-data.js test/db/mongodb-init.js

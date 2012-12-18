@@ -30,23 +30,23 @@ append content
             each video in course.videos
               mixin videoItem(video)
 
-      section.row-fluid.upcoming-editions
-      h1.header-3 Upcoming courses
-      -if(editions.length > 0) {
-        ul
-          -editions.slice(0, 10).forEach(function (edition) {
-            li 
-              a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{fromNow(edition.date)}
-              &nbsp; - #{edition.address} (by <a href="/instructors/#{edition.instructorId}">#{edition.instructorName}</a>)&nbsp;  
-              -if (edition.finished)
-                span( class="label label-inverse") FINISHED
-              
-          -})
-      -} else {
-        p No courses scheduled
-      -}
-      -if(locals.isCertifiedInstructor) {
-        .controls-group
-          a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
-      -}
+    section.row-fluid.upcoming-editions
+    h1.header-3 Upcoming courses
+    -if(editions.length > 0) {
+      ul
+        -editions.slice(0, 10).forEach(function (edition) {
+          li 
+            a(href='/courses/' + course.uuid + '/editions/' + edition.id ) #{fromNow(edition.date)}
+            &nbsp; - #{edition.address} (by <a href="/instructors/#{edition.instructorId}">#{edition.instructorName}</a>)&nbsp;  
+            -if (edition.finished)
+              span( class="label label-inverse") FINISHED
+            
+        -})
+    -} else {
+      p No courses scheduled
+    -}
+    -if(locals.isCertifiedInstructor) {
+      .controls-group
+        a(href="/courses/" + course.uuid + "/editions/new").btn.btn-primary Add Edition
+    -}
 

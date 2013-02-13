@@ -23,8 +23,8 @@ define(['core', 'editions/contactrequestmodel', 'hbs!./contactrequestview'],
         );
         Recaptcha.create( recaptcha_public_key, 'recaptcha',
             {
-              theme: "white",
-              callback: Recaptcha.focus_response_field
+              theme: "white"
+              // callback: Recaptcha.focus_response_field
             }
           );
 

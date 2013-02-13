@@ -1,6 +1,6 @@
 
-
 var ObjectId = mongoose.Schema.ObjectId,
+  errors = require(__apppath + '/src/routes/errorHandlers'),
   wrapResult = require('./helpers').wrapResult,
   errors = require(__apppath + '/src/routes/errorHandlers.js');
 
@@ -52,10 +52,10 @@ _.extend(UserSchema.statics, {
     var self = this;
     this.findOne({email: body.email, deleted: false}, function (err, item) {
       if(err) {
-        err = codeError(500, 'Internal server error');
+        err = errors.codeError(500, 'Internal server error');
         return callback(err, item);
       } else if(item) {
-        err = codeError(500, 'A user with this email already exists')
+        err = errors.codeError(500, 'A user with this email already exists')
         return callback(err, item);
       } else {
         self.normalizeBooleans(body);

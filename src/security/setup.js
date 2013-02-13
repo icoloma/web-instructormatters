@@ -27,8 +27,6 @@ passport.deserializeUser(function(id, done) {
 });
 
 
-
-
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, and Google
@@ -41,7 +39,7 @@ passport.use(new GoogleStrategy({
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
     process.nextTick(function () {
-      
+
       // To keep the example simple, the user's Google profile is returned to
       // represent the logged-in user.  In a typical application, you would want
       // to associate the Google account with a user record in your database,
@@ -63,67 +61,58 @@ updateUserData = function (dbUser, req, res) {
     res.redirect('/instructors/' + dbUser.id);
     return;
   } 
-    
-  // actualizamos el token y el displayName
-  async.parallel([
-    function(cb){
-      var query = {googleId:req.user.id, name:req.user.displayName, deleted:false};
-      if (dbUser.deleted){
-        query.admin=false;
-        query.address=null;
-        query.geopoint=null;
-        query.courses=[];
-        query.certificates=[];
-        query.videos=[];
-      }
-      models.Users
-      .update({_id: dbUser.id}, query )
-      .exec(cb);
-    }], function(err,num){
-      if (err || num === 0){
-        err && console.log(err.message); 
-        res.send(500, 'Error updating googleId token');
-        return; 
-      } 
-      res.redirect('/instructors/' + dbUser.id + '/edit');
-      return;
-  });
 
+  // actualizamos el token y el displayName
+  var query = {
+    googleId:req.user.id,
+    name:req.user.displayName,
+    deleted:false
+  };
+  if (dbUser.deleted) {
+    _.extend(query, {
+      admin: false,
+      address: null,
+      geopoit: null,
+      courses: [],
+      certificates: [],
+      videos: []
+    });
+  }
+  models.Users.update({_id: dbUser.id}, query, function(err, num) {
+    if (err || num === 0) {
+      err.message = 'Error updating googleId token'
+      return next(err);
+    }
+    res.redirect('/instructors/' + dbUser.id + '/edit');
+  });
 }
 
 // Se ha autenticado con Google, pero ¿ está en nuestra bdd ?
-passport.checkUser = function (req,res) {
-  async.parallel([
-    function(cb) {
-      models.Users.findOne( {email:req.user.emails[0].value}).exec(cb);
-    }], function( err, results){
-      if (err) {
-        console.log(err);
-        res.send(500, err.message);
-        return;
-      }
-
-      var dbUser = results[0];
+passport.checkUser = function(req, res, next) {
+  models.Users
+    .findOne( {email:req.user.emails[0].value})
+    .exec(function(err, dbUser) {
+      if (err) return next(err);
 
       if (!dbUser){
         // creamos un usuario nuevo
-        dbUser = { admin:false , certified:false,  deleted:false, courses: [], email:req.user.emails[0].value};
+        dbUser = { 
+          admin:false,
+          certified:false,
+          deleted:false,
+          courses: [],
+          email:req.user.emails[0].value
+        };
         models.Users.addUser(dbUser, function (err, userID) {
-          if(err)  {
-            console.log(err);
-            res.send(500, err.message);
-           return;
-          }
+          if (err) return next(err);
           dbUser.id = userID;
-          this.updateUserData(dbUser,req,res);
-        
+          updateUserData(dbUser,req,res);
         });
-        
+
       } else {
-        this.updateUserData(dbUser,req,res);
-        
+        updateUserData(dbUser,req,res);
       }
-    });
+  });
 }
 
 module.exports = passport;

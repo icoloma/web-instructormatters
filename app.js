@@ -53,7 +53,7 @@ app.configure(function() {
 
 });
 
-mongoose.connect('mongodb://localhost/instructormatters');
+mongoose.connect('mongodb://nodejitsu_extrema:cv4evebpbhiurtg4g3ab3av32v@ds051947.mongolab.com:51947/nodejitsu_extrema_nodejitsudb302180454');
 routes(app);
 
 http.createServer(app).listen(app.get('port'), function(){

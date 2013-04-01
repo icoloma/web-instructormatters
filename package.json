@@ -1,33 +1,31 @@
 {
   "name": "instructormatters",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app.js"
   },
-
   "dependencies": {
     "async": "0.1.22",
     "express": "3.0.0rc1",
-    "fs": "*",
     "jade": "0.27.2",
     "jshint": "*",
     "less": "1.3.0",
     "mongoose": "2.7.3",
     "node-minify": "0.4.2",
-    "nodemailer" : "0.3.22",
+    "nodemailer": "0.3.22",
     "passport": "0.1.12",
-    "passport-google-oauth" : "0.1.4",
+    "passport-google-oauth": "0.1.4",
     "pdfkit": "0.1.9",
     "underscore": "*",
-    "request" : "*",
-    "moment": "*", 
-    "simple-recaptcha" : "*"
+    "request": "*",
+    "moment": "*",
+    "simple-recaptcha": "*"
   },
-
-   "devDependencies": {
-
-  },
-
-   "repository": "https://github.com/icoloma/instructormatters.git"
+  "devDependencies": {},
+  "repository": "https://github.com/icoloma/web-instructormatters.git",
+  "subdomain": "instructormatters",
+  "engines": {
+    "node": "0.8.x"
+  }
 }

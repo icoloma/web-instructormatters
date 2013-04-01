@@ -146,7 +146,7 @@ exports.checkDomain = function (req,res,next){
   if (host.indexOf(":") != -1) {
      host = /(.*):.*/.exec(host)[1];
   }
-  if (host != "instructormatters.com"){
+  if (host != "instructormatters.com" && host != 'instructormatters.nodejitsu.com') {
     res.redirect("http://instructormatters.com");
   }
    next();

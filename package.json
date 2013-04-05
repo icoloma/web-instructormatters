@@ -25,6 +25,10 @@
   "devDependencies": {},
   "repository": "https://github.com/icoloma/web-instructormatters.git",
   "subdomain": "instructormatters",
+  "domains": [
+    "instructormatters.com",
+    "www.instructormatters.com"
+  ],
   "engines": {
     "node": "0.8.x"
   }
